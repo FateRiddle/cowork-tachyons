@@ -1,0 +1,207 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+ul,li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: #A2B4BC;
+}
+
+a.active {
+  color:
+}
+
+.App {
+  margin: 0 auto;
+  display: flex;
+}
+
+.Sidebar {
+  background-color: #2E3C54;
+  width: 12rem;
+  height: 100vh;
+  flex-shrink:
+}
+
+.Sidebar .AddItemInput {
+  margin: 2rem 0 2rem 1rem
+}
+
+.AddItemInput input {
+  height: 1.5rem;
+  width: 8rem;
+  font-size: 1rem;
+}
+
+.Sidebar ul {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+}
+
+.Sidebar ul li {
+  margin: .5rem .5rem;
+}
+
+.Sidebar a {
+  color: #A2B4BC;
+}
+
+.Sidebar a.active {
+  color: #55CFDE;
+}
+
+.AppContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.Headbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  height: 5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.Headbar a {
+  margin: 0 5rem
+}
+
+.Headbar a.active {
+  color: #55CFDE;
+}
+
+.MainContent {
+  flex: 1;
+  display: flex;
+}
+
+.TaskPage {
+  margin: 1rem;
+  padding: .5rem 1rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.TaskTable {
+  /*width: 32rem;*/
+  border-collapse: collapse;
+}
+
+.TaskItem {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+/*.TaskItem:not(.TaskItemSelected):hover {
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.3);
+}*/
+
+.CheckIcon {
+  width: 2rem;
+  height: 2rem;
+  background-image: url('./images/check.png');
+  background-size: 1.4rem 1.4rem;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.CheckIcon:hover {
+  background-image: url('./images/check-hover.png');
+}
+
+.TaskItem.selected {
+  border-top: 1px solid #55CFDE;
+  border-bottom: 1px solid #55CFDE;
+}
+
+.DragHandle {
+  text-align: center;
+  font-size: 1.2rem;
+  width: 1.2rem;
+  color: rgb(158, 146, 154);
+  cursor: pointer;
+}
+
+.DragHandle:hover {
+  color: #55CFDE;
+}
+
+.TaskTitle input {
+  width: 38vw;
+  height: 1.8rem;
+  font-size: 1rem;
+  border-style: none;
+  outline: none;
+  /*background-color: rgb(143, 213, 196);*/
+}
+
+.isTitle .TaskTitle input {
+  /*font-size: 1.3rem;*/
+  font-weight: 600;
+}
+
+.TaskItem span {
+  padding: 0 1rem;
+}
+
+.AddItem {
+  width: 30rem;
+  height: 2.2rem;
+  font-size: 1rem;
+}
+
+.DetailPage {
+  margin: 1rem 0;
+  padding: .5rem 1rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.Toolbar {
+  padding: .5rem 2rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.DetailPageTitle {
+  margin: 1rem auto .5rem;
+  padding: 0 .5rem;
+  width: 32vw;
+  height: 1.8rem;
+  outline: none;
+  border-style: none;
+  font-size: 1.5rem;
+  border: 1px solid white;
+}
+
+.DetailPageTitle:focus,.DetailPageTitle:hover {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.DetailPageDetail {
+  margin: .5rem auto;
+  padding: .5rem;
+  width: 32vw;
+  min-height: 2rem;
+  font-size: 1rem;
+  outline: none;
+  border: 1px solid white;
+}
+
+.DetailPageDetail:focus,.DetailPageDetail:hover {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
