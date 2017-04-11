@@ -1,6 +1,7 @@
 // import axios from 'axios'
 import moment from 'moment'
 import { v4 } from 'uuid'
+import { me } from '../data'
 
 // taskId projectId taskName contents createDate deadline creatorId isComplete completeDate
 // taskId: id
@@ -12,13 +13,6 @@ import { v4 } from 'uuid'
 // deadline: dueAt
 // isComplete: completed
 // completeDate: completedAt
-
-const thisFilter = {
-  projectId:['1'],
-   creator:['3'],
-  completed:'notCompleted',//'completed','notCompleted'
-  // createdBetween:['moment1','moment2']
-}
 
 //先让assignee 默认等于 creator， 之后再改
 

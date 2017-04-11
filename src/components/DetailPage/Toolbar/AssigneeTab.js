@@ -1,63 +1,39 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { editTaskAssignee } from '../../../actions'
+import { getAllUsers } from '../../../reducers'
+import Drop from '../../parts/Drop'
 
 class AssigneeTab extends React.Component {
-  state = {assigneeList:false}
-
-  toggleAssigneeList = () => {
-    this.setState({assigneeList:!this.state.assigneeList})
-  }
-
-  unassign = () => {
-    const { currentTask,editTaskAssignee } = this.props
-    editTaskAssignee('',currentTask)
-  }
-
-  assign = assignee => {
-    const { currentTask,editTaskAssignee } = this.props
-    editTaskAssignee(assignee,currentTask)
-  }
-
-  render() {
-    const { users,assignee } = this.props
-    let userName = ''
-    if(assignee !== '' && users.allIds.indexOf(assignee) > -1){
-      userName = users.byId[assignee].name
-    }
-
+  render(){
+    const { assignee,allUsers,currentTask } = this.props
+    const users = [...allUsers,{name:'nobody',id:''}] //add this to match when task is assigned to nobody
     return (
-      assignee === ''?
-        <div>
-          <div onClick={this.toggleAssigneeList} >unassigned</div>
-          {
-            this.state.assigneeList?
-            <ul>
-            {
-              users.allIds.map(id => {
-                const { qq,name } = users.byId[id]
-                return <li key={id} onClick={()=>this.assign(qq)}>{name}</li>
-              })
-            }
-            </ul>:null
-          }
-        </div>
-        :
-        <div>{userName}
-          <span onClick={this.unassign}> X </span>
-        </div>
+      <Drop
+        titleId={assignee || ''}
+        dropArray={users}
+        changeTitle={userId => this.props.editTaskAssignee(userId,currentTask)}
+      />
     )
   }
 }
 
-const mapStateToProps = ({ currentTask,users,tasks }) => ({
-  currentTask,
-  users,
-  assignee:tasks.byId[currentTask].assignee,
-})
+const mapStateToProps = (state,{ match }) => {
+  const allUsers = getAllUsers(state)
+  const currentTask = match.params.taskId
+  const { assignee } = state.tasks.byId[currentTask] || '' //in case it is undefined
+  return {
+    allUsers,
+    currentTask,
+    assignee,
+  }
+}
 
-AssigneeTab = connect(mapStateToProps,{
-  editTaskAssignee,
-})(AssigneeTab)
+AssigneeTab = withRouter(
+  connect(mapStateToProps,
+    { editTaskAssignee }
+  )(AssigneeTab)
+)
 
 export default AssigneeTab

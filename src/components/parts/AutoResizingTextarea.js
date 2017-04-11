@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { editTaskDetail } from '../../actions'
 
 class Textarea extends React.Component {
@@ -19,8 +20,7 @@ class Textarea extends React.Component {
 
 	render() {
     const { placeholder,className,lineHeight, currentTask,tasks } = this.props
-    const task = tasks.byId[currentTask]
-    const detail = task.detail || ''
+    const { detail } = tasks.byId[currentTask] || ''
 
   	return <textarea
       placeholder={placeholder}
@@ -39,9 +39,19 @@ Textarea.propTypes = {
   lineHeight: React.PropTypes.number.isRequired,
 }
 
-Textarea = connect(
-  ({ currentTask,tasks }) => ({currentTask,tasks}),
-  {editTaskDetail}
-)(Textarea)
+const mapStateToProps = ({ tasks },{ match }) => {
+  const currentTask = match.params.taskId
+  return {
+    currentTask,
+    tasks,
+  }
+}
+
+Textarea = withRouter(
+  connect(
+    mapStateToProps,
+    {editTaskDetail},
+  )(Textarea)
+)
 
 export default Textarea

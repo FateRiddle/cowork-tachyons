@@ -63,7 +63,7 @@ a.active {
 }
 
 .Headbar {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   height: 5rem;
   display: flex;
   justify-content: flex-start;
@@ -86,8 +86,8 @@ a.active {
 .TaskPage {
   margin: 1rem;
   padding: .5rem 1rem;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .TaskTable {
@@ -96,7 +96,7 @@ a.active {
 }
 
 .TaskItem {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
 }
@@ -163,8 +163,8 @@ a.active {
 .DetailPage {
   margin: 1rem 0;
   padding: .5rem 1rem;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -174,7 +174,7 @@ a.active {
   padding: .5rem 2rem;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .DetailPageTitle {
@@ -189,7 +189,7 @@ a.active {
 }
 
 .DetailPageTitle:focus,.DetailPageTitle:hover {
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .DetailPageDetail {
@@ -203,5 +203,5 @@ a.active {
 }
 
 .DetailPageDetail:focus,.DetailPageDetail:hover {
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }

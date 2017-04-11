@@ -8,25 +8,22 @@ class AddItem extends React.Component {
 
   AddTask = () => {
     const {
-      currentUser,currentProject,
-      addTaskForMe,addTaskForProject,
+      addTask,
       focusLast,
+      match,
     } = this.props
-    if(currentProject === 'me'){
-      addTaskForMe(currentUser)
-    } else {
-      addTaskForProject(currentProject)
-    }
+    const currentProject = match.params.id
+    addTask(currentProject)
     setTimeout(()=>focusLast(),0)
   }
 
   render(){
-    const num = this.props.howManyTasks
-    console.log(num);
+    const { listLength } = this.props
+    // console.log(num);
     let msg = ''
-    if (num === 0){
+    if (listLength === 0){
       msg = '点击添加新任务'
-    } else if(num < 2){
+    } else if(listLength < 2){
       msg = '选择一行回车'
     }
     return (
@@ -37,11 +34,11 @@ class AddItem extends React.Component {
 
 AddItem.propTypes = {
   focusLast: React.PropTypes.func.isRequired,
-  howManyTasks: React.PropTypes.number.isRequired,
+  listLength: React.PropTypes.number.isRequired,
 }
 
-const mapStateToProps = ({ currentUser,currentProject,tasks }) => ({
-  currentUser,currentProject,tasks,
+const mapStateToProps = ({ tasks }) => ({
+  tasks,
 })
 
 AddItem = withRouter(

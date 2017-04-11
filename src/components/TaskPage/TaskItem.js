@@ -1,28 +1,51 @@
 import React from 'react'
 import { connect } from  'react-redux'
 import { withRouter } from 'react-router'
-// import Link from '../parts/Link'
 import { SortableElement,SortableHandle } from 'react-sortable-hoc'
 import * as actions from '../../actions'
+import { me } from '../../data'
+import { isEmpty } from 'lodash'
 
-const DragHandle = SortableHandle(({ focused }) => <td className='DragHandle'>
-  {focused?'::':''}
+const DragHandle = SortableHandle(({ show }) => <td className='DragHandle'>
+  {show?'::':''}
 </td>)
 
 class TaskItem extends React.Component {
 
-  state = {mouseOver:false}
+  state = {mouseOn:false, isFocus:false}
 
-  componentDidMount() {
-    console.log(this.props.location);
+  //life cycle 解决focus的问题
+  componentWillReceiveProps(nextProps) {
+    const nextTaskId = nextProps.match.params.taskId
+    this.setFocus(nextTaskId)
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps.location,this.props.location);
+    if(this.state.isFocus){
+      this.input.focus()
+    }
+  }
+
+  canEdit = () => {
+    const { completed,search } = this.props
+    return completed === 'active' && isEmpty(search)
+  }
+
+  setFocus = (nextTaskId) => {
+    const taskId = this.props.match.params.taskId
+    const { id } = this.props.task
+    if(this.state.isFocus){
+      this.setState({isFocus:false})
+    }
+    if(taskId && nextTaskId && taskId !== nextTaskId){//url有变化
+      if(id === nextTaskId) { //url到了这个TaskItem
+        this.setState({isFocus:true})//这里不能直接控制focus，因为还没有render,DOM不存在
+      }
+    }
   }
 
   isTitle = task => {
-    if(task && this.props.currentProject === 'me'){
+    if(task){
       const titleLast = task.title.substring(task.title.length-1)
       return titleLast === "：" || titleLast === ":"
     }
@@ -30,9 +53,9 @@ class TaskItem extends React.Component {
   }
 
   calcClassName = (className) => {
-    const { currentTask,id,tasks } = this.props
-    const task = tasks.byId[id]
-    if(currentTask === id){
+    const currentTask = this.props.match.params.taskId
+    const { task } = this.props
+    if(currentTask === task.id){
       className += ' selected'
     }
     if(this.isTitle(task)){
@@ -46,13 +69,16 @@ class TaskItem extends React.Component {
   }
 
   handleLineClick = () => {
-    const { id,history } = this.props
+    const { task:{ id },history } = this.props
     history.push(`${id}`)
   }
 
-  handleTitleChange = title => {
-    const { id,editTaskTitle } = this.props
-    editTaskTitle(title,id)
+  handleTitleChange = e => {
+    if(this.canEdit()){
+      const title = e.target.value
+      const { task:{ id },editTaskTitle } = this.props
+      editTaskTitle(title,id)
+    }
   }
 
   handleFocus = (id,direction) => {
@@ -73,35 +99,29 @@ class TaskItem extends React.Component {
 
   handleKeyDown = e => {
     const {
-      id,
-      currentProject,currentUser,
-      deleteTask, insertTaskForMe, insertTaskForProject,
+      task:{ id },
+      deleteTask, insertTask,
     } = this.props
-
     switch (e.key) {
       case "Tab":
         e.preventDefault()
       break
 
       case "Backspace":
-        console.log('Backspace');
-        if(e.target.value === ''){
+        if(e.target.value === '' && this.canEdit()){
           e.preventDefault()
           deleteTask(id)
-          this.handleFocus(id,'up')
+          this.handleFocus(id,'up')   // TODO: 第一行被删除是特例，考虑简洁的写法
         }
       break
 
       case "Enter":
-        e.preventDefault()
-        if(currentProject === 'me'){
-          insertTaskForMe(currentUser,id)
-        } else {
-          insertTaskForProject(currentProject,id)
+        if(this.canEdit()){
+          e.preventDefault()
+          const currentProject = this.props.match.params.id
+          insertTask(currentProject,id)
+          setTimeout(()=>this.handleFocus(id,'down'),0)
         }
-        setTimeout(()=>this.handleFocus(id,'down'),0)
-
-
       break
 
       case "ArrowUp":
@@ -120,18 +140,17 @@ class TaskItem extends React.Component {
   }
 
   render() {
-    const { tasks,id,match } = this.props
-
+    const { match,task } = this.props
+    const id = task.id
     const { id:currentProject, taskId:currentTask } = match.params
     // console.log(currentTask,currentProject);
-    const task = tasks.byId[id]
     const isTitle = this.isTitle(task)
     return (
       <tr className={this.calcClassName("TaskItem")}
-        onMouseEnter={()=>this.setState({mouseOver:true})}
-        onMouseLeave={()=>this.setState({mouseOver:false})}
+        onMouseEnter={()=>this.setState({mouseOn:true})}
+        onMouseLeave={()=>this.setState({mouseOn:false})}
       >
-        <DragHandle focused={this.state.mouseOver||currentTask === id} />
+        <DragHandle show={this.state.mouseOn||currentTask === id} />
         {
           isTitle?null:<td className="CheckIcon" onClick={()=>this.handleCheckIconClick(id)}></td>
         }
@@ -139,15 +158,15 @@ class TaskItem extends React.Component {
           <input value={task.title || ''}
             ref={node => this.input = node}
             onClick={this.handleLineClick}
-            onChange={e => this.handleTitleChange(e.target.value)}
-            onKeyDown={e => this.handleKeyDown(e)}
+            onChange={this.handleTitleChange}
+            onKeyDown={this.handleKeyDown}
           />
           {
             isTitle?null:
             <span>{task.dueDate?task.dueDate.format('MM-DD'):''}</span>
           }
           {
-            currentProject === '3'?null:
+            currentProject === me.id?null:
             <span>Assign</span>
           }
         </td>
@@ -157,14 +176,14 @@ class TaskItem extends React.Component {
 }
 
 TaskItem.propTypes = {
-  id: React.PropTypes.string.isRequired,
+  task: React.PropTypes.object.isRequired,
   focusUp: React.PropTypes.func.isRequired,
   focusDown: React.PropTypes.func.isRequired,
 }
 
-const mapStateToProps = ({ tasks,currentUser }) => ({
-  tasks,
-  currentUser,
+const mapStateToProps = ({ completed,search }) => ({
+  completed,
+  search,
 })
 
 TaskItem = withRouter(
@@ -175,7 +194,7 @@ TaskItem = withRouter(
 
 //转换成可拖拽的item
 const SortableTaskItem = SortableElement(({
-  id,focusDown,focusUp,
-}) => <TaskItem id={id} focusDown={focusDown} focusUp={focusUp} />)
+  task,focusDown,focusUp,
+}) => <TaskItem task={task} focusDown={focusDown} focusUp={focusUp} />)
 
 export default SortableTaskItem

@@ -10,7 +10,7 @@ const byId = (state = {}, action) => {
     case "EDIT_TASK_TITLE":
     case "EDIT_TASK_DETAIL":
     case "EDIT_TASK_ASSIGNEE":
-    case "EDIT_TASK_DUEDATE":
+    case "EDIT_TASK_DUE":
     case "EDIT_TASK_PROJECT":
     case "TOGGLE_TASK":
       return {

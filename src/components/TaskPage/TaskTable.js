@@ -6,86 +6,88 @@ import { SortableContainer } from 'react-sortable-hoc'
 import TaskItem from './TaskItem'
 import AddItem from './AddItem'
 import * as actions from '../../actions'
+import { getFilteredTasks } from '../../reducers'
+import { isEmpty } from 'lodash'
 
 class TaskTable extends React.Component {
 
-  componentDidMount() {
-    console.log(this.props.match.params);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps.location,this.props.location);
-    console.log(this.props.history);
-  }
-
   focusLast = () => {
-    const { filteredTasks,history,match } = this.props
-    const lastId = filteredTasks[filteredTasks.length-1]
-    history.push(`/${match.params.id}/${lastId}`)
+    const { tasks,history } = this.props
+    const lastId = tasks[tasks.length-1]
+    history.push(`${lastId}`)
   }
 
-  focusUp = index => {
-    const { filteredTasks,history,match } = this.props
-    if(index > 0 && index < filteredTasks.length){
-      const previousId = filteredTasks[index-1]
-      history.push(`/${match.params.id}/${previousId}`)
+  focusUp = id => {
+    const { tasks,history } = this.props
+    const item = tasks.find(task => task.id === id)
+    const index = tasks.indexOf(item)
+    if(index > 0 && index < tasks.length){
+      const previousId = tasks[index-1].id
+      history.push(`${previousId}`)
     }
   }
 
-  focusDown = index => {
-    const { filteredTasks,history,match } = this.props
-    if(index > -1 && index < filteredTasks.length-1){
-      const nextId = filteredTasks[index+1]
-      history.push(`/${match.params.id}/${nextId}`)
+  focusDown = id => {
+    const { tasks,history } = this.props
+    const item = tasks.find(task => task.id === id)
+    const index = tasks.indexOf(item)
+    if(index > -1 && index < tasks.length-1){
+      const nextId = tasks[index+1].id
+      // console.log(tasks,nextId);
+      history.push(`${nextId}`)
     }
   }
 
   render() {
-    const { filteredTasks,allTasks } = this.props
-    console.log(filteredTasks);
+    const { allIds,tasks,completed,search } = this.props
+    // console.log(tasks);
     return (
       <div>
         <table className='TaskTable'>
           <tbody>
             {
-              filteredTasks
-              .map((id,index) => {
-                const allIndex = allTasks.indexOf(id)
-                return <Route key={id} render={()=>(
+              tasks
+              .map((task,index) => {
+                // console.log(task);
+                const IndexInAll = allIds.indexOf(task.id)
+                return <Route key={index} render={()=>(
                   <TaskItem
-                     id={id} index={allIndex} //index 是dragItem需要的prop
-                    focusDown={() => this.focusDown(index)}
-                    focusUp={() => this.focusUp(index)}
+                    task={task} index={IndexInAll} //index 是dragItem需要的prop
+                    focusDown={this.focusDown}
+                    focusUp={this.focusUp}
                   />)}
                 />
               })
             }
           </tbody>
         </table>
-        <AddItem focusLast={this.focusLast} howManyTasks={filteredTasks.length} />
+        {
+          completed === 'active' && isEmpty(search) &&
+          <AddItem focusLast={this.focusLast} listLength={tasks.length} />
+        }
       </div>
     )
   }
 }
 
 TaskTable.propTypes = {
-  filteredTasks: React.PropTypes.array.isRequired
+
 }
 
-const mapStateToProps = ({ tasks }) => ({
-  allTasks: tasks.allIds
+const mapStateToProps = (state,{ match }) => ({
+  tasks:getFilteredTasks(state,match.params.id),
+  allIds: state.tasks.allIds,
+  completed: state.completed,
+  search: state.search,
 })
 
 TaskTable = withRouter(
   connect(
     mapStateToProps,
-    {
-      ...actions
-    }
+    {...actions}
   )(TaskTable)
 )
 
-
-const SortableTaskTable = SortableContainer(({ filteredTasks }) => <TaskTable filteredTasks={filteredTasks}/>)
+const SortableTaskTable = SortableContainer(() => <TaskTable />)
 
 export default SortableTaskTable

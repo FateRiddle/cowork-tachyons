@@ -1,13 +1,13 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { changeCurrentTask } from '../../../actions'
+// import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import AssigneeTab from './AssigneeTab'
 import DueDateTab from './DueDateTab'
 
 class Toolbar extends React.Component {
 
   close = () => {
-    this.props.changeCurrentTask('0')
+    this.props.history.push('list')
   }
 
   render(){
@@ -16,18 +16,10 @@ class Toolbar extends React.Component {
       <AssigneeTab />
       <DueDateTab />
       <button onClick={this.close}>X</button>
-      {/* <div onClick={this.handleTagClick} >tag</div> */}
     </div>
   }
 }
 
-// Toolbar.propTypes = {
-//   assignee: React.PropTypes.string,
-//   toggleTag: React.PropTypes.func,
-// }
-//
-
-
-Toolbar = connect(null,{ changeCurrentTask })(Toolbar)
+Toolbar = withRouter(Toolbar)
 
 export default Toolbar

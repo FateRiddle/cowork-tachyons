@@ -1,4 +1,5 @@
 import { v4 } from 'uuid'
+import { me } from '../data'
 
 ////////////////project action:
 export const addProject = (title) => ({
@@ -13,32 +14,40 @@ export const deleteProject = (id) => ({
 })
 
 /////////////////TASK:
-export const addTaskForMe = (assignee) => ({
-  type: 'ADD_TASK_FOR_ME',
-  id: v4(),
-  assignee,
-})
+
+export const addTask = (projectId) => {
+  if(projectId === me.id) {
+    return {
+      type: 'ADD_TASK_FOR_ME',
+      id: v4(),
+      assignee:projectId,
+    }
+  }
+  return {
+    type: 'ADD_TASK_FOR_PROJECT',
+    id: v4(),
+    projectId,
+  }
+}
 
 //insert the task right after taskId in allIds array
-export const insertTaskForMe = (assignee,taskId) => ({
-  type: 'INSERT_TASK_FOR_ME',
-  id: v4(),
-  assignee,
-  taskId,
-})
 
-export const addTaskForProject = (projectId) => ({
-  type: 'ADD_TASK_FOR_PROJECT',
-  id: v4(),
-  projectId,
-})
-
-export const insertTaskForProject = (projectId,taskId) => ({
-  type: 'INSERT_TASK_FOR_PROJECT',
-  id: v4(),
-  projectId,
-  taskId,
-})
+export const insertTask = (projectId,taskId) => {
+  if(projectId === me.id){
+    return {
+      type: 'INSERT_TASK_FOR_ME',
+      id: v4(),
+      assignee:projectId,
+      taskId,
+    }
+  }
+  return {
+    type: 'INSERT_TASK_FOR_PROJECT',
+    id: v4(),
+    projectId,
+    taskId,
+  }
+}
 
 export const deleteTask = (id) => ({
   type: 'DELETE_TASK',
@@ -69,8 +78,8 @@ export const editTaskAssignee = (assignee,id) =>({
   id,
 })
 
-export const editTaskDueDate = (dueDate,id) =>({
-  type: 'EDIT_TASK_DUEDATE',
+export const editTaskDue = (dueDate,id) =>({
+  type: 'EDIT_TASK_DUE',
   dueDate,
   id,
 })
@@ -87,20 +96,15 @@ export const addTaskTag = (tag,id) => ({
 })
 /////////////////////
 
-export const changeCurrentTask = (id) => ({
-  type: 'CHANGE_CURRENT_TASK',
-  id,
-})
-
-export const changeCurrentProject = (id) => ({
-  type: 'CHANGE_CURRENT_PROJECT',
-  id,
-})
-
-export const changeCurrentUser = (qq) => ({
-  type: 'CHANGE_CURRENT_USER',
-  qq,
-})
+// export const changeCurrentTask = (id) => ({
+//   type: 'CHANGE_CURRENT_TASK',
+//   id,
+// })
+//
+// export const changeCurrentProject = (id) => ({
+//   type: 'CHANGE_CURRENT_PROJECT',
+//   id,
+// })
 
 export const changeTaskOrder = (oldIndex, newIndex) => ({
   type:'CHANGE_TASK_ORDER',
@@ -108,7 +112,33 @@ export const changeTaskOrder = (oldIndex, newIndex) => ({
   newIndex,
 })
 
-export const changeFilter = (filter = {}) => ({  //filter is an object of detailed filter like in graphql
-  type:'CHANGE_FILTER',
-  filter
+// export const changeFilter = (filter = {}) => ({  //filter is an object
+//   type:'CHANGE_FILTER',
+//   ...filter,
+// })
+
+export const changeCompleted = (completed) => ({
+  type:'CHANGE_COMPLETED',
+  completed,
 })
+
+export const changeSearch = (search = {}) => ({
+  type:'CHANGE_SEARCH',
+  search,
+})
+
+export const changeFilter = (filter) => dispatch => {
+  const { completed,search } = filter
+  if(completed){
+    dispatch ({
+      type:'CHANGE_COMPLETED',
+      completed,
+    })
+  }
+  if(search){
+    dispatch ({
+      type:'CHANGE_SEARCH',
+      search,
+    })
+  }
+}

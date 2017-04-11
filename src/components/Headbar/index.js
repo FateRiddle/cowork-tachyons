@@ -3,18 +3,15 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { NavLink } from 'react-router-dom'
 import Searchbar from './Searchbar'
-import * as actions from '../../actions'
+import { me } from '../../data'
 
 let Headbar = ({
   users,
-  currentUser,
-  changeFilter,
 }) => {
-  const { name,id } = users.byId[currentUser]
+  const { name,id } = users.byId[me.id]
   return (
     <div className='Headbar' >
       <NavLink to={`/${id}/list`}
-        onClick={()=>changeFilter()}
       >{`${name}'s tasks:`}</NavLink>
       <Searchbar />
     </div>
@@ -22,18 +19,15 @@ let Headbar = ({
 }
 
 Headbar.propTypes = {
-
+  users: React.PropTypes.object.isRequired,
 }
 
-const mapStateToProps = ({ users, currentUser }) => ({
+const mapStateToProps = ({ users }) => ({
   users,
-  currentUser,
 })
 
 Headbar = withRouter(
-  connect(mapStateToProps,{
-    ...actions,
-  })(Headbar)
+  connect(mapStateToProps)(Headbar)
 )
 
 export default Headbar

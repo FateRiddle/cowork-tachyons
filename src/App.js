@@ -1,54 +1,40 @@
 import React from 'react'
 import { withRouter } from 'react-router'
-import { Route,NavLink } from 'react-router-dom'
+import { Route,Switch,Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import Login from './components/Login/index'
-import Sidebar from './components/Sidebar/index'
-import Headbar from './components/Headbar/index'
-import TaskPage from './components/TaskPage/index'
-import DetailPage from './components/DetailPage/index'
+// import Login from './components/Login'
+import Sidebar from './components/Sidebar'
+import Headbar from './components/Headbar'
+import MainContent from './components/MainContent'
+import { me } from './data'
 import './App.css'
 // import { fetchTasks } from './api/fetchData'
 
 class App extends React.Component {
 
   render(){
-    const {
-      filteredTasks,
-      currentTask,
-      currentUser,
-      location,
-    } = this.props
-
     return (
-      currentUser.qq === '0'?<Login />:
-      (
-          <div className='App'>
-            <Route component={Sidebar} />
-            <div className='AppContent'>
-              <Headbar />
-              <div className='MainContent'>
-                <TaskPage />
-                {
-                  currentTask === '0'?null:
-                  <DetailPage />
-                }
-              </div>
-            </div>
-          </div>
-      )
+      <div className='App'>
+        <Route component={Sidebar} />
+        <div className='AppContent'>
+          <Headbar />
+          <Switch>
+            <Route exact path='/search/:searchId/list' component={MainContent} />
+            <Route exact path='/search/:searchId/:taskId' component={MainContent} />
+            <Route exact path='/:id/list' component={MainContent} />
+            <Route exact path='/:id/:taskId' component={MainContent} />
+            <Redirect to={`/${me.id}/list`}></Redirect>
+          </Switch>
+        </div>
+      </div>
     )
   }
 }
 
 const mapStateToProps = ({
-  tasks,
-  currentTask,
-  currentUser,
+  tasks
 }) => ({
-  filteredTasks:tasks.allIds,
-  currentTask,
-  currentUser,
+  allIds:tasks.allIds,
 })
 
 App = withRouter(connect(mapStateToProps)(App))

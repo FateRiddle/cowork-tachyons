@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import { SingleDatePicker } from 'react-dates'
 import moment from 'moment'
 import 'react-dates/lib/css/_datepicker.css'
-import { editTaskDueDate } from '../../../actions'
+import { editTaskDue } from '../../../actions'
 
 class DueDateTab extends Component {
 
@@ -17,17 +18,17 @@ class DueDateTab extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { tasks,currentTask } = this.props
-    if(currentTask !== prevProps.currentTask){
-      const dueDate = tasks.byId[currentTask].dueDate
-      this.setState({date:dueDate})
-    }
+    // const { tasks,currentTask } = this.props
+    // if(currentTask !== prevProps.currentTask){
+    //   const dueAt = tasks.byId[currentTask].dueAt
+    //   this.setState({date:dueAt})
+    // }
   }
 
   handleDateChange(date){
-    const { currentTask,editTaskDueDate } = this.props
+    const { currentTask,editTaskDue } = this.props
     this.setState({date})
-    editTaskDueDate(date,currentTask)
+    editTaskDue(date,currentTask)
   }
 
   render() {
@@ -44,13 +45,18 @@ class DueDateTab extends Component {
   }
 }
 
-const mapStateToProps = ({ currentTask,tasks }) => ({
-  currentTask,
-  tasks,
-})
+const mapStateToProps = ({ tasks },{ match }) => {
+  const currentTask = match.params.taskId
+  return {
+    tasks,
+    currentTask,
+  }
+}
 
-DueDateTab = connect(mapStateToProps,
-  { editTaskDueDate },
-)(DueDateTab)
+DueDateTab = withRouter(
+  connect(mapStateToProps,
+    { editTaskDue },
+  )(DueDateTab)
+)
 
 export default DueDateTab;
