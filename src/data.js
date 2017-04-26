@@ -5,8 +5,8 @@ export const persistedState = {
   projects:{
     allIds:['11','22'],
     byId:{
-      '11':{id:'11',title:"project1"},
-      '22':{id:'22',title:"project2"},
+      '11':{id:'11',title:"project1",group:['1','2','3']},
+      '22':{id:'22',title:"project2",group:['2']},
     },
   },
 
@@ -41,38 +41,28 @@ export const persistedState = {
 }
 
 //不用放在state里，因为是死数据
-export const filterTabs = [
-  {
-    name: '分配我的任务',
-    search:{
-      assignee:me.id,
-      createdBy:me.id,
-    }
-  },
-  {
-    name: '我创建的任务',
-    search:{
-      assignee:me.id,
-      createdBy:me.id,
-      createdAt:'',
-      dueAt:'',
-    }
-  },
-  {
-    name: '布置给我的任务',
-    search:{
-      assignee:me.id,
-      createdBy:me.id,
-      createdAt:'',
-      dueAt:'',
-    }
-  },{
-    name: '布置给我的任务',
-    search:{
-      assignee:me.id,
-      createdBy:me.id,
-      createdAt:'',
-      dueAt:'',
-    }
-  }
+export const completedTabs = [
+  {id:1,name:'未完成',completed:'active'},
+  {id:2,name:'全部',completed:'all'},
+  {id:3,name:'完成',completed:'completed'},
 ]
+
+//
+// export const filterTabs = [
+//   {
+//     name: '分配我的任务',
+//     search:{
+//       assignee:me.id,
+//       createdBy:me.id,
+//     }
+//   },
+//   {
+//     name: '我创建的任务',
+//     search:{
+//       assignee:me.id,
+//       createdBy:me.id,
+//       createdAt:'',
+//       dueAt:'',
+//     }
+//   },
+// ]

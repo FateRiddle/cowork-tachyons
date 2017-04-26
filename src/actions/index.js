@@ -2,15 +2,42 @@ import { v4 } from 'uuid'
 import { me } from '../data'
 
 ////////////////project action:
-export const addProject = (title) => ({
+export const addProject = (title='', group=[]) => ({
   type: 'ADD_PROJECT',
   id: v4(),
-  title
+  title,
+  group,
 })
 
 export const deleteProject = (id) => ({
   type: 'DELETE_PROJECT',
   id,
+})
+
+export const editProjectTitle = (title,id) => ({
+  type: 'EDIT_PROJECT_TITLE',
+  title,
+  id,
+})
+
+export const editProjectGroup = (group,id) => ({  //group is array of userIds
+  type: 'EDIT_PROJECT_GROUP',
+  group,
+  id,
+})
+
+//no async
+export const addUserToProject = (userId,projectId) => ({
+  type: 'ADD_USER_TO_PROJECT',
+  userId,
+  id:projectId,
+})
+
+//no async
+export const removeUserFromProject = (userId,projectId) => ({
+  type: 'REMOVE_USER_FROM_PROJECT',
+  userId,
+  id:projectId,
 })
 
 /////////////////TASK:
@@ -54,12 +81,14 @@ export const deleteTask = (id) => ({
   id,
 })
 
+//no async
 export const editTaskTitle = (title,id) => ({
   type: 'EDIT_TASK_TITLE',
   title,
   id,
 })
 
+//no async
 export const editTaskDetail = (detail,id) => ({
   type: 'EDIT_TASK_DETAIL',
   detail,
@@ -106,26 +135,22 @@ export const addTaskTag = (tag,id) => ({
 //   id,
 // })
 
+//no async
 export const changeTaskOrder = (oldIndex, newIndex) => ({
   type:'CHANGE_TASK_ORDER',
   oldIndex,
   newIndex,
 })
 
-// export const changeFilter = (filter = {}) => ({  //filter is an object
-//   type:'CHANGE_FILTER',
-//   ...filter,
+// export const changeCompleted = (completed) => ({
+//   type:'CHANGE_COMPLETED',
+//   completed,
 // })
-
-export const changeCompleted = (completed) => ({
-  type:'CHANGE_COMPLETED',
-  completed,
-})
-
-export const changeSearch = (search = {}) => ({
-  type:'CHANGE_SEARCH',
-  search,
-})
+//
+// export const changeSearch = (search = {}) => ({
+//   type:'CHANGE_SEARCH',
+//   search,
+// })
 
 export const changeFilter = (filter) => dispatch => {
   const { completed,search } = filter
@@ -142,3 +167,8 @@ export const changeFilter = (filter) => dispatch => {
     })
   }
 }
+
+export const changeCompletedTab = (id) => ({
+  type:"CHANGE_COMPLETED_TAB",
+  id,
+})

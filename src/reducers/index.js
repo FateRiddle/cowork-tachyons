@@ -5,6 +5,7 @@ import users from './users'
 import { me } from '../data'
 import { search } from './search'
 import { completed } from './completed'
+import { completedTab } from './current'
 import { isEmpty } from 'lodash'
 
 const app = combineReducers({
@@ -13,6 +14,7 @@ const app = combineReducers({
   users,
   completed,
   search,
+  completedTab,
 })
 
 export default app
@@ -25,6 +27,9 @@ export const getAllProjects = ({ projects }) =>
 
 export const getAllUsers = ({ users }) =>
   users.allIds.map(id => users.byId[id])
+
+export const getGroupUsers = (state,group) => //group of userIds
+  getAllUsers(state).filter(user => group.indexOf(user.id) > -1)
 
 export const getFilteredTasks = (state,projectId) => {
   const allTasks = getAlltasks(state)
@@ -43,7 +48,7 @@ export const getFilteredTasks = (state,projectId) => {
     .filter(t => t.assignee === projectId)
   }
   if(projects.allIds.indexOf(projectId)>-1){
-    return allTasks.filter(t => t.completed === completed)
+    return allTasks.filter(t => completed === 'all' || t.completed === completed)
     .filter(t => t.projectId === projectId)
   }
   return []

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router'
 
 class Filter extends React.Component {
 
-  state = { isOpen: false, id:1 }
+  state = { isOpen: false }
 
   componentWillReceiveProps(nextProps) {//切换到别的task时，不再展开
     if(this.props.location.pathname !== nextProps.location.pathname){
@@ -22,31 +22,31 @@ class Filter extends React.Component {
     this.setState({isOpen:!this.state.isOpen})
   }
 
-  handleListClick = ({ id,index,completed,search }) => {
-    this.setState({ id,isOpen:false })
-    this.props.changeTitle({completed,search})
+  handleListClick = (filter) => {
+    this.setState({ isOpen:false })
+    this.props.changeTitle(filter)
   }
 
   render() {
-    const { filterArray } = this.props
-    const array = filterArray.filter(arr => arr.id !== this.state.id)
-    const { name:title } = filterArray.find(arr => arr.id === this.state.id)
+    const { filterArray,titleId } = this.props
+    const array = filterArray.filter(arr => arr.id !== titleId)
+    const { name } = filterArray.find(arr => arr.id === titleId)
     // const arr = filterArray.find(arr => arr.id === titleId)
     //
     // console.log(title,titleId,arr);
     return (
       <div className="Filter">
         <header onClick={this.handleTitleClick}>
-          {title}
+          {name}
         </header>
         {
           this.state.isOpen &&
           <ul className='FilterList'>
             {
-              array.map(({ id,name,completed,search }) => {
+              array.map(filter => {
                 return (
-                  <li key={id} onClick={ _ => this.handleListClick({id,completed,search})}>
-                    {name}
+                  <li key={filter.id} onClick={ _ => this.handleListClick(filter)}>
+                    {filter.name}
                   </li>
                 )
               })
@@ -60,7 +60,7 @@ class Filter extends React.Component {
 }
 
 Filter.propTypes = {
-  // titleId: React.PropTypes.string.isRequired,
+  titleId: React.PropTypes.number.isRequired,
   filterArray: React.PropTypes.array.isRequired,
   changeTitle: React.PropTypes.func.isRequired,
 }

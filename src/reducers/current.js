@@ -26,3 +26,12 @@
 //       return state
 //   }
 // }
+
+export const completedTab = (state=1, action) => {
+  switch (action.type) {
+    case 'CHANGE_COMPLETED_TAB':
+      return action.id
+    default:
+      return state
+  }
+}

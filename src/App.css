@@ -13,7 +13,7 @@ a {
 }
 
 a.active {
-  color:
+  color: #55CFDE;
 }
 
 .App {
@@ -25,16 +25,16 @@ a.active {
   background-color: #2E3C54;
   width: 12rem;
   height: 100vh;
-  flex-shrink:
+  flex-shrink: 0;
 }
 
 .Sidebar .AddItemInput {
-  margin: 2rem 0 2rem 1rem
+  margin: 2rem 1rem;
 }
 
 .AddItemInput input {
-  height: 1.5rem;
   width: 8rem;
+  height: 1.5rem;
   font-size: 1rem;
 }
 
@@ -79,26 +79,35 @@ a.active {
 }
 
 .MainContent {
-  flex: 1;
+  width: 100%;
   display: flex;
+  flex-grow: 1;
+  justify-content: center;
 }
 
 .TaskPage {
+  flex: 0 2 60%;
   margin: 1rem;
-  padding: .5rem 1rem;
+  padding: 0 1rem;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .TaskTable {
-  /*width: 32rem;*/
+  width: 100%;
   border-collapse: collapse;
+}
+
+tbody {
+  display: flex;
+  flex-direction: column;
 }
 
 .TaskItem {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
+  flex-grow: 1;
 }
 
 /*.TaskItem:not(.TaskItemSelected):hover {
@@ -119,7 +128,7 @@ a.active {
   background-image: url('./images/check-hover.png');
 }
 
-.TaskItem.selected {
+.TaskItem--selected {
   border-top: 1px solid #55CFDE;
   border-bottom: 1px solid #55CFDE;
 }
@@ -136,8 +145,13 @@ a.active {
   color: #55CFDE;
 }
 
+.TaskTitle {
+  flex-grow: 2;
+  display: flex;
+}
+
 .TaskTitle input {
-  width: 38vw;
+  flex-grow: 1;
   height: 1.8rem;
   font-size: 1rem;
   border-style: none;
@@ -145,7 +159,7 @@ a.active {
   /*background-color: rgb(143, 213, 196);*/
 }
 
-.isTitle .TaskTitle input {
+.TaskItem--isTitle input {
   /*font-size: 1.3rem;*/
   font-weight: 600;
 }
@@ -155,17 +169,17 @@ a.active {
 }
 
 .AddItem {
-  width: 30rem;
   height: 2.2rem;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .DetailPage {
   margin: 1rem 0;
-  padding: .5rem 1rem;
+  padding: 0 1rem;
+  flex: 2 1 45%;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(0, 0, 0, 0.2);
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -177,31 +191,31 @@ a.active {
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.DetailPageTitle {
+.Editor__title {
   margin: 1rem auto .5rem;
   padding: 0 .5rem;
-  width: 32vw;
+  width: 90%;
   height: 1.8rem;
-  outline: none;
   border-style: none;
   font-size: 1.5rem;
   border: 1px solid white;
+  outline: none;
 }
 
-.DetailPageTitle:focus,.DetailPageTitle:hover {
+.Editor__title:focus,.Editor__title:hover {
   border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.DetailPageDetail {
+.Editor__detail {
   margin: .5rem auto;
   padding: .5rem;
-  width: 32vw;
+  width: 90%;
   min-height: 2rem;
   font-size: 1rem;
   outline: none;
   border: 1px solid white;
 }
 
-.DetailPageDetail:focus,.DetailPageDetail:hover {
+.Editor__detail:focus,.Editor__detail:hover {
   border: 1px solid rgba(0, 0, 0, 0.3);
 }

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router'
 // import { Switch,Route,Redirect } from 'react-router-dom'
 import TableFilter from './TableFilter'
 import TaskTable from './TaskTable'
+import AddItem from './AddItem'
 import { changeTaskOrder } from '../../actions'
 
 class TaskPage extends React.Component {
@@ -15,11 +16,12 @@ class TaskPage extends React.Component {
   render() {
     return (
       <div className='TaskPage'>
-        {this.props.match.params.id === '3' && <TableFilter />}
+        {this.props.match.params.id && <TableFilter />}
         <TaskTable
           onSortEnd={this.onSortEnd}
           useDragHandle
         />
+        <AddItem />
       </div>
     )
   }

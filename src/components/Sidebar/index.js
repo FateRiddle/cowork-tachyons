@@ -1,47 +1,62 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import AddItemInput from '../parts/AddItemInput'
 import { NavLink } from 'react-router-dom'
-import { addProject } from '../../actions'
+import { getAllProjects } from '../../reducers'
+import ProjectEditor from '../Pop/ProjectEditor'
 
-let Sidebar = ({
-  projects,
-  addProject,
-}) => {
-  return (
-    <div className="Sidebar">
-      <AddItemInput placeholder="new project" addItem={addProject} />
-      <ul className='ProjectList'>
-      {
-        projects.allIds
-        .map(id =>
-          <li key={id}>
-            <NavLink to={`/${id}/list`}
-            >
-              {projects.byId[id].title}
-            </NavLink>
-          </li>
-        )
-      }
-      </ul>
-    </div>
-  )
+class Sidebar extends React.Component {
+
+  state = { editorHidden:true,projectId:'' }
+
+  handleAddProjectClick = () => {
+    this.openProjectEditor()
+  }
+
+  openProjectEditor = (projectId='') => {
+    this.setState({ editorHidden:false,projectId })
+  }
+
+  render(){
+    const { editorHidden,projectId } = this.state
+    const { projects } = this.props
+    const project = projects.find(project => project.id === projectId) || {}
+    return (
+      <div className="Sidebar">
+        <ProjectEditor
+          project={project}
+          onClick={()=>this.setState({editorHidden:true})}
+          hidden={editorHidden}
+        />
+        <div>project<span onClick={this.handleAddProjectClick}>++++</span></div>
+        <ul className='ProjectList'>
+        {
+          projects.map(project =>
+            <li key={project.id}>
+              <NavLink to={`/${project.id}/list`}>
+                {project.title}
+              </NavLink>
+              <span
+                onClick={()=>{
+                  this.openProjectEditor(project.id)
+                }}
+              >++++</span>
+            </li>
+          )
+        }
+        </ul>
+      </div>
+    )
+  }
 }
 
 Sidebar.propTypes = {
-  projects: React.PropTypes.object.isRequired,
-  addProject: React.PropTypes.func.isRequired,
+  projects: React.PropTypes.array.isRequired,
 }
 
-const mapStateToProps = ({ projects }) => ({
-  projects,
-})
+const mapStateToProps = (state) => ({ projects:getAllProjects(state) })
 
 Sidebar = connect(
   mapStateToProps,
-  {
-    addProject,
-  }
 )(Sidebar)
 
 export default Sidebar

@@ -56,10 +56,10 @@ class TaskItem extends React.Component {
     const currentTask = this.props.match.params.taskId
     const { task } = this.props
     if(currentTask === task.id){
-      className += ' selected'
+      className += ' TaskItem--selected'
     }
     if(this.isTitle(task)){
-      className += ' isTitle'
+      className += ' TaskItem--isTitle'
     }
     return className
   }

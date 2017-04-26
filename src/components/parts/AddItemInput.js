@@ -2,12 +2,7 @@ import React from 'react'
 
 class AddItemInput extends React.Component {
 
-  constructor(props){
-    super(props)
-    this.handleAddItem = this.handleAddItem.bind(this)
-  }
-
-  handleAddItem(){
+  handleAddItem = () => {
     this.props.addItem(this.input.value)
     this.input.value = ''
   }

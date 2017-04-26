@@ -35,14 +35,14 @@ class Editor extends React.Component {
           dropArray={projectArray}
           changeTitle={this.changeProject}
         />
-        <input className='DetailPageTitle'
+        <input className='Editor__title'
           value={title||''}
           placeholder='标题'
           onChange={e => this.canEdit() && editTaskTitle(e.target.value,currentTask)}
         />
 
         <AutoResizingTextarea
-          className="DetailPageDetail"
+          className="Editor__detail"
           lineHeight={18}
           placeholder="描述"
         />
