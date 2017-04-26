@@ -5,6 +5,7 @@ import { SortableElement,SortableHandle } from 'react-sortable-hoc'
 import * as actions from '../../actions'
 import { me } from '../../data'
 import { isEmpty } from 'lodash'
+import AssignTab from './AssignTab'
 
 const DragHandle = SortableHandle(({ show }) => <td className='DragHandle'>
   {show?'::':''}
@@ -167,7 +168,7 @@ class TaskItem extends React.Component {
           }
           {
             currentProject === me.id?null:
-            <span>Assign</span>
+            <AssignTab taskId={id} />
           }
         </td>
       </tr>

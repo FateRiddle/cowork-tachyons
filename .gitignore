@@ -16,4 +16,4 @@ npm-debug.log
 
 # private
 memo.js
-server
+/server/db.js

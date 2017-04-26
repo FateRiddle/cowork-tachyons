@@ -14,14 +14,9 @@ export const deleteProject = (id) => ({
   id,
 })
 
-export const editProjectTitle = (title,id) => ({
-  type: 'EDIT_PROJECT_TITLE',
+export const editProject = (title,group,id) => ({  //group is array of userIds
+  type: 'EDIT_PROJECT',
   title,
-  id,
-})
-
-export const editProjectGroup = (group,id) => ({  //group is array of userIds
-  type: 'EDIT_PROJECT_GROUP',
   group,
   id,
 })

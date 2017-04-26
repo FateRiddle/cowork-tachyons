@@ -5,9 +5,7 @@ const path = require('path');
 
 const app = express();
 
-const sql = require('mssql');
-
-const db = sql.connect("mssql://youcb:DJit9379@youcaibao.sqlserver.rds.aliyuncs.com:3433/youcb_dev")
+const { sql,db } = require('./db.js');
 
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));

@@ -19,14 +19,32 @@ const app = combineReducers({
 
 export default app
 
+//all the selectors
+
 const getAlltasks = ({ tasks }) =>
   tasks.allIds.map(id => tasks.byId[id])
+
+export const getTaskById = (state,taskId) =>
+  getAlltasks(state).find(task => task.id === taskId)
 
 export const getAllProjects = ({ projects }) =>
   projects.allIds.map(id => projects.byId[id])
 
+const getProjectById = (state,projectId) =>
+  getAllProjects(state).find(project => project.id === projectId)
+
 export const getAllUsers = ({ users }) =>
   users.allIds.map(id => users.byId[id])
+
+export const getUserById = (state,userId) =>
+  getAllUsers(state).find(user => user.id === userId)
+
+export const getUserByTask = (state,taskId) => {   //users in the group of a project that task belong to
+  const { projectId } = getTaskById(state,taskId)
+  const group = getProjectById(state,projectId).group || []
+  return getAllUsers(state).filter(user => group.indexOf(user.id) > -1)
+}
+
 
 export const getGroupUsers = (state,group) => //group of userIds
   getAllUsers(state).filter(user => group.indexOf(user.id) > -1)

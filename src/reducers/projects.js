@@ -4,8 +4,7 @@ import project from './project'
 const byId = (state = {}, action) => {
   switch (action.type) {
     case "ADD_PROJECT":
-    case "EDIT_PROJECT_TITLE":
-    case "EDIT_PROJECT_GROUP":
+    case "EDIT_PROJECT":
     case "ADD_USER_TO_PROJECT":
     case "REMOVE_USER_FROM_PROJECT":
       return {

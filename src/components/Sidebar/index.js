@@ -2,11 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { getAllProjects } from '../../reducers'
+import { addProject } from '../../actions'
 import ProjectEditor from '../Pop/ProjectEditor'
 
 class Sidebar extends React.Component {
 
-  state = { editorHidden:true,projectId:'' }
+  state = { editorHidden:true,projectId:'' } //which project to pass into ProjectEditor
 
   handleAddProjectClick = () => {
     this.openProjectEditor()
@@ -24,10 +25,10 @@ class Sidebar extends React.Component {
       <div className="Sidebar">
         <ProjectEditor
           project={project}
-          onClick={()=>this.setState({editorHidden:true})}
+          closeWindow={()=>this.setState({editorHidden:true})}
           hidden={editorHidden}
         />
-        <div>project<span onClick={this.handleAddProjectClick}>++++</span></div>
+        <div>project<span onClick={this.handleAddProjectClick}>++</span></div>
         <ul className='ProjectList'>
         {
           projects.map(project =>
@@ -39,7 +40,7 @@ class Sidebar extends React.Component {
                 onClick={()=>{
                   this.openProjectEditor(project.id)
                 }}
-              >++++</span>
+              >++</span>
             </li>
           )
         }
@@ -56,7 +57,7 @@ Sidebar.propTypes = {
 const mapStateToProps = (state) => ({ projects:getAllProjects(state) })
 
 Sidebar = connect(
-  mapStateToProps,
+  mapStateToProps, { addProject }
 )(Sidebar)
 
 export default Sidebar

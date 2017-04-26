@@ -56,6 +56,15 @@ a.active {
   color: #55CFDE;
 }
 
+.Pop {
+  position: fixed;
+  padding: 1rem;
+  background: lightblue;
+  min-height: 15rem;
+  top:30%;
+  left:30%;
+}
+
 .AppContent {
   flex: 1;
   display: flex;

@@ -2,25 +2,36 @@ import React from 'react'
 import Pop from '../Pop'
 import { connect } from 'react-redux'
 import * as actions from '../../actions'
-import { getGroupUsers,getAllUsers } from '../../reducers'
+import { getAllUsers } from '../../reducers'
 import { isEmpty } from 'lodash'
 
 class ProjectEditor extends React.Component {
 
-  state = { alertText: '',userListHidden:true }
+  state = { alertText: '',userListHidden:true, group:[] }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.props.hidden && !nextProps.hidden){
+      this.setState({group:nextProps.project.group || []})
+    }
+  }
 
   addUser = (id) => {
-    const projectId = this.props.project.id
-    this.props.addUserToProject(id,projectId)
+    this.setState({
+      group:[
+        ...this.state.group,
+        id
+      ]
+    })
   }
 
   removeUser = (id) => {
-    const projectId = this.props.project.id
-    this.props.removeUserFromProject(id,projectId)
+    this.setState({
+      group:this.state.group.filter(userId => userId !== id)
+    })
   }
 
   handleOKClick = () => {
-    const { project,onClick,editProjectTitle,editProjectGroup,addProject } = this.props   //必须要
+    const { project,closeWindow,editProject,addProject } = this.props   //必须要
     const title = this.titleDOM.value
     if(title === ''){
       this.setState({alertText:'请填写项目名'})
@@ -29,46 +40,46 @@ class ProjectEditor extends React.Component {
     this.setState({alertText:'',userListHidden:true})
 
     if(isEmpty(project)){  //说明是添加的新项目
-      addProject(title,project.group)
-      onClick()
+      addProject(title,this.state.group)
+      closeWindow()
       return
     }
 
-    editProjectTitle(this.titleDOM.value,project.id)
-    editProjectGroup(this.state.group,project.id)
-    onClick()
+    editProject(this.titleDOM.value,this.state.group,project.id)
+    closeWindow()
     return
   }
 
   children = () => {
-    const { userListHidden } = this.state
-    const { restOfUsers,groupUsers,project } = this.props
+    const { userListHidden,group,alertText } = this.state
+    const { allUsers,project } = this.props
+    const groupUsers = allUsers.filter(u => group.indexOf(u.id) > -1)
+    const restOfUsers = allUsers.filter(u => group.indexOf(u.id) === -1)
     return (
       <div className="ProjectEditor">
         <input placeholder="project name" defaultValue={project.title} ref={node=>this.titleDOM=node} />
-        <div className="ProjectEditor__Alert">{this.state.alertText}</div>
+        <div className="ProjectEditor__alert">{alertText}</div>
         {
           userListHidden? <div onClick={()=>this.setState({userListHidden:false})}>user+</div>:
           <div onClick={()=>this.setState({userListHidden:true})}>fold</div>
         }
 
-        <ul className="ProjectEditor__UserList">
+        <ul className="ProjectEditor__userList">
           {
             !userListHidden &&
             restOfUsers.map(user => (
               <li key={user.id}>
-                <span>{user.name}</span>
-                <span onClick={() => this.addUser(user.id)}>+</span>
+                <span onClick={() => this.addUser(user.id)}>{user.name}</span>
               </li>
             ))
           }
         </ul>
-        <ul className="ProjectEditor__Group">
+        <div>group:</div>
+        <ul className="ProjectEditor__group">
           {
             groupUsers.map(user => (
               <li key={user.id}>
-                <span>{user.name}</span>
-                <span onClick={() => this.removeUser(user.id)}>-</span>
+                <span onClick={() => this.removeUser(user.id)}>{user.name}</span>
               </li>
             ))
           }
@@ -78,11 +89,12 @@ class ProjectEditor extends React.Component {
   }
 
   render() {
-    const { hidden } = this.props
+    const { hidden,closeWindow } = this.props
     return (
       <Pop
         hidden={hidden}
-        onClick={this.handleOKClick}
+        onOKClick={this.handleOKClick}
+        onCancelClick={closeWindow}
         children={this.children()}
       />
     )
@@ -95,13 +107,12 @@ ProjectEditor.PropTypes = {
   onClick: React.PropTypes.func.isRequired,
 }
 
-const mapStateToProps = (state,{ project }) => {
-  const group = project.group || [] //if project is empty when you wann create a new one
+const mapStateToProps = (state) => {
+  // const group = project.group || [] //if project is empty when you wann create a new one
   const allUsers = getAllUsers(state)
-  const restOfUsers = allUsers.filter(user => group.indexOf(user.id) === -1)
+  // const restOfUsers = allUsers.filter(user => group.indexOf(user.id) === -1)
   return {
-    restOfUsers,
-    groupUsers: getGroupUsers(state,group)
+    allUsers
   }
 }
 

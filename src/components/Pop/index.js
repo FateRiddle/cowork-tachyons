@@ -3,12 +3,13 @@ import React from 'react'
 class Pop extends React.Component {
 
   render() {
-    const { hidden,onClick,children } = this.props
+    const { hidden,children,onCancelClick,onOKClick } = this.props
     return (
       !hidden &&
       <div className="Pop">
         {children}
-        <div className='Pop__button' onClick={onClick}>OK</div>
+        <div className='Pop__button' onClick={onOKClick}>OK</div>
+        <div className='Pop__button' onClick={onCancelClick}>Cancel</div>
       </div>
     )
   }
@@ -16,7 +17,8 @@ class Pop extends React.Component {
 
 Pop.propTypes = {
   hidden: React.PropTypes.bool.isRequired,
-  onClick: React.PropTypes.func.isRequired,
+  onOKClick: React.PropTypes.func.isRequired,
+  onCancelClick: React.PropTypes.func.isRequired,
   children: React.PropTypes.element,
 }
 

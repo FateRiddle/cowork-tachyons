@@ -12,4 +12,6 @@ export const search = (state={}, action) => {
 //   createdBy:me.id,
 //   createdAt:'',
 //   dueAt:'',
+//   projectId:'',
+//   completed:'all',
 // }
