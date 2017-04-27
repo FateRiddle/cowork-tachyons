@@ -26,6 +26,23 @@ a.active {
   width: 12rem;
   height: 100vh;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.Sidebar--hidden {
+  display: none;
+}
+
+.Sidebar__closeButton {
+  position: absolute;
+  color: #A2B4BC;
+  align-self: flex-end;
+  padding: 0.5rem 0.5rem 0 0
+}
+
+.Sidebar__closeButton:hover {
+  color: white;
 }
 
 .Sidebar .AddItemInput {
@@ -79,11 +96,17 @@ a.active {
   align-items: center;
 }
 
-.Headbar a {
+.Headbar__openSidebar {
+  align-self: flex-start;
+  padding: 0.5rem 0 0 0.5rem;
+  position: absolute;
+}
+
+.Headbar__myTask {
   margin: 0 5rem
 }
 
-.Headbar a.active {
+.Headbar__myTask--active {
   color: #55CFDE;
 }
 

@@ -24,7 +24,8 @@ class AddItem extends React.Component {
 
   focusLast = () => {
     const { tasks,history } = this.props
-    const lastId = tasks[tasks.length-1]
+    const lastId = tasks[tasks.length-1].id
+    console.log(lastId);
     history.push(`${lastId}`)
   }
 

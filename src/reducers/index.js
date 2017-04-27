@@ -7,6 +7,7 @@ import { search } from './search'
 import { completed } from './completed'
 import { completedTab } from './current'
 import { isEmpty } from 'lodash'
+import { sidebarHidden } from './visualStates'
 
 const app = combineReducers({
   projects,
@@ -15,6 +16,7 @@ const app = combineReducers({
   completed,
   search,
   completedTab,
+  sidebarHidden,
 })
 
 export default app
@@ -30,7 +32,7 @@ export const getTaskById = (state,taskId) =>
 export const getAllProjects = ({ projects }) =>
   projects.allIds.map(id => projects.byId[id])
 
-const getProjectById = (state,projectId) =>
+export const getProjectById = (state,projectId) =>
   getAllProjects(state).find(project => project.id === projectId)
 
 export const getAllUsers = ({ users }) =>
@@ -40,14 +42,12 @@ export const getUserById = (state,userId) =>
   getAllUsers(state).find(user => user.id === userId)
 
 export const getUserByTask = (state,taskId) => {   //users in the group of a project that task belong to
-  const { projectId } = getTaskById(state,taskId)
-  const group = getProjectById(state,projectId).group || []
-  return getAllUsers(state).filter(user => group.indexOf(user.id) > -1)
+
+  const { projectId } = getTaskById(state,taskId) || ''  //a task can have no project
+  const { group } = getProjectById(state,projectId) || ''
+  const groupUsers = group || []
+  return getAllUsers(state).filter(user => groupUsers.indexOf(user.id) > -1)
 }
-
-
-export const getGroupUsers = (state,group) => //group of userIds
-  getAllUsers(state).filter(user => group.indexOf(user.id) > -1)
 
 export const getFilteredTasks = (state,projectId) => {
   const allTasks = getAlltasks(state)

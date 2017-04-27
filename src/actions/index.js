@@ -167,3 +167,9 @@ export const changeCompletedTab = (id) => ({
   type:"CHANGE_COMPLETED_TAB",
   id,
 })
+
+//visual changing actions
+
+export const toggleSidebar = () => ({
+  type: 'TOGGLE_SIDEBAR',
+})

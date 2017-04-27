@@ -17,7 +17,7 @@ class App extends React.Component {
       <div className='App'>
         <Route component={Sidebar} />
         <div className='AppContent'>
-          <Headbar />
+          <Route component={Headbar} />
           <Switch>
             <Route exact path='/search/:searchId/list' component={MainContent} />
             <Route exact path='/search/:searchId/:taskId' component={MainContent} />

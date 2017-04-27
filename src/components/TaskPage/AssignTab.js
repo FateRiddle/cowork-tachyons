@@ -26,7 +26,7 @@ class AssignTab extends React.Component {
         <span>{task.assignee?user.name:'assign'}</span>
         {
           !this.state.hidden && (
-            <ul className='dropList'>
+            <ul className='AssignTab__dropList'>
               {
                 groupUsers.map(user => (
                   <li key={user.id}

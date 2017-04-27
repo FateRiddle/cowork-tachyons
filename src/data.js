@@ -1,5 +1,5 @@
 //Login data:
-export const me = {name:"Fate Riddle",id:"3",psw:"123123"}
+export const me = {name:"Riddle",id:"3",psw:"123123"}
 
 export const persistedState = {
   projects:{

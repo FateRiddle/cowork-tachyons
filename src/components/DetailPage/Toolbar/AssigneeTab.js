@@ -2,17 +2,20 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { editTaskAssignee } from '../../../actions'
-import { getAllUsers } from '../../../reducers'
+import { getUserByTask,getTaskById,getUserById } from '../../../reducers'
 import Drop from '../../parts/Drop'
+import { me } from '../../../data'
 
 class AssigneeTab extends React.Component {
+
   render(){
-    const { assignee,allUsers,currentTask } = this.props
-    const users = [...allUsers,{name:'nobody',id:''}] //add this to match when task is assigned to nobody
+    const { assigneeName,users,currentTask } = this.props
+    const userArray = [...users,me,{id:'',name:'nobody'}] //add this to match when task is assigned to nobody
     return (
       <Drop
-        titleId={assignee || ''}
-        dropArray={users}
+        className="Drop__assignee"
+        title={assigneeName || 'assign'}
+        dropArray={userArray}
         changeTitle={userId => this.props.editTaskAssignee(userId,currentTask)}
       />
     )
@@ -20,13 +23,14 @@ class AssigneeTab extends React.Component {
 }
 
 const mapStateToProps = (state,{ match }) => {
-  const allUsers = getAllUsers(state)
   const currentTask = match.params.taskId
-  const { assignee } = state.tasks.byId[currentTask] || '' //in case it is undefined
+  const users = getUserByTask(state,currentTask)
+  const { assignee } = getTaskById(state,currentTask) || {} //in case it is undefined
+  const { name:assigneeName } = getUserById(state,assignee) || {}
   return {
-    allUsers,
+    users,
     currentTask,
-    assignee,
+    assigneeName,
   }
 }
 

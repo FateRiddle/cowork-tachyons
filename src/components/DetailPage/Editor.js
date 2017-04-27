@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 import { editTaskTitle } from '../../actions'
 import AutoResizingTextarea from '../parts/AutoResizingTextarea'
 import Drop from '../parts/Drop'
-import { getAllProjects } from '../../reducers'
+import { getAllProjects,getTaskById,getProjectById } from '../../reducers'
 import { editTaskProject } from  '../../actions'
 import { isEmpty } from 'lodash'
 
@@ -21,22 +21,22 @@ class Editor extends React.Component {
   }
 
   render() {
-    const { currentTask,task,allProjects,
+    const { currentTask,task,allProjects,projectName,
       editTaskTitle,
     } = this.props
-    const { title,projectId } = task || ''
     let projectArray = allProjects.map( project => ({name:project.title,id:project.id}) )
     projectArray = [...projectArray, {name:'No Project',id:''}]
     // console.log(projectArray);
     return (
       <div className='Editor'>
         <Drop
-          titleId={projectId || ''}
+          className="Drop__project"
+          title={projectName || 'No project'}
           dropArray={projectArray}
           changeTitle={this.changeProject}
         />
         <input className='Editor__title'
-          value={title||''}
+          value={task.title||''}
           placeholder='标题'
           onChange={e => this.canEdit() && editTaskTitle(e.target.value,currentTask)}
         />
@@ -52,14 +52,15 @@ class Editor extends React.Component {
 }
 
 const mapStateToProps = (state,{ match }) => {
-  const { tasks } = state
   const allProjects = getAllProjects(state)
   const currentTask = match.params.taskId
-  const task = tasks.byId[currentTask]
+  const task = getTaskById(state,currentTask) || {}
+  const { title } = getProjectById(state,task.projectId) || {}
   return {
     allProjects,
     task,
     currentTask,
+    projectName: title || 'No Project',
     completed: state.completed,
     search: state.search,
   }

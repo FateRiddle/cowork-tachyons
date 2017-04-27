@@ -3,6 +3,7 @@
 
 import React from 'react'
 import { withRouter } from 'react-router'
+import classnames from 'classnames'
 
 class Drop extends React.Component {
 
@@ -24,14 +25,9 @@ class Drop extends React.Component {
   }
 
   render() {
-    const { titleId,dropArray } = this.props
-    const array = dropArray.filter(arr => arr.id !== titleId)
-    const { name:title } = dropArray.find(arr => arr.id === titleId)
-    // const arr = dropArray.find(arr => arr.id === titleId)
-    //
-    // console.log(title,titleId,arr);
+    const { title,dropArray,className } = this.props
     return (
-      <div className="Drop">
+      <div className={classnames("Drop",className)}>
         <header onClick={this.handleTitleClick}>
           {title}
         </header>
@@ -39,7 +35,7 @@ class Drop extends React.Component {
           this.state.isOpen &&
           <ul className='DropList'>
             {
-              array.map(({ name,id },index) => {
+              dropArray.map(({ name,id },index) => {
                 return (
                   <li key={index} onClick={ _ => this.handleListClick(id)}>
                     {name}
@@ -56,9 +52,10 @@ class Drop extends React.Component {
 }
 
 Drop.propTypes = {
-  titleId: React.PropTypes.string.isRequired, // if nothing: ''
+  title: React.PropTypes.string.isRequired, // if nothing: ''
   dropArray: React.PropTypes.array.isRequired,
   changeTitle: React.PropTypes.func.isRequired,
+  className: React.PropTypes.string,
 }
 
 Drop = withRouter(Drop)
