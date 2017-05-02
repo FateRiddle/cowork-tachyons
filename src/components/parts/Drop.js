@@ -28,12 +28,12 @@ class Drop extends React.Component {
     const { title,dropArray,className } = this.props
     return (
       <div className={classnames("Drop",className)}>
-        <header onClick={this.handleTitleClick}>
+        <header className='Drop__head' onClick={this.handleTitleClick}>
           {title}
         </header>
         {
           this.state.isOpen &&
-          <ul className='DropList'>
+          <ul className='Drop__list'>
             {
               dropArray.map(({ name,id },index) => {
                 return (

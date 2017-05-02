@@ -3,6 +3,7 @@
 
 import React from 'react'
 import { withRouter } from 'react-router'
+import classnames from 'classnames'
 
 class Filter extends React.Component {
 
@@ -35,13 +36,13 @@ class Filter extends React.Component {
     //
     // console.log(title,titleId,arr);
     return (
-      <div className="Filter">
+      <div className={classnames("Filter",this.props.className)}>
         <header onClick={this.handleTitleClick}>
           {name}
         </header>
         {
           this.state.isOpen &&
-          <ul className='FilterList'>
+          <ul className='Drop__list'>
             {
               array.map(filter => {
                 return (
@@ -63,6 +64,7 @@ Filter.propTypes = {
   titleId: React.PropTypes.number.isRequired,
   filterArray: React.PropTypes.array.isRequired,
   changeTitle: React.PropTypes.func.isRequired,
+  className: React.PropTypes.string,
 }
 
 Filter = withRouter(Filter)

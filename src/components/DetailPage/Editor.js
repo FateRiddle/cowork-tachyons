@@ -26,7 +26,7 @@ class Editor extends React.Component {
     } = this.props
     let projectArray = allProjects.map( project => ({name:project.title,id:project.id}) )
     projectArray = [...projectArray, {name:'No Project',id:''}]
-    // console.log(projectArray);
+
     return (
       <div className='Editor'>
         <Drop

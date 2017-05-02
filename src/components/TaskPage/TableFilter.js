@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import Filter from '../parts/Filter'
-import { me } from '../../data'
 import { changeFilter,changeCompletedTab } from '../../actions'
 import { completedTabs } from '../../data'
 
@@ -15,7 +14,7 @@ class TableFilter extends React.Component {
 
   render() {
     return (
-      <Filter className='tableFilter'
+      <Filter className='TableFilter'
         titleId={this.props.completedTab}
         filterArray={completedTabs}
         changeTitle={this.changeTitle}

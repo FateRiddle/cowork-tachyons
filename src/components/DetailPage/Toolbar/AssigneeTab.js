@@ -10,7 +10,12 @@ class AssigneeTab extends React.Component {
 
   render(){
     const { assigneeName,users,currentTask } = this.props
-    const userArray = [...users,me,{id:'',name:'nobody'}] //add this to match when task is assigned to nobody
+    let userArray = []
+    if(users.length > 0){
+      userArray = [...users,{id:'',name:'nobody'}] //add this to match when task is assigned to nobody
+    } else {
+      userArray = [me,{id:'',name:'nobody'}] //if task is created without a project, it can still assign to me.
+    }
     return (
       <Drop
         className="Drop__assignee"

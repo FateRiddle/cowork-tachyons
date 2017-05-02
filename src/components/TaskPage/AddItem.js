@@ -25,13 +25,11 @@ class AddItem extends React.Component {
   focusLast = () => {
     const { tasks,history } = this.props
     const lastId = tasks[tasks.length-1].id
-    console.log(lastId);
     history.push(`${lastId}`)
   }
 
   render(){
     const { tasks } = this.props
-    // console.log(num);
     let msg = ''
     if(this.isActive()){
       if (tasks.length === 0){

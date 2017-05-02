@@ -14,9 +14,11 @@ class TaskPage extends React.Component {
   }//拖拽的lib要求的方法
 
   render() {
+    const projectId = this.props.match.params.id
+    //如果是search，params里有searchId但没有id（不用projectId是因为assignee，比如my task也使用这个id），search的结果不带<TableFilter />
     return (
       <div className='TaskPage'>
-        {this.props.match.params.id && <TableFilter />}
+        {projectId && <TableFilter />}
         <TaskTable
           onSortEnd={this.onSortEnd}
           useDragHandle

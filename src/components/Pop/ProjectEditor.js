@@ -37,6 +37,10 @@ class ProjectEditor extends React.Component {
       this.setState({alertText:'请填写项目名'})
       return
     }
+    if(this.state.group.length === 0){
+      this.setState({alertText:'項目組至少要有一人'})
+      return
+    }
     this.setState({alertText:'',userListHidden:true})
 
     if(isEmpty(project)){  //说明是添加的新项目
@@ -50,6 +54,11 @@ class ProjectEditor extends React.Component {
     return
   }
 
+  handleCancelClick = () => {
+    this.setState({alertText:'',userListHidden:true})
+    this.props.closeWindow()
+  }
+
   children = () => {
     const { userListHidden,group,alertText } = this.state
     const { allUsers,project } = this.props
@@ -59,23 +68,27 @@ class ProjectEditor extends React.Component {
       <div className="ProjectEditor">
         <input placeholder="project name" defaultValue={project.title} ref={node=>this.titleDOM=node} />
         <div className="ProjectEditor__alert">{alertText}</div>
+        <div className='ProjectEditor__label'
+          onClick={()=>this.setState({userListHidden:!userListHidden})}>
+          user
+          <span className='addIcon'>{userListHidden?'+':'-'}</span>
+        </div>
         {
-          userListHidden? <div onClick={()=>this.setState({userListHidden:false})}>user+</div>:
-          <div onClick={()=>this.setState({userListHidden:true})}>fold</div>
+          !userListHidden &&
+          <ul className="ProjectEditor__userList">
+            {
+              !userListHidden &&
+              restOfUsers.map(user => (
+                <li key={user.id}>
+                  <span onClick={() => this.addUser(user.id)}>{user.name}</span>
+                </li>
+              ))
+            }
+          </ul>
         }
 
+        <div className='ProjectEditor__label'>group:</div>
         <ul className="ProjectEditor__userList">
-          {
-            !userListHidden &&
-            restOfUsers.map(user => (
-              <li key={user.id}>
-                <span onClick={() => this.addUser(user.id)}>{user.name}</span>
-              </li>
-            ))
-          }
-        </ul>
-        <div>group:</div>
-        <ul className="ProjectEditor__group">
           {
             groupUsers.map(user => (
               <li key={user.id}>
@@ -89,12 +102,12 @@ class ProjectEditor extends React.Component {
   }
 
   render() {
-    const { hidden,closeWindow } = this.props
+    const { hidden } = this.props
     return (
       <Pop
         hidden={hidden}
         onOKClick={this.handleOKClick}
-        onCancelClick={closeWindow}
+        onCancelClick={this.handleCancelClick}
         children={this.children()}
       />
     )

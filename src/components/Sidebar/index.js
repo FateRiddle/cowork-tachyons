@@ -21,7 +21,6 @@ class Sidebar extends React.Component {
   }
 
   isLinkActive = (match,location) => {
-    console.log(match,location);
     if(match){
       return true
     }
@@ -45,22 +44,26 @@ class Sidebar extends React.Component {
           closeWindow={()=>this.setState({editorHidden:true})}
           hidden={editorHidden}
         />
-        <div>project<span onClick={this.handleAddProjectClick}>++</span></div>
-        <ul className='ProjectList'>
+        <div className='Sidebar__addProject'>
+          project
+          <span className='addIcon Sidebar__headerAddIcon'
+            onClick={this.handleAddProjectClick}>+</span>
+        </div>
+        <ul className='Sidebar__projectList'>
         {
           projects.map(project =>
             <li key={project.id}>
               <NavLink
-                to={`/${project.id}/list`}
+                to={`/${project.id}`}
                 isActive={this.isLinkActive}
               >
                 {project.title}
               </NavLink>
-              <span
+              <span className='addIcon'
                 onClick={()=>{
                   this.openProjectEditor(project.id)
                 }}
-              >++</span>
+              >+</span>
             </li>
           )
         }

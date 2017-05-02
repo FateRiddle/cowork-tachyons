@@ -45,6 +45,34 @@ a.active {
   color: white;
 }
 
+.Sidebar__addProject {
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;
+  padding-left: 1rem;
+  color:orange;
+  font-size: 1.2rem;
+}
+
+
+.addIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: orange;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-left: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.Sidebar__headerAddIcon {
+  margin-left: 0.5rem;
+  border: 2px solid orange;
+  border-radius: 50%;
+}
+
 .Sidebar .AddItemInput {
   margin: 2rem 1rem;
 }
@@ -55,14 +83,15 @@ a.active {
   font-size: 1rem;
 }
 
-.Sidebar ul {
+.Sidebar__projectList {
   display: flex;
   flex-direction: column;
   list-style-type: none;
 }
 
-.Sidebar ul li {
-  margin: .5rem .5rem;
+.Sidebar__projectList li {
+  padding-top: 1rem;
+  padding-left: 1.5rem;
 }
 
 .Sidebar a {
@@ -73,13 +102,63 @@ a.active {
   color: #55CFDE;
 }
 
-.Pop {
+.Pop__mask {
   position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Pop {
+  background: rgba(0,0,0,0.1);
   padding: 1rem;
-  background: lightblue;
-  min-height: 15rem;
-  top:30%;
-  left:30%;
+  min-height: 20rem;
+  min-width: 20rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.Pop__button {
+  width: 30%;
+  text-align: center;
+  background: orange;
+  align-self: flex-end;
+  height: 1.5rem;
+  color: white;
+}
+
+.ProjectEditor {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ProjectEditor__label {
+  height: 3rem;
+  line-height: 3rem;
+}
+
+.ProjectEditor input {
+  max-width: 18rem;
+  height: 1.4rem;
+}
+
+.ProjectEditor__userList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ProjectEditor__userList li {
+  border: 1px solid white;
+  margin: 0.2rem;
+  padding: 0.2rem;
 }
 
 .AppContent {
@@ -110,6 +189,10 @@ a.active {
   color: #55CFDE;
 }
 
+.Searchbar input {
+  height: 1.4rem;
+}
+
 .MainContent {
   width: 100%;
   display: flex;
@@ -123,6 +206,26 @@ a.active {
   padding: 0 1rem;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.TableFilter {
+  height: 2rem;
+}
+
+.Drop__list {
+  position: absolute;
+  background: white;
+  border: 1px solid grey;
+  min-width: 4rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Drop__list li{
+  padding: 0.3rem;
 }
 
 .TaskTable {
@@ -150,14 +253,14 @@ tbody {
 .CheckIcon {
   width: 2rem;
   height: 2rem;
-  background-image: url('./images/check.png');
-  background-size: 1.4rem 1.4rem;
-  background-repeat: no-repeat;
-  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.CheckIcon:hover {
-  background-image: url('./images/check-hover.png');
+.CheckIcon img {
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .TaskItem--selected {
@@ -177,12 +280,12 @@ tbody {
   color: #55CFDE;
 }
 
-.TaskTitle {
+.TaskItem__title {
   flex-grow: 2;
   display: flex;
 }
 
-.TaskTitle input {
+.TaskItem__title input {
   flex-grow: 1;
   height: 1.8rem;
   font-size: 1rem;
@@ -196,8 +299,14 @@ tbody {
   font-weight: 600;
 }
 
-.TaskItem span {
-  padding: 0 1rem;
+.TaskItem__dueAt {
+  display: flex;
+  align-items: center;
+  padding: 0 0.2rem;
+}
+
+.AssignTab__head {
+  padding: 0.2rem;
 }
 
 .AddItem {
@@ -217,17 +326,37 @@ tbody {
 }
 
 .Toolbar {
-  padding: .5rem 2rem;
   display: flex;
   align-items: center;
+  padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+.Drop__assignee {
+  min-width: 5rem;
+  text-align: center;
+}
+
+.Toolbar__closeButton {
+  position: absolute;
+  right: 1rem;
+  align-self: flex-start;
+}
+
+.Editor {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0.5rem;
+}
+
+.Drop__project {
+
+}
+
 .Editor__title {
-  margin: 1rem auto .5rem;
-  padding: 0 .5rem;
+  margin-top: 1rem;
+  padding: .3rem .5rem;
   width: 90%;
-  height: 1.8rem;
   border-style: none;
   font-size: 1.5rem;
   border: 1px solid white;
@@ -239,11 +368,11 @@ tbody {
 }
 
 .Editor__detail {
-  margin: .5rem auto;
+  margin-top: 1rem;
   padding: .5rem;
   width: 90%;
-  min-height: 2rem;
-  font-size: 1rem;
+  min-height: 5rem;
+  font-size: 1.2rem;
   outline: none;
   border: 1px solid white;
 }

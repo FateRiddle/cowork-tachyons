@@ -7,7 +7,7 @@ import DueDateTab from './DueDateTab'
 class Toolbar extends React.Component {
 
   close = () => {
-    this.props.history.push('list')
+    this.props.history.push('')
   }
 
   render(){
@@ -15,7 +15,7 @@ class Toolbar extends React.Component {
     return <div className='Toolbar'>
       <AssigneeTab />
       <DueDateTab />
-      <button onClick={this.close}>X</button>
+      <div className='Toolbar__closeButton' onClick={this.close}>X</div>
     </div>
   }
 }

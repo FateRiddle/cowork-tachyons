@@ -5,6 +5,7 @@ import { SortableElement,SortableHandle } from 'react-sortable-hoc'
 import * as actions from '../../actions'
 import { me } from '../../data'
 import { isEmpty } from 'lodash'
+import CheckIcon from './CheckIcon'
 import AssignTab from './AssignTab'
 
 const DragHandle = SortableHandle(({ show }) => <td className='DragHandle'>
@@ -66,12 +67,20 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
+    console.log('haha');
     this.props.toggleTask(id)
   }
 
   handleLineClick = () => {
-    const { task:{ id },history } = this.props
-    history.push(`${id}`)
+    const { history,match } = this.props
+    const { id:projectId,searchId } = match.params
+    const taskId = this.props.task.id
+    if(projectId){
+      history.push(`/${projectId}/${taskId}`)
+    }
+    if(searchId){
+      history.push(`/search/${searchId}/${taskId}`)
+    }
   }
 
   handleTitleChange = e => {
@@ -153,9 +162,12 @@ class TaskItem extends React.Component {
       >
         <DragHandle show={this.state.mouseOn||currentTask === id} />
         {
-          isTitle?null:<td className="CheckIcon" onClick={()=>this.handleCheckIconClick(id)}></td>
+          !isTitle &&
+          <CheckIcon completed={task.completed === 'completed'}
+            onClick={()=>this.handleCheckIconClick(id)}
+          />
         }
-        <td className='TaskTitle'>
+        <td className='TaskItem__title'>
           <input value={task.title || ''}
             ref={node => this.input = node}
             onClick={this.handleLineClick}
@@ -163,11 +175,13 @@ class TaskItem extends React.Component {
             onKeyDown={this.handleKeyDown}
           />
           {
-            isTitle?null:
-            <span>{task.dueDate?task.dueDate.format('MM-DD'):''}</span>
+            !isTitle &&
+            <span className='TaskItem__dueAt'>
+              {task.dueDate?task.dueDate.format('MM-DD'):''}
+            </span>
           }
           {
-            currentProject === me.id?null:
+            currentProject !== me.id &&
             <AssignTab taskId={id} />
           }
         </td>

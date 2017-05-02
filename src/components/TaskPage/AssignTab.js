@@ -8,7 +8,7 @@ class AssignTab extends React.Component {
   state = { hidden:true }
 
   toggleList = () => {
-    this.setState({hidden:!this.state.hidden},()=>{console.log(this.state)})
+    this.setState({hidden:!this.state.hidden})
   }
 
   handleListClick = (assignee) => {
@@ -18,15 +18,16 @@ class AssignTab extends React.Component {
 
   render() {
     const { user,task,groupUsers } = this.props
+    console.log(groupUsers);
     return (
       <span
         className='AssignTab'
         onClick={this.toggleList}
       >
-        <span>{task.assignee?user.name:'assign'}</span>
+        <span className='AssignTab__head'>{task.assignee?user.name:'assign'}</span>
         {
           !this.state.hidden && (
-            <ul className='AssignTab__dropList'>
+            <ul className='Drop__list'>
               {
                 groupUsers.map(user => (
                   <li key={user.id}
