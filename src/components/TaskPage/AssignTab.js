@@ -18,7 +18,6 @@ class AssignTab extends React.Component {
 
   render() {
     const { user,task,groupUsers } = this.props
-    console.log(groupUsers);
     return (
       <span
         className='AssignTab'

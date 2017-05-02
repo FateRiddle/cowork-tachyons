@@ -23,9 +23,13 @@ class AddItem extends React.Component {
   }
 
   focusLast = () => {
-    const { tasks,history } = this.props
+    const { tasks,history,match } = this.props
     const lastId = tasks[tasks.length-1].id
-    history.push(`${lastId}`)
+    if(match.params.taskId){
+      history.push(`${lastId}`)
+    } else {
+      history.push(`${match.url}/${lastId}`)
+    }
   }
 
   render(){
