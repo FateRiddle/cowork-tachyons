@@ -19,15 +19,7 @@ class Sidebar extends React.Component {
       this.setState({ editorHidden:false,projectId })
     }
   }
-
-  isLinkActive = (match,location) => {
-    if(match){
-      return true
-    }
-    // if()
-    return false
-  }
-
+  
   render(){
     const { editorHidden,projectId } = this.state
     const { projects,toggleSidebar,sidebarHidden } = this.props

@@ -17,10 +17,10 @@ const byId = (state = {}, action) => {
         ...state,
         [action.id]: task(state[action.id], action),
       }
-    case "UPDATE_TASKS":
-      const nextState = {...state}
-      action.tasks.forEach((task) => {
-        nextState.byId[task] = task
+    case "UPDATE_STATE":
+      const nextState = {}
+      action.tasks.forEach(task => {
+        nextState[task.id] = task
       })
       return nextState
     default:
@@ -58,6 +58,8 @@ const allIds = (state = [], action) => {
           ...state.slice(oldIndex+1)
         ]
       }
+    case "UPDATE_STATE":
+      return action.tasks.map(task => task.id)
 
     default:
       return state

@@ -115,7 +115,7 @@ a.active {
 }
 
 .Pop {
-  background: #d4d4d4;
+  background: white;
   padding: 1rem;
   min-height: 20rem;
   min-width: 20rem;
@@ -146,7 +146,13 @@ a.active {
 
 .ProjectEditor input {
   max-width: 18rem;
-  height: 1.4rem;
+  height: 1.6rem;
+  text-indent: 0.5rem;
+}
+
+.ProjectEditor__alert {
+  height: 1.2rem;
+  color: orangered;
 }
 
 .ProjectEditor__userList {
@@ -156,7 +162,7 @@ a.active {
 }
 
 .ProjectEditor__userList li {
-  border: 1px solid white;
+  border: 1px solid rgba(0,0,0,0.3);
   margin: 0.2rem;
   padding: 0.2rem;
 }

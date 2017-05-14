@@ -13,11 +13,11 @@ export const persistedState = {
   tasks:{
     allIds:['111','222','333','444','555'],
     byId:{
-      '111':{id:'111',assignee:'3',projectId:'',title:'task1:',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-      '222':{id:'222',assignee:'3',projectId:'22',title:'task2',detail:'more',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-      '333':{id:'333',assignee:'1',projectId:'22',title:'task3',detail:'',completed:'active',createdAt:'',createdBy:'1',dueAt:''},
-      '444':{id:'444',assignee:'3',projectId:'',title:'task4',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-      '555':{id:'555',assignee:'',projectId:'11',title:'task5',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
+      '111':{id:'111',assignee:'3',projectId:'',upTaskId:'',title:'task1:',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
+      '222':{id:'222',assignee:'3',projectId:'22',upTaskId:'',title:'task2',detail:'more',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
+      '333':{id:'333',assignee:'1',projectId:'22',upTaskId:'',title:'task3',detail:'',completed:'active',createdAt:'',createdBy:'1',dueAt:''},
+      '444':{id:'444',assignee:'3',projectId:'',upTaskId:'',title:'task4',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
+      '555':{id:'555',assignee:'',projectId:'11',upTaskId:'',title:'task5',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
     }
   },
 

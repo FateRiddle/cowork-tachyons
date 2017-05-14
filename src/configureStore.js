@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
-import { persistedState } from './data'
+// import { persistedState } from './data'
 import app from './reducers'
 
 const configureStore = () => {
@@ -14,7 +14,7 @@ const configureStore = () => {
 
   return createStore(
     app,
-    persistedState,
+    // persistedState,
     applyMiddleware(...middlewares),
   )
 }

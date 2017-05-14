@@ -4,15 +4,12 @@ import { toggleSidebar } from '../../actions'
 import { NavLink } from 'react-router-dom'
 import Searchbar from './Searchbar'
 import { me } from '../../data'
-import { getUserById } from '../../reducers'
 import classnames from 'classnames'
 
 let Headbar = ({
-  user,
   toggleSidebar,
   sidebarHidden,
 }) => {
-  const { name,id } = user
   return (
     <div className='Headbar' >
       <div
@@ -25,21 +22,16 @@ let Headbar = ({
         onClick={toggleSidebar}
       >三</div>
       <NavLink
-        to={`/${id}`}
+        to={`/${me.id}`}
         className='Headbar__myTask'
         activeClassName='Headbar__myTask--active'
-      >{`${name}'s tasks:`}</NavLink>
+      >My Tasks:</NavLink>
       <Searchbar />
     </div>
   )
 }
 
-Headbar.propTypes = {
-  user: React.PropTypes.object.isRequired,
-}
-
 const mapStateToProps = (state) => ({
-  user: getUserById(state,me.id),
   sidebarHidden: state.sidebarHidden,
 })
 

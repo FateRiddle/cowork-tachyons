@@ -1,33 +1,27 @@
 // server/app.js
-const express = require('express');
-const morgan = require('morgan');
-const path = require('path');
+const express = require('express')
+const morgan = require('morgan')
+const path = require('path')
 
-const app = express();
-
-const { sql,db } = require('./db.js');
+const app = express()
 
 // Setup logger
-app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
+app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
 
 // Serve static assets
-app.use(express.static(path.resolve(__dirname, '..', 'build')));
+app.use(express.static(path.resolve(__dirname, '..', 'build')))
 
-app.get('/user', (req, res) => {
-  db.then(()=>{
-    new sql.Request().query('select * from tb_huodong order by createdAt desc').then(data => {
-        res.send(data)
-    }).catch(err => {
-      console.error(err)
-    });
-  }).catch(err => console.log(err))
-});
+app.use(require('./routes'))
 
+// test
+// app.get('/api',(req,res,next) => {
+//   console.log('haha');
+//   next()
+// })
 
 // Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'))
+})
 
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-});
-
-module.exports = app;
+module.exports = app

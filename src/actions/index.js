@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
 import { me } from '../data'
+import * as api from '../api'
 
 ////////////////project action:
 export const addProject = (title='', group=[]) => ({
@@ -173,3 +174,35 @@ export const changeCompletedTab = (id) => ({
 export const toggleSidebar = () => ({
   type: 'TOGGLE_SIDEBAR',
 })
+
+//subtask:
+
+export const addSubTask = (taskId) => ({
+  type: 'ADD_SUBTASK',
+  id: v4(),
+  upTaskId: taskId,
+})
+
+
+//async
+
+export const updateState = () => dispatch => {
+  dispatch({
+    type: 'FETCH_STATE_REQUEST',
+  })
+  return api.fetchState().then(state => {
+    dispatch({
+      type: 'UPDATE_STATE',
+      ...state
+    })
+  })
+}
+
+export const saveTaskEdit = (task) => dispatch => {
+  dispatch({
+    type: 'SAVE_TASK_REQUEST',
+  })
+  return api.saveTaskEdit(task).then(output => dispatch({
+    type: 'SAVE_TASK_SUCCESS',
+  }))
+}

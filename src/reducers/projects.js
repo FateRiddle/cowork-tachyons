@@ -11,6 +11,12 @@ const byId = (state = {}, action) => {
         ...state,
         [action.id]: project(state[action.id], action),
       }
+    case "UPDATE_STATE":
+      const nextState = {}
+      action.projects.forEach(project => {
+        nextState[project.id] = project
+      })
+      return nextState
     default:
       return state
   }
@@ -22,6 +28,8 @@ const allIds = (state = [], action) => {
       return [...state, action.id]
     case "DELETE_PROJECT":
       return state.filter(id => id !== action.id)
+    case "UPDATE_STATE":
+      return action.projects.map(project => project.id)
     default:
       return state
   }

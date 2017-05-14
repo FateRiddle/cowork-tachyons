@@ -2,12 +2,12 @@ import { combineReducers } from 'redux'
 import projects from './projects'
 import tasks from './tasks'
 import users from './users'
-import { me } from '../data'
 import { search } from './search'
 import { completed } from './completed'
 import { completedTab } from './current'
 import { isEmpty } from 'lodash'
 import { sidebarHidden } from './visualStates'
+import { me } from './me'
 
 const app = combineReducers({
   projects,
@@ -17,6 +17,7 @@ const app = combineReducers({
   search,
   completedTab,
   sidebarHidden,
+  me,
 })
 
 export default app
@@ -60,8 +61,7 @@ export const getFilteredTasks = (state,projectId) => {
       (!search.dueAt || t.dueAt === search.dueAt)
     })
   }
-
-  if(projectId === me.id){
+  if(projectId === state.me.id){
     return allTasks.filter(t => completed === 'all' || t.completed === completed)
     .filter(t => t.assignee === projectId)
   }
@@ -71,3 +71,17 @@ export const getFilteredTasks = (state,projectId) => {
   }
   return []
 }
+
+// export const getDepthOfTask = (state, taskId) => {
+//   let task = getTaskById(taskId)
+//   let depth = 0
+//   if(!task.projectId){
+//     return depth
+//   }
+//   depth = 1
+//   while (task.upTaskId) {
+//     task = getTaskById(upTaskId)
+//     depth += depth
+//   }
+//   return depth
+// }

@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import Headbar from './components/Headbar'
 import MainContent from './components/MainContent'
 import { me } from './data'
+import { updateState } from './actions'
 import './App.css'
 // import { fetchTasks } from './api/fetchData'
 
@@ -43,6 +44,10 @@ Project = connect(
 
 class App extends React.Component {
 
+  componentDidMount() {
+    this.props.updateState()
+  }
+
   render(){
     return (
       <div className='App'>
@@ -71,6 +76,6 @@ const mapStateToProps = ({
   allIds:tasks.allIds,
 })
 
-App = withRouter(connect(mapStateToProps)(App))
+App = withRouter(connect(mapStateToProps, { updateState })(App))
 
 export default App
