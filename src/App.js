@@ -1,33 +1,26 @@
 import React from 'react'
 import { withRouter } from 'react-router'
-import { Route,Switch,Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 // import Login from './components/Login'
 import Sidebar from './components/Sidebar'
 import Headbar from './components/Headbar'
 import MainContent from './components/MainContent'
-import { me } from './data'
 import { updateState } from './actions'
 import './App.css'
 // import { fetchTasks } from './api/fetchData'
 
 //使用nested route的风格重写了，更清晰。这里使用match.path是精髓。之后react-roouter会出relative routes，能更方便地解决。
 
-let Search = ({ match }) => {
-  return (
-    <Switch>
-      <Route exact path={match.path} component={MainContent} />
-      <Route exact path={`${match.path}/:taskId`} component={MainContent} />
-      <Redirect to={`${match.url}`} />
-    </Switch>
-  )
-}
-
-
-let Project = ({ match,allProjectIds }) => {
+let Project = ({ match, allProjectIds, me }) => {
   const projectId = match.params.id
-  if(allProjectIds.indexOf(projectId) === -1 && projectId !== me.id){  //如果projectId不存在
-    // return <Redirect to={`/${me.id}`}></Redirect>
+  if (
+    allProjectIds.indexOf(projectId) === -1 &&
+    projectId !== me.id &&
+    projectId !== 'search'
+  ) {
+    //如果projectId不存在
+    return <Redirect to={`/${me.id}`} />
   }
   return (
     <Switch>
@@ -38,31 +31,30 @@ let Project = ({ match,allProjectIds }) => {
   )
 }
 
-Project = connect(
-  ({ projects }) => ({allProjectIds:projects.allIds})
-)(Project)
+Project = connect(({ projects, me }) => ({
+  allProjectIds: projects.allIds,
+  me
+}))(Project)
 
 class App extends React.Component {
-
   componentDidMount() {
-    this.props.updateState()
+    const { me } = this.props
+    if (me) {
+      // console.log(localStorage.getItem('token'))
+      this.props.updateState() //only update uses and projects here. update tasks base on url & inside <MainContent />
+    }
   }
 
-  render(){
+  render() {
+    const { me } = this.props
     return (
-      <div className='App'>
+      <div className="App">
         <Route component={Sidebar} />
-        <div className='AppContent'>
+        <div className="AppContent">
           <Route component={Headbar} />
           <Switch>
-            <Route path='/search/:searchId' component={Search} />
-            <Route path='/:id' component={Project} />
-
-            {/* <Route exact path='/search/:searchId/list' component={MainContent} />
-            <Route exact path='/search/:searchId/:taskId' component={MainContent} />
-            <Route exact path='/:id/list' component={MainContent} />
-            <Route exact path='/:id/:taskId' component={MainContent} /> */}
-            <Redirect to={`/${me.id}`}></Redirect>
+            <Route path="/:id" component={Project} />
+            <Redirect to={`/${me.id}`} />
           </Switch>
         </div>
       </div>
@@ -70,10 +62,9 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = ({
-  tasks
-}) => ({
-  allIds:tasks.allIds,
+const mapStateToProps = ({ me, tasks }) => ({
+  allIds: tasks.allIds,
+  me
 })
 
 App = withRouter(connect(mapStateToProps, { updateState })(App))

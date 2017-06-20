@@ -1,5 +1,5 @@
 //Login data:
-export const me = {name:"Riddle",id:"3",psw:"123123"}
+export const me = {name:"fateriddle",id:"3",psw:"123123"}
 
 export const persistedState = {
   projects:{
@@ -42,9 +42,9 @@ export const persistedState = {
 
 //不用放在state里，因为是死数据
 export const completedTabs = [
-  {id:1,name:'未完成',completed:'active'},
-  {id:2,name:'全部',completed:'all'},
-  {id:3,name:'完成',completed:'completed'},
+  {name:'未完成',id:'active'},
+  {name:'全部',id:'all'},
+  {name:'完成',id:'completed'},
 ]
 
 //

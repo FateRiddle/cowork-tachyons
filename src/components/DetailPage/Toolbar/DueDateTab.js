@@ -1,55 +1,41 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { SingleDatePicker } from 'react-dates'
 import moment from 'moment'
-import 'react-dates/lib/css/_datepicker.css'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import { editTaskDue } from '../../../actions'
+import { getTaskById } from '../../../reducers'
 
 class DueDateTab extends Component {
 
-  state = {
-    date:null,
-    focused: false,
-  }
-
-  componentDidMount() {
-    moment.locale('zh-cn')
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // const { tasks,currentTask } = this.props
-    // if(currentTask !== prevProps.currentTask){
-    //   const dueAt = tasks.byId[currentTask].dueAt
-    //   this.setState({date:dueAt})
-    // }
-  }
-
-  handleDateChange(date){
-    const { currentTask,editTaskDue } = this.props
-    this.setState({date})
-    editTaskDue(date,currentTask)
+  handleDateChange = (date) => {
+    const { task,editTaskDue } = this.props
+    // console.log(task.dueAt,date,task.id);
+    if(task){
+      editTaskDue(date,task.id)
+    }
   }
 
   render() {
+    const { task } = this.props
+    const selectedDate = task && task.dueAt?moment(task.dueAt):null
     return (
-        <SingleDatePicker
-          id="date"
-          placeholder="截止日期"
-          date={this.state.date}
-          focused={this.state.focused}
-          onDateChange={date => this.handleDateChange(date)}
-          onFocusChange={({ focused }) => this.setState({focused})}
-        />
+      <DatePicker
+        selected={selectedDate}
+        onChange={this.handleDateChange}
+        isClearable={true}
+        placeholderText="点击选择"
+        locale='zh-cn'
+      />
     )
   }
 }
 
-const mapStateToProps = ({ tasks },{ match }) => {
+const mapStateToProps = (state,{ match }) => {
   const currentTask = match.params.taskId
   return {
-    tasks,
-    currentTask,
+    task:getTaskById(state,currentTask)
   }
 }
 

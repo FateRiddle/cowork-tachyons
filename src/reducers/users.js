@@ -2,15 +2,16 @@ import { combineReducers } from 'redux'
 import user from './user'
 
 const byId = (state = {}, action) => {
+  const { payload } = action
   switch (action.type) {
     case "ADD_USER":
       return {
         ...state,
-        [action.qq]: user(state[action.qq], action),
+        [payload.qq]: user(state[payload.qq], action),
       }
-    case "UPDATE_STATE":
+    case "UPDATE_ALL_SUCCESS":
       const nextState = {}
-      action.users.forEach(user => {
+      payload.users.forEach(user => {
         nextState[user.id] = user
       })
       return nextState
@@ -20,13 +21,14 @@ const byId = (state = {}, action) => {
 }
 
 const allIds = (state = [], action) => {
+  const { payload } = action
   switch (action.type) {
     case "ADD_USER":
-      return [...state, action.qq]
+      return [...state, payload.qq]
     case "DELETE_USER":
-      return state.filter(qq => qq !== action.qq)
-    case "UPDATE_STATE":
-      return action.users.map(user => user.id)
+      return state.filter(qq => qq !== payload.qq)
+    case "UPDATE_ALL_SUCCESS":
+      return payload.users.map(user => user.id)
     default:
       return state
   }

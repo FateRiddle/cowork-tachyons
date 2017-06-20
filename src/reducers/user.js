@@ -1,10 +1,11 @@
 const user = (state, action) => {
+  const { payload } = action
   switch (action.type) {
     case "ADD_USER":
     case "EDIT_USER":
       return {
-        qq: action.qq,
-        name: action.name,
+        qq: payload.qq,
+        name: payload.name,
       }
 
     default:

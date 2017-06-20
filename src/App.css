@@ -3,7 +3,7 @@
   margin: 0;
 }
 
-ul,li {
+ul, li {
   list-style: none;
 }
 
@@ -14,6 +14,86 @@ a {
 
 a.active {
   color: #55CFDE;
+}
+
+input {
+  border-style: none;
+  border: 1px solid grey;
+}
+
+.btn-grey {
+  box-sizing: border-box;
+  padding: 2px;
+  width: 4rem;
+  text-align: center;
+  border: 1px solid grey;
+}
+
+.btn-grey:hover {
+  background: grey;
+  color: white;
+}
+
+.Home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Home header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Home header a {
+  padding-top: 1rem;
+  padding-right: 3rem;
+}
+
+.Home main {
+  flex-basis: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 4em;
+  align-items: center;
+  transition: flex-basis 500ms ease-out;
+}
+
+.Home .empty {
+  flex-basis: 50vh;
+}
+
+.Home main h1 {
+  font-size: 5em;
+}
+
+.Signup, .Login {
+  display: flex;
+  flex-basis: 50vh;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Home input {
+  text-indent: 1em;
+  height: 2em;
+  margin-bottom: 1em;
+  border-radius: 3px;
+}
+
+.Home .button {
+  cursor: pointer;
+  width: 5em;
+  height: 2em;
+  line-height: 2em;
+  text-align: center;
+  border: 1px solid grey;
+}
+
+.Home .button:hover {
+  background: grey;
+  color: white;
 }
 
 .App {
@@ -38,7 +118,7 @@ a.active {
   position: absolute;
   color: #A2B4BC;
   align-self: flex-end;
-  padding: 0.5rem 0.5rem 0 0
+  padding: 0.5rem 0.5rem 0 0;
 }
 
 .Sidebar__closeButton:hover {
@@ -51,10 +131,9 @@ a.active {
   align-items: center;
   padding-top: 1rem;
   padding-left: 1rem;
-  color:orange;
-  font-size: 1.2rem;
+  color: orange;
+  font-size: 1.4rem;
 }
-
 
 .addIcon {
   display: inline-flex;
@@ -64,7 +143,7 @@ a.active {
   width: 1.2rem;
   height: 1.2rem;
   margin-left: 0.5rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .Sidebar__headerAddIcon {
@@ -77,16 +156,11 @@ a.active {
   margin: 2rem 1rem;
 }
 
-.AddItemInput input {
-  width: 8rem;
-  height: 1.5rem;
-  font-size: 1rem;
-}
-
 .Sidebar__projectList {
   display: flex;
   flex-direction: column;
   list-style-type: none;
+  font-size: 1.1rem;
 }
 
 .Sidebar__projectList li {
@@ -108,7 +182,7 @@ a.active {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,7 +192,7 @@ a.active {
   background: white;
   padding: 1rem;
   min-height: 20rem;
-  min-width: 20rem;
+  width: 20rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -155,14 +229,14 @@ a.active {
   color: orangered;
 }
 
-.ProjectEditor__userList {
+.userList {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
 
-.ProjectEditor__userList li {
-  border: 1px solid rgba(0,0,0,0.3);
+.userList li {
+  border: 1px solid rgba(0, 0, 0, 0.3);
   margin: 0.2rem;
   padding: 0.2rem;
 }
@@ -171,13 +245,16 @@ a.active {
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .Headbar {
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  height: 5rem;
+  height: 4rem;
+  flex-shrink: 0;
+  box-sizing: border-box;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -188,15 +265,70 @@ a.active {
 }
 
 .Headbar__myTask {
-  margin: 0 5rem
+  margin-left: 2rem;
 }
 
 .Headbar__myTask--active {
   color: #55CFDE;
 }
 
+.Headbar__user {
+  display: flex;
+  margin-right: 2rem;
+}
+
+.Headbar__user div {
+  padding: 0 1rem;
+}
+
+.Searchbar {
+  position: relative;
+}
+
 .Searchbar input {
   height: 1.4rem;
+}
+
+.Searchform.Drop__list {
+  width: 20rem;
+  align-items: flex-start;
+  box-sizing: border-box;
+  padding: 0.8rem;
+}
+
+.Searchform__selection .chosen {
+  background: orange;
+}
+
+.Searchform__completed {
+  display: flex;
+}
+
+.Searchform__buttons {
+  width: 100%;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.Warning {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  min-width: 200px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  color: white;
+  background: orangered;
+}
+
+.Home .Warning {
+  left: 0;
+  min-width: 30%;
+  right: auto;
 }
 
 .MainContent {
@@ -207,18 +339,21 @@ a.active {
 }
 
 .TaskPage {
+  display: flex;
+  flex-direction: column;
   flex: 0 2 60%;
-  margin: 1rem;
-  padding: 0 1rem;
+  margin: 1rem 1rem 0 1rem;
   border-left: 1px solid rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .TableFilter {
-  height: 2rem;
+  flex: 0 0 2rem;
+  padding-left: 1rem;
 }
 
 .Drop__list {
+  z-index: 1;
   position: absolute;
   background: white;
   border: 1px solid grey;
@@ -230,17 +365,22 @@ a.active {
   align-items: center;
 }
 
-.Drop__list li{
+.Drop__list li {
   padding: 0.3rem;
+}
+
+.Table__scrollWrapper {
+  overflow: auto;
 }
 
 .TaskTable {
   width: 100%;
-  border-collapse: collapse;
 }
 
 tbody {
+  padding: 0 1rem;
   display: flex;
+  overflow: auto;
   flex-direction: column;
 }
 
@@ -248,7 +388,8 @@ tbody {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
-  flex-grow: 1;
+  box-sizing: border-box;
+  flex: 0 0 2.4rem;
 }
 
 /*.TaskItem:not(.TaskItemSelected):hover {
@@ -294,7 +435,7 @@ tbody {
 .TaskItem__title input {
   flex-grow: 1;
   height: 1.8rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
   border-style: none;
   outline: none;
   /*background-color: rgb(143, 213, 196);*/
@@ -316,8 +457,8 @@ tbody {
 }
 
 .AddItem {
-  height: 2.2rem;
-  font-size: 1rem;
+  height: 2.4rem;
+  font-size: 1.1rem;
   cursor: pointer;
 }
 
@@ -356,20 +497,19 @@ tbody {
 }
 
 .Drop__project {
-
 }
 
 .Editor__title {
   margin-top: 1rem;
-  padding: .3rem .5rem;
   width: 90%;
+  padding: 0.6rem;
   border-style: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   border: 1px solid white;
   outline: none;
 }
 
-.Editor__title:focus,.Editor__title:hover {
+.Editor__title:focus, .Editor__title:hover {
   border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
@@ -377,12 +517,12 @@ tbody {
   margin-top: 1rem;
   padding: .5rem;
   width: 90%;
-  min-height: 5rem;
-  font-size: 1.2rem;
+  min-height: 7rem;
+  font-size: 1.1rem;
   outline: none;
   border: 1px solid white;
 }
 
-.Editor__detail:focus,.Editor__detail:hover {
+.Editor__detail:focus, .Editor__detail:hover {
   border: 1px solid rgba(0, 0, 0, 0.3);
 }

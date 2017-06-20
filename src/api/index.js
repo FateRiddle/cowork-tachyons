@@ -1,59 +1,95 @@
-// import axios from 'axios'
-import moment from 'moment'
-import { v4 } from 'uuid'
+// import moment from 'moment'
+// import { v4 } from 'uuid'
 import axios from 'axios'
-// taskId projectId taskName contents createDate deadline creatorId isComplete completeDate
-// taskId: id
-// projectId: projectId
-// taskName: title
-// contents: detail
-// createDate: createdAt
-// creatorId: creator
-// deadline: dueAt
-// isComplete: completed
-// completeDate: completedAt
 
-//先让assignee 默认等于 creator， 之后再改
+//constant
+const API_ROOT = '/api'
+let token = null
 
-const fakedb = {
-  projects:[
-    {id:'11',title:"project1",group:['1','2','3']},
-    {id:'22',title:"project2",group:['2']},
-  ],
+token = window.localStorage.getItem('token')
 
-  tasks:[
-    {id:'111',assignee:'3',projectId:'',title:'task1:',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-    {id:'222',assignee:'3',projectId:'22',title:'task2',detail:'more',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-    {id:'333',assignee:'1',projectId:'22',title:'task3',detail:'',completed:'active',createdAt:'',createdBy:'1',dueAt:''},
-    {id:'444',assignee:'3',projectId:'',title:'task4',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-    {id:'555',assignee:'',projectId:'11',title:'task5',detail:'',completed:'active',createdAt:'',createdBy:'3',dueAt:''},
-  ],
+//setting up request
+const request = axios.create({
+  baseURL: API_ROOT
+})
 
-  users:[
-    {id:'1',name:"Luosang"},
-    {id:'2',name:"Luoshui"},
-    {id:'3',name:"Riddle"}
-  ],
+axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-  //这几个属性不需要每次加载，只要default就行！
-  completed: 'active', // completed,active,all
+//methods
+// const encode = encodeURIComponent;
+const responseBody = res => res.data.recordset
+const responseOutput = res => res.data
 
-  search:{
-    // assignee:me.id,
-    // createdBy:me.id,
-    // createdAt:'',
-    // dueAt:'',
-  },
-  me: {
-    name:"Riddle",id:"3",psw:"123123"
-  }
+const ax = {
+  del: url => request.delete(url).then(responseOutput),
+  get: url => request.get(url).then(responseBody),
+  put: (url, body) => request.put(url, body).then(responseOutput), //put is for update
+  post: (url, body) => request.post(url, body).then(responseOutput) //post is for create
 }
 
-const delay = ms =>
-  new Promise(resolve => setTimeout(resolve,ms))
+const Auth = {
+  login: (name, password) =>
+    ax.post('/auth/login', { user: { name, password } }),
+  signup: (name, password, password2, slogan) =>
+    ax.post('/auth', { user: { name, password, password2 }, slogan })
+}
 
+const Projects = {
+  all: () => ax.get('/projects'),
+  add: ({ id, title, group }) => ax.post('/projects', { id, title, group }),
+  update: ({ id, title, group }) => ax.put('/projects', { id, title, group })
+}
 
-export const fetchState = () => delay(1000).then(() => fakedb)
+const Tasks = {
+  all: () => ax.get('/tasks'),
+  byProject: id => ax.get(`/tasks?projectId=${id}`),
+  byUser: id => ax.get(`/tasks?userId=${id}`),
+  bySearch: search => ax.post(`/tasks/search`, search),
+  // const {
+  //   assignee,
+  //   createdBy,
+  //   createdAt,
+  //   dueAt,
+  //   projectId,
+  //   completed,
+  // } = search
+  add: ({ id, projectId, assignee, taskOrder }) =>
+    ax.post('/tasks', { id, projectId, assignee, taskOrder }),
+  insert: ({ id, projectId, assignee, taskId }) =>
+    ax.post('/tasks', { id, projectId, assignee, taskId }),
+  addSubtask: ({ id, upTaskId, projectId }) =>
+    ax.post(`/tasks/`, { id, upTaskId, projectId }),
+  del: ({ id }) => ax.del(`/tasks/${id}`),
+  editTitle: ({ id, title }) => ax.put(`/tasks/${id}`, { title }),
+  editDetail: ({ id, detail }) => ax.put(`/tasks/${id}`, { detail }),
+  editProject: ({ id, projectId }) => ax.put(`/tasks/${id}`, { projectId }),
+  editAssignee: ({ id, assignee }) => ax.put(`/tasks/${id}`, { assignee }),
+  editDue: ({ id, dueAt }) =>
+    ax.put(`/tasks/${id}`, { dueAt: dueAt ? dueAt.format() : null }),
+  toggle: ({ id }) => ax.put(`/tasks/${id}`, { toggle: true }),
+  changeOrder: ({ id, order }) => ax.put(`/tasks/${id}`, { order })
+}
 
+const Users = {
+  all: () => ax.get('/users')
+  // current: () => ax.get('/user'),
+  // save: (id,name) => ax.put('/user', { user: { id,name } }),
+}
 
-/////////////////////////////////////async
+export default {
+  request,
+  Auth,
+  Projects,
+  Tasks,
+  Users,
+  setToken: _token => {
+    token = _token
+  }
+  // getToken: () => { return token }
+}
+
+//
+// const delay = ms =>
+//   new Promise(resolve => setTimeout(resolve,ms))
+//
+// const fetchState = () => delay(1000).then(() => fakedb)

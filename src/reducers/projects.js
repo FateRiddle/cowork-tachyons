@@ -2,18 +2,19 @@ import { combineReducers } from 'redux'
 import project from './project'
 
 const byId = (state = {}, action) => {
+  const { payload } = action
   switch (action.type) {
-    case "ADD_PROJECT":
-    case "EDIT_PROJECT":
+    case "ADD_PROJECT_LOADING":
+    case "EDIT_PROJECT_LOADING":
     case "ADD_USER_TO_PROJECT":
     case "REMOVE_USER_FROM_PROJECT":
       return {
         ...state,
-        [action.id]: project(state[action.id], action),
+        [payload.id]: project(state[payload.id], action),
       }
-    case "UPDATE_STATE":
+    case "UPDATE_ALL_SUCCESS":
       const nextState = {}
-      action.projects.forEach(project => {
+      payload.projects.forEach(project => {
         nextState[project.id] = project
       })
       return nextState
@@ -23,13 +24,14 @@ const byId = (state = {}, action) => {
 }
 
 const allIds = (state = [], action) => {
+  const { payload } = action
   switch (action.type) {
-    case "ADD_PROJECT":
-      return [...state, action.id]
+    case "ADD_PROJECT_LOADING":
+      return [...state, payload.id]
     case "DELETE_PROJECT":
-      return state.filter(id => id !== action.id)
-    case "UPDATE_STATE":
-      return action.projects.map(project => project.id)
+      return state.filter(id => id !== payload.id)
+    case "UPDATE_ALL_SUCCESS":
+      return payload.projects.map(project => project.id)
     default:
       return state
   }

@@ -4,7 +4,7 @@ import tasks from './tasks'
 import users from './users'
 import { search } from './search'
 import { completed } from './completed'
-import { completedTab } from './current'
+import { warning } from './current'
 import { isEmpty } from 'lodash'
 import { sidebarHidden } from './visualStates'
 import { me } from './me'
@@ -15,7 +15,7 @@ const app = combineReducers({
   users,
   completed,
   search,
-  completedTab,
+  warning,
   sidebarHidden,
   me,
 })
@@ -26,6 +26,12 @@ export default app
 
 const getAlltasks = ({ tasks }) =>
   tasks.allIds.map(id => tasks.byId[id])
+
+export const getTaskByCompleted = (state) =>
+  getAlltasks(state).filter(task => {
+    return state.completed === 'all' ||
+    task.completed === state.completed
+  })
 
 export const getTaskById = (state,taskId) =>
   getAlltasks(state).find(task => task.id === taskId)
@@ -50,10 +56,26 @@ export const getUserByTask = (state,taskId) => {   //users in the group of a pro
   return getAllUsers(state).filter(user => groupUsers.indexOf(user.id) > -1)
 }
 
+//recursion
+export const getSubtaskIds = (state, id) => {
+  const allTasks = getAlltasks(state)
+	let subtasks = []
+	allTasks.forEach(task => {
+  	if (task.upId === id) {
+    	subtasks.push(task.id)
+      let subIds = getSubtaskIds(tasks, task.id)
+      if (subIds) {
+      	subtasks = subtasks.concat(subIds)
+      }
+    }
+  })
+  return subtasks
+}
+
 export const getFilteredTasks = (state,projectId) => {
   const allTasks = getAlltasks(state)
   const { projects,search,completed } = state
-  if(!isEmpty(search)){
+  if(projectId === 'search' && !isEmpty(search)){
     return allTasks.filter(t => {
       return (!search.assignee || t.assignee === search.assignee) &&
       (!search.createdBy || t.createdBy === search.createdBy) &&

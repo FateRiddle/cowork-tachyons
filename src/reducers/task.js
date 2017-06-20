@@ -1,76 +1,54 @@
-// taskId taskName projectId contents createDate deadline creatorId isComplete completeDate
-// taskId: id
-// projectId: projectId
-// taskName: title
-// contents: detail
-// createDate: createdAt
-// creatorId: creator
-// deadline: dueAt
-// isComplete: completed
-// completeDate: completedAt
 import moment from 'moment'
-// import { me } from '../data'
 
 const task = (state, action) => {
+  const { payload } = action
   switch (action.type) {
-    case "ADD_TASK_FOR_PROJECT":
-    case "INSERT_TASK_FOR_PROJECT":
+    case "ADD_TASK_LOADING":
+    case "INSERT_TASK_LOADING":
       return {
-        id: action.id,
-        projectId: action.projectId,
-        assignee:'',
+        id: payload.id,
+        projectId: payload.projectId,
+        assignee:payload.assignee,
         title:'',
         detail:'',
-        createdAt: moment(),
-        createdBy:'',
-        completed: 'active',
-      }
-    case "ADD_TASK_FOR_ME":
-    case "INSERT_TASK_FOR_ME":
-      return {
-        id: action.id,
-        projectId:'',
-        assignee: action.assignee,
-        title:'',
-        detail:'',
-        createdAt: moment(),
+        createdAt: moment().format(),
         createdBy:'',
         completed: 'active',
       }
     case "EDIT_TASK_TITLE":
-      if (state.id === action.id){
+      if (state.id === payload.id){
         return {
           ...state,
-          title:action.title,
+          title:payload.title,
         }
       }
       return state
     case "EDIT_TASK_DETAIL":
-      if (state.id === action.id){
+      if (state.id === payload.id){
         return {
           ...state,
-          detail:action.detail,
+          detail:payload.detail,
         }
       }
       return state
-    case "EDIT_TASK_ASSIGNEE":
-      if (state.id === action.id){
+    case "EDIT_TASK_ASSIGNEE_LOADING":
+      if (state.id === payload.id){
         return {
           ...state,
-          assignee:action.assignee,
+          assignee:payload.assignee,
         }
       }
       return state
-    case "EDIT_TASK_DUE":
-      if (state.id === action.id){
+    case "EDIT_TASK_DUE_LOADING":
+      if (state.id === payload.id){
         return {
           ...state,
-          dueDate:action.dueDate,
+          dueAt:payload.dueAt,
         }
       }
       return state
-    case "TOGGLE_TASK":
-      if (state.id === action.id){
+    case "TOGGLE_TASK_LOADING":
+      if (state.id === payload.id){
         const completed = state.completed === 'active'?'completed':'active'
         return {
           ...state,
@@ -78,11 +56,11 @@ const task = (state, action) => {
         }
       }
       return state
-    case "EDIT_TASK_PROJECT":
-      if (state.id === action.id){
+    case "EDIT_TASK_PROJECT_LOADING":
+      if (state.id === payload.id){
         return {
           ...state,
-          projectId:action.projectId,
+          projectId:payload.projectId,
         }
       }
       return state

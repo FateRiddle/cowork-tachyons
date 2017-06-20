@@ -2,24 +2,25 @@ import { combineReducers } from 'redux'
 import task from './task'
 
 const byId = (state = {}, action) => {
+  const { payload } = action
   switch (action.type) {
-    case "ADD_TASK_FOR_PROJECT":
-    case "ADD_TASK_FOR_ME":
-    case "INSERT_TASK_FOR_PROJECT":
-    case "INSERT_TASK_FOR_ME":
+    case "ADD_TASK_LOADING":
+    case "INSERT_TASK_LOADING":
     case "EDIT_TASK_TITLE":
     case "EDIT_TASK_DETAIL":
-    case "EDIT_TASK_ASSIGNEE":
-    case "EDIT_TASK_DUE":
-    case "EDIT_TASK_PROJECT":
-    case "TOGGLE_TASK":
+    case "EDIT_TASK_ASSIGNEE_LOADING":
+    case "EDIT_TASK_DUE_LOADING":
+    case "EDIT_TASK_PROJECT_LOADING":
+    case "TOGGLE_TASK_LOADING":
       return {
         ...state,
-        [action.id]: task(state[action.id], action),
+        [payload.id]: task(state[payload.id], action),
       }
-    case "UPDATE_STATE":
+    case "UPDATE_MY_TASKS_SUCCESS":
+    case "UPDATE_PROJECT_TASKS_SUCCESS":
+    case "SEARCH_TASKS_SUCCESS":
       const nextState = {}
-      action.tasks.forEach(task => {
+      payload.forEach(task => {
         nextState[task.id] = task
       })
       return nextState
@@ -29,21 +30,20 @@ const byId = (state = {}, action) => {
 }
 
 const allIds = (state = [], action) => {
+  const { payload } = action
   switch (action.type) {
-    case "ADD_TASK_FOR_PROJECT":
-    case "ADD_TASK_FOR_ME":
-      return [...state, action.id]
-    case "INSERT_TASK_FOR_PROJECT":
-    case "INSERT_TASK_FOR_ME":
-      const index = state.indexOf(action.taskId)
+    case "ADD_TASK_LOADING":
+      return [...state, payload.id]
+    case "INSERT_TASK_LOADING":
+      const index = state.indexOf(payload.taskId)
       return [...state.slice(0,index+1),
-        action.id,
+        payload.id,
         ...state.slice(index+1),
       ]
-    case "DELETE_TASK":
-      return state.filter(id => id !== action.id)
-    case "CHANGE_TASK_ORDER":
-      const { oldIndex,newIndex } = action
+    case "DELETE_TASK_LOADING":
+      return state.filter(id => id !== payload.id)
+    case "CHANGE_TASK_ORDER_LOADING":
+      const { oldIndex,newIndex } = payload
       const id = state[oldIndex]
       if(oldIndex<newIndex){
         return [...state.slice(0,oldIndex),
@@ -58,8 +58,10 @@ const allIds = (state = [], action) => {
           ...state.slice(oldIndex+1)
         ]
       }
-    case "UPDATE_STATE":
-      return action.tasks.map(task => task.id)
+    case "UPDATE_MY_TASKS_SUCCESS":
+    case "UPDATE_PROJECT_TASKS_SUCCESS":
+    case "SEARCH_TASKS_SUCCESS":
+      return payload.map(task => task.id)
 
     default:
       return state

@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { editTaskDetail } from '../../actions'
+import { getTaskById } from '../../reducers'
+import { editTaskDetail,saveTaskDetail } from '../../actions'
 
 class Textarea extends React.Component {
   state = {rows: 2};
@@ -15,12 +16,19 @@ class Textarea extends React.Component {
     	e.target.rows = newRows
     }
   	this.setState({rows: newRows})
-    this.props.editTaskDetail(e.target.value,this.props.currentTask)
+    this.props.editTaskDetail(e.target.value,this.props.task.id)
+  }
+
+  handleBlur = e => {
+    const detail = e.target.value
+    const { task:{ id },saveTaskDetail } = this.props
+    saveTaskDetail(detail,id)
   }
 
 	render() {
-    const { placeholder,className,lineHeight, currentTask,tasks } = this.props
-    const { detail } = tasks.byId[currentTask] || ''
+    const { placeholder,className,lineHeight,task } = this.props
+    // const { detail='' } = task || ''
+    const detail = task.detail || ''
 
   	return <textarea
       placeholder={placeholder}
@@ -28,6 +36,7 @@ class Textarea extends React.Component {
     	value={detail}
       rows={this.state.rows}
       onChange={this.handleChange}
+      onBlur={this.handleBlur}
       style={{lineHeight: `${lineHeight}px`}}
     />
   }
@@ -39,18 +48,18 @@ Textarea.propTypes = {
   lineHeight: React.PropTypes.number.isRequired,
 }
 
-const mapStateToProps = ({ tasks },{ match }) => {
+const mapStateToProps = (state,{ match }) => {
   const currentTask = match.params.taskId
+  const task = getTaskById(state,currentTask) || {}
   return {
-    currentTask,
-    tasks,
+    task,
   }
 }
 
 Textarea = withRouter(
   connect(
     mapStateToProps,
-    {editTaskDetail},
+    { editTaskDetail,saveTaskDetail },
   )(Textarea)
 )
 

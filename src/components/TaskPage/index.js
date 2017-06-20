@@ -8,40 +8,33 @@ import AddItem from './AddItem'
 import { changeTaskOrder } from '../../actions'
 
 class TaskPage extends React.Component {
+  state = { hasMore: false }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
-    this.props.changeTaskOrder(oldIndex,newIndex)
-  }//拖拽的lib要求的方法
+    this.props.changeTaskOrder(oldIndex, newIndex)
+  } //拖拽的lib要求的方法
+
+  onScroll = e => {
+    if (e.target.scrollTop > 500) {
+      this.loadMore()
+    }
+  }
+
+  loadMore = () => {}
 
   render() {
-    const projectId = this.props.match.params.id
-    //如果是search，params里有searchId但没有id（不用projectId是因为assignee，比如my task也使用这个id），search的结果不带<TableFilter />
     return (
-      <div className='TaskPage'>
-        {projectId && <TableFilter />}
-        <TaskTable
-          onSortEnd={this.onSortEnd}
-          useDragHandle
-        />
-        <AddItem />
+      <div className="TaskPage">
+        <TableFilter />
+        <div className="Table__scrollWrapper" onScroll={this.onScroll}>
+          <TaskTable onSortEnd={this.onSortEnd} useDragHandle />
+          <AddItem />
+        </div>
       </div>
     )
   }
 }
 
-TaskPage.propTypes = {
-
-}
-
-// const mapStateToProps = state => ({
-//   store:state,
-// })
-
-TaskPage = withRouter(
-  connect(null,
-    {changeTaskOrder}
-  )(TaskPage)
-)
-
+TaskPage = withRouter(connect(null, { changeTaskOrder })(TaskPage))
 
 export default TaskPage

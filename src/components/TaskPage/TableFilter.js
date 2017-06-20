@@ -1,35 +1,35 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import Filter from '../parts/Filter'
-import { changeFilter,changeCompletedTab } from '../../actions'
-import { completedTabs } from '../../data'
+import { changeCompleted } from 'actions'
+import { Dropdown } from 'semantic-ui-react'
+
+const options = [
+  { key: 1, value: 'active', text: '未完成' },
+  { key: 2, value: 'completed', text: '完成' },
+  { key: 3, value: 'all', text: '全部' }
+]
 
 class TableFilter extends React.Component {
-
-  changeTitle = (filter) => {
-    this.props.changeFilter(filter)
-    this.props.changeCompletedTab(filter.id)
+  changeTitle = (e, data) => {
+    this.props.changeCompleted(data.value)
   }
 
   render() {
     return (
-      <Filter className='TableFilter'
-        titleId={this.props.completedTab}
-        filterArray={completedTabs}
-        changeTitle={this.changeTitle}
+      <Dropdown
+        value={this.props.completed || 'active'}
+        options={options}
+        onChange={this.changeTitle}
       />
     )
   }
 }
 
-const mapStateToProps = ({ completedTab }) => ({ completedTab })
+const mapStateToProps = ({ completed }) => ({ completed })
 
 TableFilter = withRouter(
-  connect(
-    mapStateToProps,
-    { changeFilter,changeCompletedTab },
-  )(TableFilter)
+  connect(mapStateToProps, { changeCompleted })(TableFilter)
 )
 
 export default TableFilter

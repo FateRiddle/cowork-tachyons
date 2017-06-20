@@ -4,10 +4,12 @@ import ReactDOM from 'react-dom'
 import configureStore from './configureStore'
 import Root from './Root'
 import './index.css'
+import 'semantic-ui-css/semantic.min.css'
 
 const store = configureStore()
 
-// console.log(store.getState());
+// getting state as global object accessible from outside React, if needed
+// store.subscribe(() => window.reduxStore = store.getState())
 
 ReactDOM.render(
     <Root store={store} />,

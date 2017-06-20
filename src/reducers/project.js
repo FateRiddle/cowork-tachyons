@@ -1,17 +1,17 @@
 const project = (state, action) => {
+  const { payload } = action
   switch (action.type) {
-    case "ADD_PROJECT":
-    console.log(state);
+    case "ADD_PROJECT_LOADING":
       return {
-        id: action.id,
-        title: action.title,
-        group: action.group,
+        id: payload.id,
+        title: payload.title,
+        group: payload.group,
       }
-    case "EDIT_PROJECT":
+    case "EDIT_PROJECT_LOADING":
       return {
         ...state,
-        title: action.title,
-        group: action.group,
+        title: payload.title,
+        group: payload.group,
       }
     default:
       return state
