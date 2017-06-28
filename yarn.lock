@@ -5520,6 +5520,10 @@ table@^3.7.8:
     slice-ansi "0.0.4"
     string-width "^2.0.0"
 
+tachyons@^4.7.4:
+  version "4.7.4"
+  resolved "http://registry.npm.taobao.org/tachyons/download/tachyons-4.7.4.tgz#eca4ffa15c1f06a357f088c6d0e687fc5f0408cc"
+
 tapable@^0.1.8, tapable@~0.1.8:
   version "0.1.10"
   resolved "http://registry.npm.taobao.org/tapable/download/tapable-0.1.10.tgz#29c35707c2b70e50d07482b5d202e8ed446dafd4"

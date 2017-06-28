@@ -1,14 +1,15 @@
 import React from 'react'
 import Toolbar from './Toolbar'
 import Editor from './Editor'
+import Stats from './Stats'
 
 class DetailPage extends React.Component {
-
-  render(){
+  render() {
     return (
-      <div className='DetailPage'>
+      <div className="DetailPage">
         <Toolbar />
         <Editor />
+        <Stats />
       </div>
     )
   }

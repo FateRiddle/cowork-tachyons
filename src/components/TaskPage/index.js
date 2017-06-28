@@ -4,8 +4,7 @@ import { withRouter } from 'react-router'
 // import { Switch,Route,Redirect } from 'react-router-dom'
 import TableFilter from './TableFilter'
 import TaskTable from './TaskTable'
-import AddItem from './AddItem'
-import { changeTaskOrder } from '../../actions'
+import { changeTaskOrder } from 'actions'
 
 class TaskPage extends React.Component {
   state = { hasMore: false }
@@ -26,9 +25,9 @@ class TaskPage extends React.Component {
     return (
       <div className="TaskPage">
         <TableFilter />
-        <div className="Table__scrollWrapper" onScroll={this.onScroll}>
-          <TaskTable onSortEnd={this.onSortEnd} useDragHandle />
-          <AddItem />
+        <div className="Table__wrapper" onScroll={this.onScroll}>
+          {/* <TaskTable onSortEnd={this.onSortEnd} useDragHandle /> */}
+          <TaskTable />
         </div>
       </div>
     )

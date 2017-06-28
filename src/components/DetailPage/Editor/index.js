@@ -120,8 +120,8 @@ class ContentEditor extends React.Component {
 
   handleTitleBlur = () => {
     const title = Plain.serialize(this.state.titleState)
-    const { task: { id }, saveTaskTitle } = this.props
-    saveTaskTitle(title, id)
+    const { currentTask, saveTaskTitle } = this.props
+    saveTaskTitle(title, currentTask)
   }
 
   onDetailChange = state => {
@@ -144,14 +144,14 @@ class ContentEditor extends React.Component {
 
   handleDetailBlur = () => {
     const detail = Plain.serialize(this.state.detailState)
-    const { task: { id }, saveTaskDetail } = this.props
-    saveTaskDetail(detail, id)
+    const { currentTask, saveTaskDetail } = this.props
+    saveTaskDetail(detail, currentTask)
   }
 
   changeProject = (e, data) => {
     const projectId = data.value
-    const taskId = this.props.task.id
-    this.props.editTaskProject(projectId, taskId)
+    const { editTaskProject, currentTask } = this.props
+    this.props.editTaskProject(projectId, currentTask)
   }
 
   getProjectOptions = () => {

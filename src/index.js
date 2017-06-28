@@ -11,7 +11,4 @@ const store = configureStore()
 // getting state as global object accessible from outside React, if needed
 // store.subscribe(() => window.reduxStore = store.getState())
 
-ReactDOM.render(
-    <Root store={store} />,
-  document.getElementById('root')
-)
+ReactDOM.render(<Root store={store} />, document.getElementById('root'))

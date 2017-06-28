@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { addTask } from '../../actions'
-import { getFilteredTasks } from '../../reducers'
+import { addTask } from 'actions'
+import { getFilteredTasks } from 'reducers'
 
 class AddItem extends React.Component {
   isActive = () => {
@@ -11,6 +11,7 @@ class AddItem extends React.Component {
   }
 
   AddTask = () => {
+    console.log('haha')
     const { addTask, match } = this.props
     if (this.isActive()) {
       const currentProject = match.params.id
@@ -30,7 +31,7 @@ class AddItem extends React.Component {
   }
 
   render() {
-    const { tasks } = this.props
+    const { tasks, style } = this.props
     let msg = ''
     if (this.isActive()) {
       if (tasks.length === 0) {
@@ -40,7 +41,11 @@ class AddItem extends React.Component {
       }
     }
 
-    return <div className="AddItem" onClick={this.AddTask}>{msg}</div>
+    return (
+      <li className="AddItem" style={style} onClick={this.AddTask}>
+        {msg}
+      </li>
+    )
   }
 }
 
