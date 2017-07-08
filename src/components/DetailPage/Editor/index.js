@@ -1,10 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { Dropdown } from 'semantic-ui-react'
-import { getAllProjects, getTaskById, getProjectById } from 'reducers'
+import { getAllProjects, getTaskById } from 'reducers'
 import {
-  editTaskProject,
   editTaskTitle,
   saveTaskTitle,
   editTaskDetail,
@@ -63,15 +61,8 @@ class ContentEditor extends React.Component {
   }
 
   render() {
-    const { currentProject } = this.props
     return (
       <div className="Editor">
-        <Dropdown
-          // className="Drop__project"
-          value={currentProject}
-          options={this.getProjectOptions()}
-          onChange={this.changeProject}
-        />
         <div className="Editor__title">
           <Editor
             placeholder="标题"
@@ -147,35 +138,14 @@ class ContentEditor extends React.Component {
     const { currentTask, saveTaskDetail } = this.props
     saveTaskDetail(detail, currentTask)
   }
-
-  changeProject = (e, data) => {
-    const projectId = data.value
-    const { editTaskProject, currentTask } = this.props
-    this.props.editTaskProject(projectId, currentTask)
-  }
-
-  getProjectOptions = () => {
-    const { allProjects } = this.props
-    const projectArray = allProjects.map(project => ({
-      key: project.id,
-      value: project.id,
-      text: project.title
-    }))
-    return [...projectArray, { key: 0, value: '0', text: 'No Project' }]
-  }
 }
 
 const mapStateToProps = (state, { match }) => {
-  const allProjects = getAllProjects(state)
   const currentTask = match.params.taskId
   const task = getTaskById(state, currentTask) || {}
-  const project = getProjectById(state, task.projectId) || {}
-  const currentProject = project.id ? project.id : '0'
   return {
-    allProjects,
     task,
     currentTask,
-    currentProject,
     completed: state.completed,
     search: state.search
   }
@@ -184,7 +154,6 @@ const mapStateToProps = (state, { match }) => {
 ContentEditor = withRouter(
   connect(mapStateToProps, {
     editTaskTitle,
-    editTaskProject,
     saveTaskTitle,
     editTaskDetail,
     saveTaskDetail

@@ -25,6 +25,7 @@
     "mssql": "^4.0.1",
     "react": "15.4.2",
     "react-addons-shallow-compare": "15.4.2",
+    "react-click-outside": "tj/react-click-outside",
     "react-datepicker": "^0.46.0",
     "react-dom": "15.4.2",
     "react-redux": "^5.0.1",
@@ -38,6 +39,7 @@
     "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.68.5",
     "slate": "^0.20.2",
+    "tachyons": "^4.7.4",
     "uuid": "^3.0.1"
   },
   "scripts": {

@@ -5,8 +5,11 @@ const task = (state, action) => {
   switch (action.type) {
     case 'ADD_TASK_LOADING':
     case 'INSERT_TASK_LOADING':
+    case 'ADD_SUBTASK_LOADING':
+    case 'INSERT_SUBTASK_LOADING':
       return {
         id: payload.id,
+        upTaskId: payload.upTaskId,
         projectId: payload.projectId,
         assignee: payload.assignee,
         title: '',
@@ -36,6 +39,15 @@ const task = (state, action) => {
         return {
           ...state,
           assignee: payload.assignee
+        }
+      }
+      return state
+    case 'EDIT_SUBTASK_ASSIGNEE_LOADING':
+      if (state.id === payload.id) {
+        return {
+          ...state,
+          assignee: payload.assignee,
+          myOrder: payload.myOrder
         }
       }
       return state

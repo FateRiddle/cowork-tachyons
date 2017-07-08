@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import classnames from 'classnames'
 import { getAllProjects } from 'reducers'
-import { addProject, toggleSidebar, updateProjectTasks } from 'actions'
+import * as actions from 'actions'
 import ProjectEditor from '../Pop/ProjectEditor'
 import { Dropdown, Confirm } from 'semantic-ui-react'
 
@@ -27,6 +27,7 @@ class Sidebar extends React.Component {
 
   onProjectClick = id => {
     this.props.updateProjectTasks(id)
+    this.props.changeCurrentTask()
   }
 
   openProjectEditor = (projectId = '') => {
@@ -73,11 +74,6 @@ class Sidebar extends React.Component {
               >
                 {project.title}
               </NavLink>
-              {/* <span className='addIcon'
-                onClick={()=>{
-                  this.openProjectEditor(project.id)
-                }}
-              >...</span> */}
               <Dropdown text="..." inline icon={null} pointing="left">
                 <Dropdown.Menu>
                   <Dropdown.Item
@@ -109,9 +105,12 @@ const mapStateToProps = state => ({
 })
 
 Sidebar = connect(mapStateToProps, {
-  addProject,
-  toggleSidebar,
-  updateProjectTasks
+  ...actions
 })(Sidebar)
 
 export default Sidebar
+
+// addProject,
+// toggleSidebar,
+// updateProjectTasks,
+// changeCurrentTask

@@ -2,17 +2,31 @@ import React from 'react'
 import { connect } from 'react-redux'
 import TaskPage from './TaskPage'
 import DetailPage from './DetailPage'
-import { updateUserTasks, searchTasks } from '../actions'
+import { updateUserTasks, searchTasks, updateSubtasks } from 'actions'
 
 class MainContent extends React.Component {
   componentDidMount() {
     //加载的时候根据url的不同，加载不同的task，这里me和search需要persist to localStorage
-    const { search, updateUserTasks, searchTasks } = this.props
-    const { id } = this.props.match.params
+    const {
+      search,
+      updateUserTasks,
+      searchTasks,
+      updateSubtasks,
+      match
+    } = this.props
+    const { id, taskId } = match.params
     if (id === 'search') {
-      searchTasks(search)
+      searchTasks(search).then(_ => {
+        if (taskId) {
+          updateSubtasks(taskId)
+        }
+      })
     } else {
-      updateUserTasks(id)
+      updateUserTasks(id).then(_ => {
+        if (taskId) {
+          updateSubtasks(taskId)
+        }
+      })
     }
   }
 
@@ -33,7 +47,8 @@ const mapStateToProps = ({ search }) => ({ search })
 
 MainContent = connect(mapStateToProps, {
   updateUserTasks,
-  searchTasks
+  searchTasks,
+  updateSubtasks
 })(MainContent)
 
 export default MainContent

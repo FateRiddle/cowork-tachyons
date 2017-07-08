@@ -45,6 +45,7 @@ const Tasks = {
   byProject: id => ax.get(`/tasks?projectId=${id}`),
   byUser: id => ax.get(`/tasks?userId=${id}`),
   bySearch: search => ax.post(`/tasks/search`, search),
+  subtasks: id => ax.get(`/tasks?upTaskId=${id}`),
   // const {
   //   assignee,
   //   createdBy,
@@ -53,21 +54,27 @@ const Tasks = {
   //   projectId,
   //   completed,
   // } = search
-  add: ({ id, projectId, assignee, taskOrder }) =>
-    ax.post('/tasks', { id, projectId, assignee, taskOrder }),
-  insert: ({ id, projectId, assignee, taskId }) =>
-    ax.post('/tasks', { id, projectId, assignee, taskId }),
+  add: ({ id, projectId, assignee }) =>
+    ax.post('/tasks', { id, projectId, assignee }),
+  insert: ({ id, projectId, assignee, insertAt }) =>
+    ax.post('/tasks', { id, projectId, assignee, insertAt }),
   addSubtask: ({ id, upTaskId, projectId }) =>
-    ax.post(`/tasks/`, { id, upTaskId, projectId }),
+    ax.post(`/tasks`, { id, upTaskId, projectId }),
+  insertSubtask: ({ id, upTaskId, insertAt, projectId }) =>
+    ax.post(`/tasks`, { id, upTaskId, insertAt, projectId }),
   del: ({ id }) => ax.del(`/tasks/${id}`),
   editTitle: ({ id, title }) => ax.put(`/tasks/${id}`, { title }),
   editDetail: ({ id, detail }) => ax.put(`/tasks/${id}`, { detail }),
-  editProject: ({ id, projectId }) => ax.put(`/tasks/${id}`, { projectId }),
+  editProject: ({ id, projectId, ids }) =>
+    ax.put(`/tasks/${id}`, { projectId, idsForEditProject: ids }),
   editAssignee: ({ id, assignee }) => ax.put(`/tasks/${id}`, { assignee }),
   editDue: ({ id, dueAt }) =>
     ax.put(`/tasks/${id}`, { dueAt: dueAt ? dueAt.format() : null }),
   toggle: ({ id }) => ax.put(`/tasks/${id}`, { toggle: true }),
-  changeOrder: ({ id, order }) => ax.put(`/tasks/${id}`, { order })
+  taskOrder: ({ id, before, targetId }) =>
+    ax.put(`/tasks/order/${id}`, { before, type: 'task', targetId }),
+  myOrder: ({ id, before, targetId }) =>
+    ax.put(`/tasks/order/${id}`, { before, type: 'my', targetId })
 }
 
 const Users = {

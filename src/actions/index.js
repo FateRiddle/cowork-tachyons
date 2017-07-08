@@ -1,7 +1,13 @@
 import { v4 } from 'uuid'
 import api from '../api'
-import { getTaskById } from '../reducers'
+import {
+  getTaskById,
+  getAlltasks,
+  getSubtasksById,
+  getAllSubtasks
+} from '../reducers'
 import moment from 'moment'
+import { arrayMove } from 'react-sortable-hoc'
 
 //utility
 const nullToEmptyString = obj => {
@@ -17,15 +23,16 @@ const nullToEmptyString = obj => {
   return newObj
 }
 
-const formatDate = task => {
-  const { createdAt, dueAt, modifiedAt } = task
-  return {
-    ...task,
-    createdAt: createdAt ? moment(createdAt) : null,
-    dueAt: dueAt ? moment(dueAt) : null,
-    modifiedAt: modifiedAt ? moment(modifiedAt) : null
-  }
-}
+const formatDate = tasks =>
+  tasks.map(task => {
+    const { createdAt, dueAt, modifiedAt } = task
+    return {
+      ...task,
+      createdAt: createdAt ? moment(createdAt) : null,
+      dueAt: dueAt ? moment(dueAt) : null,
+      modifiedAt: modifiedAt ? moment(modifiedAt) : null
+    }
+  })
 
 ////////////////project action:
 export const addProject = (title = '', group = []) => {
@@ -88,18 +95,18 @@ export const removeUserFromProject = (userId, projectId) => ({
 
 export const addTask = projectId => (dispatch, getState) => {
   const id = v4()
-  const me = getState().me
+  const { me } = getState()
   const isMe = projectId === me.id
   const data = {
     id,
     assignee: isMe ? projectId : '',
     projectId: isMe ? '' : projectId
   }
-  const taskOrder = getState().tasks.allIds.length + 1
+
   dispatch({
     type: 'ADD_TASK',
     payload: {
-      promise: api.Tasks.add({ ...data, taskOrder }),
+      promise: api.Tasks.add(data),
       data
     }
   })
@@ -109,19 +116,54 @@ export const addTask = projectId => (dispatch, getState) => {
 
 export const insertTask = (projectId, taskId) => (dispatch, getState) => {
   const id = v4()
-  const me = getState().me
+  const { me, tasks: { allIds } } = getState()
   const isMe = projectId === me.id
-  console.log(projectId, me.id)
   const data = {
     id,
     assignee: isMe ? projectId : '',
     projectId: isMe ? '' : projectId,
-    taskId
+    insertAt: taskId
   }
   dispatch({
     type: 'INSERT_TASK',
     payload: {
       promise: api.Tasks.insert(data),
+      data
+    }
+  })
+}
+
+//insert the task right after taskId in allIds array
+
+export const addSubtask = taskId => (dispatch, getState) => {
+  const projectId = getTaskById(getState(), taskId).projectId
+  const data = {
+    id: v4(),
+    upTaskId: taskId,
+    projectId
+  }
+
+  dispatch({
+    type: 'ADD_SUBTASK',
+    payload: {
+      promise: api.Tasks.addSubtask(data),
+      data
+    }
+  })
+}
+
+export const insertSubtask = (taskId, subTaskId) => (dispatch, getState) => {
+  const projectId = getTaskById(getState(), taskId).projectId
+  const data = {
+    id: v4(),
+    upTaskId: taskId,
+    insertAt: subTaskId,
+    projectId
+  }
+  dispatch({
+    type: 'INSERT_SUBTASK',
+    payload: {
+      promise: api.Tasks.insertSubtask(data),
       data
     }
   })
@@ -163,18 +205,19 @@ export const saveTaskDetail = (detail, id) => ({
   payload: api.Tasks.editDetail({ detail, id })
 })
 
-export const editTaskProject = (projectId, id) => {
+export const editTaskProject = (projectId, id) => (dispatch, getState) => {
   const data = {
     projectId,
-    id
+    id,
+    ids: getAllSubtasks(getState(), id)
   }
-  return {
+  dispatch({
     type: 'EDIT_TASK_PROJECT',
     payload: {
       promise: api.Tasks.editProject(data),
       data
     }
-  }
+  })
 }
 
 export const editTaskAssignee = (assignee, id) => {
@@ -190,6 +233,30 @@ export const editTaskAssignee = (assignee, id) => {
     }
   }
 }
+//
+// export const editSubtaskAssignee = (assignee, id) => (dispatch, getState) => {
+//   const data = {
+//     assignee,
+//     id
+//   }
+//   //当子任务assign给自己时，要第一时间显示出来，且位置对。且对应的myOrder也要对。
+//   const getOrder = () => {
+//     if (assignee === getState().me) {
+//       const tasks = getAlltasks(getState()).filter(t => t.assignee === assignee)
+//       const myOrders = tasks.map(t => t.myOrder).filter(o => !!o) //去除undefined和null,一般不会有
+//       return Math.min(...myOrders) - 1
+//     }
+//     return undefined
+//   }
+//
+//   dispatch({
+//     type: 'EDIT_SUBTASK_ASSIGNEE',
+//     payload: {
+//       promise: api.Tasks.editAssignee(data),
+//       data: { ...data, myOrder: getOrder() }
+//     }
+//   })
+// }
 
 export const editTaskDue = (dueAt, id) => {
   const data = {
@@ -221,37 +288,36 @@ export const addTaskTag = (tag, id) => ({
   }
 })
 
-// TODO: simpler way?
 export const changeTaskOrder = (oldIndex, newIndex) => (dispatch, getState) => {
-  const allTasks = getState().tasks.allIds.map(id => getState().tasks.byId[id])
-  let { taskOrder: order, id } = allTasks[oldIndex]
-  const newOrder = allTasks[newIndex].taskOrder
-  switch (true) {
-    case newIndex === 0:
-      // console.log(1);
-      order = newOrder / 2
-      break
-    case newIndex === allTasks.length - 1:
-      // console.log(2);
-      order = newOrder + 1
-      break
-    case newIndex < oldIndex:
-      // console.log(3);
-      const formerTask = allTasks[newIndex - 1]
-      order = (newOrder + formerTask.taskOrder) / 2
-      break
-    case newIndex > oldIndex:
-      // console.log(4);
-      const latterTask = allTasks[newIndex + 1]
-      order = (newOrder + latterTask.taskOrder) / 2
-      break
-    default:
+  const tasks = getAlltasks(getState())
+  const task = tasks[oldIndex]
+  const target = tasks[newIndex]
+  // const newTasks = arrayMove(tasks, oldIndex, newIndex) // use arrayMove from react-sortable-hoc
+  // const index = newTasks.indexOf(task)
+  //
+  // const orderByIndex = (index, tasks) => {
+  //   switch (index) {
+  //     case 0:
+  //       return tasks[1].taskOrder - 1
+  //     case tasks.length - 1:
+  //       return tasks[tasks.length - 2].taskOrder + 1
+  //     default:
+  //       return (tasks[index - 1].taskOrder + tasks[index + 1].taskOrder) / 2
+  //   }
+  // }
+  // const order = orderByIndex(index, newTasks)
+  let before = true
+  if (oldIndex < newIndex) {
+    before = false
   }
-  // console.log(newIndex,order);
   dispatch({
     type: 'CHANGE_TASK_ORDER',
     payload: {
-      promise: api.Tasks.changeOrder({ id, order }),
+      promise: api.Tasks.taskOrder({
+        id: task.id,
+        before,
+        targetId: target.id
+      }),
       data: {
         oldIndex,
         newIndex
@@ -260,21 +326,35 @@ export const changeTaskOrder = (oldIndex, newIndex) => (dispatch, getState) => {
   })
 }
 
-export const addSubtask = taskId => (dispatch, getState) => {
-  const projectId = getTaskById(getState(), taskId).projectId
-  const data = {
-    id: v4(),
-    upTaskId: taskId,
-    projectId
+export const changeMyOrder = (oldIndex, newIndex) => (dispatch, getState) => {
+  const tasks = getAlltasks(getState())
+  const task = tasks[oldIndex]
+  const target = tasks[newIndex]
+  let before = true
+  if (oldIndex < newIndex) {
+    before = false
   }
   dispatch({
-    type: 'ADD_SUBTASK',
+    type: 'CHANGE_MY_ORDER',
     payload: {
-      promise: api.Tasks.addSubtask(data),
-      data
+      promise: api.Tasks.myOrder({ id: task.id, before, targetId: target.id }),
+      data: {
+        oldIndex,
+        newIndex
+      }
     }
   })
 }
+
+export const changeCurrentTask = (id = '') => ({
+  type: 'CHANGE_CURRENT_TASK',
+  id
+})
+
+export const changeCurrentSubtask = (id = '') => ({
+  type: 'CHANGE_CURRENT_SUBTASK',
+  id
+})
 
 // export const changeFilter = (filter) => dispatch => {
 //   const { completed,search } = filter
@@ -328,18 +408,24 @@ export const updateState = () => ({
 export const updateProjectTasks = id => ({
   type: 'UPDATE_PROJECT_TASKS',
   payload: {
-    promise: api.Tasks
-      .byProject(id)
-      .then(tasks => tasks.map(task => formatDate(task))) //最后这步处理是为了返回的数据结构一致，可以用一个reducer case来写。
+    promise: api.Tasks.byProject(id).then(tasks => formatDate(tasks)) //最后这步处理是为了返回的数据结构一致，可以用一个reducer case来写。
   }
 })
 
 export const updateUserTasks = id => ({
   type: 'UPDATE_MY_TASKS',
   payload: {
-    promise: api.Tasks
-      .byUser(id)
-      .then(tasks => tasks.map(task => formatDate(task)))
+    promise: api.Tasks.byUser(id).then(tasks => formatDate(tasks))
+  }
+})
+
+export const updateSubtasks = id => ({
+  type: 'UPDATE_SUBTASKS',
+  payload: {
+    promise: api.Tasks.subtasks(id).then(tasks => formatDate(tasks)),
+    data: {
+      id
+    }
   }
 })
 
@@ -362,9 +448,7 @@ export const searchTasks = (search = {}) => dispatch => {
   dispatch({
     type: 'SEARCH_TASKS',
     payload: {
-      promise: api.Tasks
-        .bySearch(search)
-        .then(tasks => tasks.map(task => formatDate(task)))
+      promise: api.Tasks.bySearch(search).then(tasks => formatDate(tasks))
     }
   })
   //how do I dispatch changeSearch after api call? can use .then() it seems

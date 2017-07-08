@@ -8,6 +8,8 @@ import 'semantic-ui-css/semantic.min.css'
 
 const store = configureStore()
 
+console.log(store.getState())
+
 // getting state as global object accessible from outside React, if needed
 // store.subscribe(() => window.reduxStore = store.getState())
 

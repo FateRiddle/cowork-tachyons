@@ -1,19 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import { Link } from 'react-router-dom'
 import { SortableHandle } from 'react-sortable-hoc'
 import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
 import { Dropdown } from 'semantic-ui-react'
-import { getUserByTask, getTaskById } from 'reducers'
+import { getUserByTask } from 'reducers'
 
 const DragHandle = SortableHandle(({ show }) =>
   <span className="DragHandle">
     {show ? '::' : ''}
   </span>
 )
-
+//为了简洁，注意所有的currentTask指的是currentSubtask
 class TaskItem extends React.Component {
   state = { mouseOn: false }
 
@@ -27,10 +28,8 @@ class TaskItem extends React.Component {
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
 
   render() {
-    const { match, task, me, style, currentTask, getTask } = this.props
+    const { match, task, me, style, currentTask } = this.props
     const id = task.id
-    const { id: currentProject } = match.params
-    // console.log(currentTask,currentProject);
     const isTitle = this.isTitle(task)
     const assignee = task.assignee ? task.assignee : '0'
     return (
@@ -57,16 +56,11 @@ class TaskItem extends React.Component {
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleBlur}
           />
-          {task.upTaskId &&
-            <span className="TaskItem__upTask">{`< ${getTask(task.upTaskId)
-              .title}`}</span>}
           {!isTitle &&
             <span className="TaskItem__dueAt">
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
             </span>}
-          {/* {currentProject !== me.id && <AssignTab taskId={id} />} */}
-          {currentProject !== me.id &&
-          false && //react-virtualized的下边界会挡住下拉框
+          {false && //react-virtualized的下边界会挡住下拉框
             <Dropdown
               pointing="right"
               inline
@@ -77,9 +71,14 @@ class TaskItem extends React.Component {
               options={this.getAssigneeOptions()}
               onChange={this.handleAssigneeChange}
             />}
+          <Link to={`${task.id}`} onClick={this.toTaskDetail}>></Link>
         </span>
       </li>
     )
+  }
+
+  toTaskDetail = () => {
+    this.props.changeCurrentTask(this.props.task.id)
   }
 
   getAssigneeOptions = () => {
@@ -100,7 +99,8 @@ class TaskItem extends React.Component {
 
   handleAssigneeChange = (e, data) => {
     const { editTaskAssignee, task } = this.props
-    editTaskAssignee(data.value, task.id)
+    const assignee = data.value
+    editTaskAssignee(assignee, task.id)
   }
 
   canEdit = () => {
@@ -133,16 +133,9 @@ class TaskItem extends React.Component {
   }
 
   handleLineClick = () => {
-    const { history, match, changeCurrentTask, task } = this.props
-    const { id: projectId } = match.params
-    const taskId = task.id
-    changeCurrentTask(taskId)
+    const { changeCurrentSubtask, task } = this.props
     console.log('item', task)
-    if (projectId === 'search') {
-      history.push(`/search/${taskId}`)
-    } else {
-      history.push(`/${projectId}/${taskId}`)
-    }
+    changeCurrentSubtask(task.id)
   }
 
   handleTitleChange = e => {
@@ -176,7 +169,13 @@ class TaskItem extends React.Component {
   }
 
   handleKeyDown = e => {
-    const { task: { id }, taskIndex, deleteTask, insertTask } = this.props
+    const {
+      task: { id },
+      taskIndex,
+      upTaskId,
+      deleteTask,
+      insertSubtask
+    } = this.props
     switch (e.key) {
       case 'Tab':
         e.preventDefault()
@@ -193,8 +192,7 @@ class TaskItem extends React.Component {
       case 'Enter':
         if (this.canEdit()) {
           e.preventDefault()
-          const currentProject = this.props.match.params.id
-          insertTask(currentProject, id)
+          insertSubtask(upTaskId, id)
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
         }
         break
@@ -225,9 +223,9 @@ const mapStateToProps = state => ({
   completed: state.completed,
   search: state.search,
   me: state.me,
-  currentTask: state.currentTask,
-  getUsers: taskId => getUserByTask(state, taskId),
-  getTask: taskId => getTaskById(state, taskId)
+  currentTask: state.currentSubtask,
+  upTaskId: state.currentTask,
+  getUsers: taskId => getUserByTask(state, taskId)
 })
 
 TaskItem = withRouter(connect(mapStateToProps, { ...actions })(TaskItem))

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { resetErrorMessage } from '../../actions'
+import { resetErrorMessage } from 'actions'
 
 class Warning extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
@@ -18,8 +18,13 @@ class Warning extends React.PureComponent {
   }
 }
 
-Warning = connect(({ warning }) => ({ warning }), { resetErrorMessage })(
-  Warning
-)
+const mapStateToProps = ({ warning }) => {
+  console.log(warning)
+  return { warning }
+}
+
+Warning = connect(mapStateToProps, {
+  resetErrorMessage
+})(Warning)
 
 export default Warning

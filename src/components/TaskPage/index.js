@@ -25,10 +25,9 @@ class TaskPage extends React.Component {
     return (
       <div className="TaskPage">
         <TableFilter />
-        <div className="Table__wrapper" onScroll={this.onScroll}>
-          {/* <TaskTable onSortEnd={this.onSortEnd} useDragHandle /> */}
-          <TaskTable />
-        </div>
+        {/* <div className="Table__wrapper" onScroll={this.onScroll}> */}
+        <TaskTable />
+        {/* </div> */}
       </div>
     )
   }

@@ -5,46 +5,54 @@ import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import { List, AutoSizer } from 'react-virtualized'
 import TaskItem from './TaskItem'
 import * as actions from 'actions'
-import { getTaskByCompleted } from 'reducers'
-import AddItem from './AddItem'
+import { getSubtasks, getTaskById } from 'reducers'
 
 //转换成可拖拽的item
 const SortableItem = SortableElement(TaskItem)
 
 const SortableList = SortableContainer(List)
 
-class TaskTable extends React.Component {
+class Subtasks extends React.Component {
   componentDidMount() {
-    const { changeCurrentTask, currentTask } = this.props
-    if (currentTask) {
-      changeCurrentTask(currentTask)
+    this.update()
+  }
+
+  componentDidUpdate(prevProps) {
+    const { currentTask } = this.props
+    const prevTask = prevProps.currentTask
+    if (prevTask !== currentTask) {
+      this.update()
+    }
+  }
+
+  update = () => {
+    const { updateSubtasks, currentTask, upTask } = this.props
+    console.log(currentTask, upTask)
+    if (currentTask && upTask && upTask.title) {
+      //如果任务没有内容，不去刷新是否有子任务，算是唯一能想到减少请求的优化了
+      updateSubtasks(currentTask)
     }
   }
 
   focusUp = index => {
-    const { tasks, history, changeCurrentTask } = this.props
+    const { tasks, changeCurrentSubtask } = this.props
     if (index > 0 && index < tasks.length) {
       const previousId = tasks[index - 1].id
-      history.push(`${previousId}`)
-      changeCurrentTask(previousId)
+      changeCurrentSubtask(previousId)
     }
   }
 
   focusDown = index => {
-    const { tasks, history, changeCurrentTask } = this.props
+    const { tasks, changeCurrentSubtask } = this.props
     if (index > -1 && index < tasks.length - 1) {
       const nextId = tasks[index + 1].id
-      history.push(`${nextId}`)
-      changeCurrentTask(nextId)
+      changeCurrentSubtask(nextId)
     }
   }
 
   rowRenderer = props => {
     const { tasks } = this.props
     const { index } = props
-    if (index === tasks.length) {
-      return <AddItem {...props} />
-    }
     return (
       <SortableItem
         task={tasks[index]}
@@ -59,39 +67,28 @@ class TaskTable extends React.Component {
   onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
       //转换成全部任务中对应的index（显示的部分可能是未完成任务，对应的index不是在整个allIds里的index）
-      let {
-        tasks,
-        changeMyOrder,
-        changeTaskOrder,
-        allIds,
-        match,
-        me
-      } = this.props
-      const isMe = match.params.id === me
+      let { tasks, changeTaskOrder, allIds } = this.props
       const oldId = tasks[oldIndex].id
       const newId = tasks[newIndex].id
       const _oldIndex = allIds.indexOf(oldId)
       const _newIndex = allIds.indexOf(newId)
-      if (isMe) {
-        changeMyOrder(_oldIndex, _newIndex)
-      } else {
-        changeTaskOrder(_oldIndex, _newIndex)
-      }
+      changeTaskOrder(_oldIndex, _newIndex)
       this.forceUpdate()
     }
   }
 
   render() {
     const { tasks } = this.props
+    console.log(tasks)
     return (
-      <div className="Table__wrapper">
+      <div className="SubTasks__wrapper">
         <AutoSizer>
-          {({ height, width }) =>
+          {({ width, height }) =>
             <SortableList
-              className="TaskTable"
+              className="SubtaskTable"
               width={width}
               height={height}
-              rowCount={tasks.length + 1}
+              rowCount={tasks.length}
               rowHeight={30}
               rowRenderer={this.rowRenderer}
               onSortEnd={this.onSortEnd}
@@ -105,28 +102,19 @@ class TaskTable extends React.Component {
   }
 }
 
-TaskTable.propTypes = {}
+Subtasks.propTypes = {}
 
-const mapStateToProps = (state, { match }) => {
-  let tasks = getTaskByCompleted(state)
-  const { id } = match.params
-  if (id === state.me.id) {
-    //个人任务, 排除未分配给自己的任务、子任务
-    tasks = tasks.filter(t => t.assignee === match.params.id)
-  } else if (id && id !== 'search') {
-    //项目任务，排除所有子任务
-    tasks = tasks.filter(t => t.projectId === id).filter(t => !t.upTaskId)
-  }
-
+const mapStateToProps = state => {
+  const { currentTask, currentSubtask } = state
   return {
-    tasks,
-    allIds: state.tasks.allIds,
-    currentTask: match.params.taskId,
-    match,
-    me: state.me
+    currentTask,
+    currentSubtask,
+    upTask: getTaskById(state, currentTask),
+    tasks: getSubtasks(state),
+    allIds: state.tasks.allIds
   }
 }
 
-TaskTable = withRouter(connect(mapStateToProps, { ...actions })(TaskTable))
+Subtasks = withRouter(connect(mapStateToProps, { ...actions })(Subtasks))
 
-export default TaskTable
+export default Subtasks

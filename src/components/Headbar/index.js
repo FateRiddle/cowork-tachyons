@@ -4,8 +4,9 @@ import { NavLink } from 'react-router-dom'
 import classnames from 'classnames'
 import Searchform from './Searchform'
 import Warning from '../parts/Warning'
-import * as actions from '../../actions'
+import * as actions from 'actions'
 import { withRouter } from 'react-router'
+import { getAllSubtasks } from 'reducers'
 
 class Headbar extends React.Component {
   onLogout = () => {
@@ -13,8 +14,19 @@ class Headbar extends React.Component {
     this.props.history.push('/home')
   }
 
+  onMyTaskClick = id => {
+    this.props.updateUserTasks(id)
+    this.props.changeCurrentTask()
+  }
+
+  test = () => {
+    const id = '41eee9bb-7e1d-4a32-b366-077d306972a1'
+    const ids = this.props.getSubs(id)
+    console.log(ids)
+  }
+
   render() {
-    const { me, toggleSidebar, sidebarHidden, updateUserTasks } = this.props
+    const { me, toggleSidebar, sidebarHidden } = this.props
     return (
       <div className="Headbar">
         <div
@@ -27,13 +39,14 @@ class Headbar extends React.Component {
         </div>
         <NavLink
           to={`/${me.id}`}
-          onClick={() => updateUserTasks(me.id)}
+          onClick={() => this.onMyTaskClick(me.id)}
           className="Headbar__myTask"
           activeClassName="Headbar__myTask--active"
         >
           My Tasks:
         </NavLink>
         <Searchform />
+        <div onClick={this.test}>test</div>
         <div className="Headbar__user">
           <button className="ui small green button">
             Download
@@ -49,7 +62,8 @@ class Headbar extends React.Component {
 
 const mapStateToProps = state => ({
   sidebarHidden: state.sidebarHidden,
-  me: state.me
+  me: state.me,
+  getSubs: id => getAllSubtasks(state, id)
 })
 
 Headbar = withRouter(connect(mapStateToProps, { ...actions })(Headbar))
