@@ -219,12 +219,12 @@ TaskItem.propTypes = {
   focusDown: React.PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, { match }) => ({
   completed: state.completed,
   search: state.search,
   me: state.me,
   currentTask: state.currentSubtask,
-  upTaskId: state.currentTask,
+  upTaskId: match.params.taskId,
   getUsers: taskId => getUserByTask(state, taskId)
 })
 

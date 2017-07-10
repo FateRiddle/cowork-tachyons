@@ -78,7 +78,7 @@ class Subtasks extends React.Component {
   }
 
   render() {
-    const { tasks } = this.props
+    const { tasks, allIds } = this.props
     console.log(tasks)
     return (
       <div className="SubTasks__wrapper">
@@ -93,7 +93,7 @@ class Subtasks extends React.Component {
               rowRenderer={this.rowRenderer}
               onSortEnd={this.onSortEnd}
               useDragHandle={true}
-              allIds={this.props.allIds} //for forceUpdate when allIds changes(drag & drop)
+              allIds={allIds} //for forceUpdate when allIds changes(drag & drop)
               tasks={tasks} // for forceUpdate when tasks changes
             />}
         </AutoSizer>
@@ -102,10 +102,9 @@ class Subtasks extends React.Component {
   }
 }
 
-Subtasks.propTypes = {}
-
-const mapStateToProps = state => {
-  const { currentTask, currentSubtask } = state
+const mapStateToProps = (state, { match }) => {
+  const currentTask = match.params.taskId
+  const { currentSubtask } = state
   return {
     currentTask,
     currentSubtask,

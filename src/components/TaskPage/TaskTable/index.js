@@ -67,7 +67,7 @@ class TaskTable extends React.Component {
         match,
         me
       } = this.props
-      const isMe = match.params.id === me
+      const isMe = match.params.id === me.id
       const oldId = tasks[oldIndex].id
       const newId = tasks[newIndex].id
       const _oldIndex = allIds.indexOf(oldId)

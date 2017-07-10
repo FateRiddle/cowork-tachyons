@@ -5,19 +5,22 @@ import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 import { editTaskProject } from 'actions'
 import { getAllProjects, getTaskById, getProjectById } from 'reducers'
-
-const TaskStack = () => <div>haha</div>
+import TaskStack from './TaskStack'
 
 class Relations extends React.Component {
   render() {
-    const { currentProject } = this.props
+    const { currentProject, currentTask } = this.props
+    console.log(currentTask)
     return (
-      <Dropdown
-        // className="Drop__project"
-        value={currentProject}
-        options={this.getProjectOptions()}
-        onChange={this.changeProject}
-      />
+      <div>
+        <Dropdown
+          // className="Drop__project"
+          value={currentProject}
+          options={this.getProjectOptions()}
+          onChange={this.changeProject}
+        />
+        <TaskStack id={currentTask} />
+      </div>
     )
   }
 

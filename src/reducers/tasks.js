@@ -107,6 +107,9 @@ export const getAllSubtasks = (state, id) => {
 export const getTaskStack = (state, id) => {
   const alltasks = getAlltasks(state)
   const task = alltasks.find(t => t.id === id)
+  if (!task) {
+    return []
+  }
   const uptask = alltasks.find(t => t.id === task.upTaskId)
   if (uptask) {
     const uptasks = getTaskStack(state, uptask.id)

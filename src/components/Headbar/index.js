@@ -6,7 +6,7 @@ import Searchform from './Searchform'
 import Warning from '../parts/Warning'
 import * as actions from 'actions'
 import { withRouter } from 'react-router'
-import { getAllSubtasks } from 'reducers'
+import { getAllSubtasks, getTaskStack } from 'reducers'
 
 class Headbar extends React.Component {
   onLogout = () => {
@@ -20,9 +20,8 @@ class Headbar extends React.Component {
   }
 
   test = () => {
-    const id = '41eee9bb-7e1d-4a32-b366-077d306972a1'
-    const ids = this.props.getSubs(id)
-    console.log(ids)
+    const id = '42e483b3-8500-4d48-a9c7-b69db32212ab'
+    console.log(this.props.stack(id))
   }
 
   render() {
@@ -63,7 +62,8 @@ class Headbar extends React.Component {
 const mapStateToProps = state => ({
   sidebarHidden: state.sidebarHidden,
   me: state.me,
-  getSubs: id => getAllSubtasks(state, id)
+  getSubs: id => getAllSubtasks(state, id),
+  stack: id => getTaskStack(state, id)
 })
 
 Headbar = withRouter(connect(mapStateToProps, { ...actions })(Headbar))

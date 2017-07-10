@@ -206,17 +206,19 @@ export const saveTaskDetail = (detail, id) => ({
 })
 
 export const editTaskProject = (projectId, id) => (dispatch, getState) => {
+  const ids = getAllSubtasks(getState(), id)
   const data = {
     projectId,
     id,
-    ids: getAllSubtasks(getState(), id)
+    ids
   }
   dispatch({
     type: 'EDIT_TASK_PROJECT',
-    payload: {
-      promise: api.Tasks.editProject(data),
-      data
-    }
+    data
+    // payload: {
+    //   promise: api.Tasks.editProject(data),
+    //   data
+    // }
   })
 }
 
@@ -292,20 +294,6 @@ export const changeTaskOrder = (oldIndex, newIndex) => (dispatch, getState) => {
   const tasks = getAlltasks(getState())
   const task = tasks[oldIndex]
   const target = tasks[newIndex]
-  // const newTasks = arrayMove(tasks, oldIndex, newIndex) // use arrayMove from react-sortable-hoc
-  // const index = newTasks.indexOf(task)
-  //
-  // const orderByIndex = (index, tasks) => {
-  //   switch (index) {
-  //     case 0:
-  //       return tasks[1].taskOrder - 1
-  //     case tasks.length - 1:
-  //       return tasks[tasks.length - 2].taskOrder + 1
-  //     default:
-  //       return (tasks[index - 1].taskOrder + tasks[index + 1].taskOrder) / 2
-  //   }
-  // }
-  // const order = orderByIndex(index, newTasks)
   let before = true
   if (oldIndex < newIndex) {
     before = false

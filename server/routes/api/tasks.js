@@ -32,70 +32,6 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   let { id, projectId = '', assignee = '', upTaskId = '', insertAt } = req.body
   const now = moment().format()
-  console.log(
-    `
-      begin tran
-        insert into tb_cowork_task
-        (id,assignee,projectId,completed,createdAt,upTaskId)
-          values
-        ('${id}','${assignee}','${projectId}','active','${now}','${upTaskId}')
-
-        declare @order numeric(12,6)
-        set @order=1
-        ${projectId || upTaskId
-          ? `
-          ${insertAt
-            ? `
-            if('${insertAt}' = (select top 1 taskId from tb_cowork_task_order order by taskOrder desc))
-              select @order=taskOrder+1 from tb_cowork_task_order where taskId = '${insertAt}'
-            else
-            begin
-              declare @insertOrder numeric(12,6)
-              declare @nextOrder numeric(12,6)
-              select @insertOrder = taskOrder from tb_cowork_task_order where taskId='${insertAt}'
-              set @nextOrder = (select top 1 taskOrder from tb_cowork_task_order where taskOrder > @insertOrder order by taskOrder)
-              set @order = (@insertOrder + @nextOrder)/2
-            end
-            `
-            : 'select @order = isnull(max(taskOrder)+1,1) from tb_cowork_task_order'}
-          insert into tb_cowork_task_order
-          (taskId,taskOrder)
-            values
-          ('${id}', @order)
-          `
-          : ''}
-        ${assignee
-          ? `
-          ${insertAt
-            ? `
-            if('${insertAt}' = (select top 1 taskId from tb_cowork_task_myOrder
-                where userId='${assignee}' order by myOrder desc))
-              select @order=myOrder+1 from tb_cowork_task_myOrder
-                where userId='${assignee}' and taskId = '${insertAt}'
-            else
-            begin
-              declare @insertOrder numeric(12,6)
-              declare @nextOrder numeric(12,6)
-              select @insertOrder = myOrder from tb_cowork_task_myOrder
-                where userId='${assignee}' and taskId='${insertAt}'
-              set @nextOrder = (select top 1 myOrder from tb_cowork_task_myOrder
-                where userId='${assignee}' and myOrder > @insertOrder order by myOrder)
-              set @order = (@insertOrder + @nextOrder)/2
-            end
-            `
-            : `select @order = isnull(max(myOrder)+1,1) from tb_cowork_task_myOrder where userId='${assignee}'`}
-
-          insert into tb_cowork_task_myOrder
-          (taskId,myOrder,userId)
-            values
-          ('${id}', @order,'${assignee}')
-          `
-          : ''}
-      if @@error != 0
-      rollback tran
-      commit tran
-    `
-  )
 
   db
     .then(pool => {
@@ -140,13 +76,12 @@ router.post('/', (req, res, next) => {
                   where userId='${assignee}' and taskId = '${insertAt}'
               else
               begin
-                declare @insertOrder numeric(12,6)
-                declare @nextOrder numeric(12,6)
-                select @insertOrder = myOrder from tb_cowork_task_myOrder
+                declare @temp numeric(12,6)
+                select @order = myOrder from tb_cowork_task_myOrder
                   where userId='${assignee}' and taskId='${insertAt}'
-                set @nextOrder = (select top 1 myOrder from tb_cowork_task_myOrder
-                  where userId='${assignee}' and myOrder > @insertOrder order by myOrder)
-                set @order = (@insertOrder + @nextOrder)/2
+                set @temp = (select top 1 myOrder from tb_cowork_task_myOrder
+                  where userId='${assignee}' and myOrder > @order order by myOrder)
+                set @order = (@order + @temp)/2
               end
               `
               : `select @order = isnull(max(myOrder)+1,1) from tb_cowork_task_myOrder where userId='${assignee}'`}
@@ -193,7 +128,41 @@ router.put('/:id', (req, res, next) => {
       )
       .reduce((a, b) => a + b)
   }
+  const insert_update_assignee = assignee === '0'
+    ? `delete from tb_cowork_task_myOrder where taskId='${id}'`
+    : `if exists(select 1 from tb_cowork_task_myOrder where taskId='${id}' and userId='${assignee}')
+    update tb_cowork_task_myOrder set myOrder=@order where taskId='${id}' and userId='${assignee}'
+    else
+    insert into tb_cowork_task_myOrder (taskId,myOrder,userId) values ('${id}',@order,'${assignee}')
+  `
+  const assignTask = assignee
+    ? `update tb_cowork_task set assignee='${assignee}' where id='${id}'
+    ${insert_update_assignee}
+    `
+    : ''
 
+  console.log(`declare @order numeric(12,6)
+  select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'
+  ${title === undefined
+    ? ''
+    : `update tb_cowork_task set title='${title}' where id='${id}'`}
+  ${detail === undefined
+    ? ''
+    : `update tb_cowork_task set detail='${detail}' where id='${id}'`}
+  ${projectEdit}
+  ${assignTask}
+  ${dueAt === undefined
+    ? ''
+    : dueAt === null
+      ? `update tb_cowork_task set dueAt=null where id='${id}'`
+      : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
+  if(${toggle} = 1)
+  begin
+    if exists( select 1 from tb_cowork_task where id='${id}' and completed='active')
+      update tb_cowork_task set completed='completed', completedAt='${now}' where id='${id}'
+    else
+      update tb_cowork_task set completed='active' where id='${id}'
+  end`)
   db
     .then(pool =>
       pool.request().query(`
@@ -207,12 +176,7 @@ router.put('/:id', (req, res, next) => {
           ? ''
           : `update tb_cowork_task set detail='${detail}' where id='${id}'`}
         ${projectEdit}
-        ${!assignee
-          ? ''
-          : `update tb_cowork_task set assignee='${assignee}' where id='${id}'
-            update tb_cowork_task_myOrder set userId='${assignee}',myOrder=@order
-            where taskId='${id}'
-          `}
+        ${assignTask}
         ${dueAt === undefined
           ? ''
           : dueAt === null
@@ -241,6 +205,7 @@ router.put('/:id', (req, res, next) => {
 router.put('/order/:id', (req, res, next) => {
   const { id } = req.params
   const { before, type, targetId } = req.body
+  console.log({ before, type, targetId })
 
   let calc_order = ''
   let update_order = ''
@@ -298,6 +263,16 @@ router.put('/order/:id', (req, res, next) => {
   } else if (type === 'my') {
     update_order = `update tb_cowork_task_myOrder set myOrder=@order where taskId='${id}'`
   }
+  //   console.log(`
+  //   begin tran
+  //   declare @order numeric(12,6)
+  //   declare @temp numeric(12,6)
+  //   ${calc_order}
+  //   ${update_order}
+  //   if @@error != 0
+  //   rollback tran
+  //   commit tran
+  // `)
   db
     .then(pool =>
       pool.request().query(`
