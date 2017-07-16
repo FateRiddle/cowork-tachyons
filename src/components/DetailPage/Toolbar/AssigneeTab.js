@@ -10,9 +10,9 @@ class AssigneeTab extends React.Component {
     const { users, me } = this.props
     let userArray = []
     if (users.length > 0) {
-      userArray = [...users, { id: '0', name: 'nobody' }] //add this to match when task is assigned to nobody
+      userArray = [...users, { id: '0', name: '无人' }] //add this to match when task is assigned to nobody
     } else {
-      userArray = [me, { id: '0', name: 'nobody' }] //if task is created without a project, it can still assign to me.
+      userArray = [me, { id: '0', name: '无人' }] //if task is created without a project, it can still assign to me.
     }
     return userArray.map(user => ({
       key: user.id,
@@ -30,7 +30,7 @@ class AssigneeTab extends React.Component {
     const { assignee } = this.props
     return (
       <Dropdown
-        // className="Drop__assignee"
+        className="pl3 pv2 w4 black-50 hover-thin-blue"
         value={assignee}
         options={this.getUserOptions()}
         onChange={this.onChange}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { resetErrorMessage } from '../../actions'
+import { resetErrorMessage } from 'actions'
 import { withRouter } from 'react-router'
 
 class HomePageWarning extends React.PureComponent {

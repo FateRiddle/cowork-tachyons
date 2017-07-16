@@ -9,7 +9,7 @@ class Stats extends React.Component {
     const { task, getUser } = this.props
     const user = getUser(task.assignee) || { name: '' }
     return (
-      <div className="Stats">
+      <div className="ph3 pv2 black-50" data-component="Stats">
         {task.assignee &&
           task.createdAt &&
           <div>

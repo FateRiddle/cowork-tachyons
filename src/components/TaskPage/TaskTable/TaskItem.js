@@ -5,17 +5,23 @@ import { SortableHandle } from 'react-sortable-hoc'
 import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
-import { Dropdown } from 'semantic-ui-react'
+// import { Dropdown } from 'semantic-ui-react'
 import { getUserByTask, getTaskById } from 'reducers'
+import moment from 'moment'
 
-const DragHandle = SortableHandle(({ show }) =>
-  <span className="DragHandle">
-    {show ? '::' : ''}
-  </span>
+const DragHandle = SortableHandle(
+  ({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
+    <span
+      className="f4 w15 tc pointer b black-60 hover-thin-blue"
+      onMouseEnter={onMouseEnterDrag}
+      onMouseLeave={onMouseLeaveDrag}
+    >
+      {show ? '::' : ''}
+    </span>
 )
 
 class TaskItem extends React.Component {
-  state = { mouseOn: false }
+  state = { mouseOn: false, mounseOnDrag: false }
 
   componentDidUpdate(prevProps, prevState) {
     const { currentTask, task } = this.props
@@ -27,12 +33,14 @@ class TaskItem extends React.Component {
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
 
   render() {
-    const { match, task, me, style, currentTask, getTask } = this.props
+    const { task, style, currentTask, getTask } = this.props
     const id = task.id
-    const { id: currentProject } = match.params
-    // console.log(currentTask,currentProject);
+    // const { id: currentProject } = match.params
+    // const assignee = task.assignee ? task.assignee : '0'
     const isTitle = this.isTitle(task)
-    const assignee = task.assignee ? task.assignee : '0'
+    const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
+    const isDue = diff < 0
+    const closeToDue = diff < 1.5 && diff >= 0
     return (
       <li
         className={this.calcClassName()}
@@ -40,14 +48,19 @@ class TaskItem extends React.Component {
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
       >
-        <DragHandle show={this.state.mouseOn || currentTask === id} />
+        <DragHandle
+          show={this.state.mouseOn || currentTask === id}
+          onMouseEnterDrag={this.onMouseEnterDrag}
+          onMouseLeaveDrag={this.onMouseLeaveDrag}
+        />
         {!isTitle &&
           <CheckIcon
             completed={task.completed === 'completed'}
             onClick={() => this.handleCheckIconClick(id)}
           />}
-        <span className="TaskItem__title">
+        <span className="flex-auto flex">
           <input
+            className="bn outline-0 flex-auto"
             value={task.title || ''}
             ref={node => {
               this.input = node
@@ -58,14 +71,20 @@ class TaskItem extends React.Component {
             onBlur={this.handleBlur}
           />
           {task.upTaskId &&
-            <span className="TaskItem__upTask">{`< ${getTask(task.upTaskId)
-              .title}`}</span>}
+            <span
+              className="ph2 black-50"
+              data-component="uptask"
+            >{`< ${task.upTaskTitle}`}</span>}
           {!isTitle &&
-            <span className="TaskItem__dueAt">
+            <span
+              className={classnames('ph2', {
+                orange: closeToDue,
+                'dark-red': isDue
+              })}
+            >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
             </span>}
-          {/* {currentProject !== me.id && <AssignTab taskId={id} />} */}
-          {currentProject !== me.id &&
+          {/* {currentProject !== me.id &&
           false && //react-virtualized的下边界会挡住下拉框
             <Dropdown
               pointing="right"
@@ -76,32 +95,32 @@ class TaskItem extends React.Component {
               value={assignee}
               options={this.getAssigneeOptions()}
               onChange={this.handleAssigneeChange}
-            />}
+            />} */}
         </span>
       </li>
     )
   }
 
-  getAssigneeOptions = () => {
-    const { me, getUsers, task } = this.props
-    const users = getUsers(task.id)
-    let userArray = [{ id: '0', name: 'nobody' }]
-    if (users.length > 0) {
-      userArray = [...users, ...userArray] //add this to match when task is assigned to nobody
-    } else {
-      userArray = [me, ...userArray] //if task is created without a project, it can still assign to me.
-    }
-    return userArray.map(user => ({
-      key: user.id,
-      value: user.id,
-      text: user.name
-    }))
-  }
-
-  handleAssigneeChange = (e, data) => {
-    const { editTaskAssignee, task } = this.props
-    editTaskAssignee(data.value, task.id)
-  }
+  // getAssigneeOptions = () => {
+  //   const { me, getUsers, task } = this.props
+  //   const users = getUsers(task.id)
+  //   let userArray = [{ id: '0', name: 'nobody' }]
+  //   if (users.length > 0) {
+  //     userArray = [...users, ...userArray] //add this to match when task is assigned to nobody
+  //   } else {
+  //     userArray = [me, ...userArray] //if task is created without a project, it can still assign to me.
+  //   }
+  //   return userArray.map(user => ({
+  //     key: user.id,
+  //     value: user.id,
+  //     text: user.name
+  //   }))
+  // }
+  //
+  // handleAssigneeChange = (e, data) => {
+  //   const { editTaskAssignee, task } = this.props
+  //   editTaskAssignee(data.value, task.id)
+  // }
 
   canEdit = () => {
     const { completed, match } = this.props
@@ -111,6 +130,10 @@ class TaskItem extends React.Component {
   onMouseEnter = () => this.setState({ mouseOn: true })
 
   onMouseLeave = () => this.setState({ mouseOn: false })
+
+  onMouseEnterDrag = () => this.setState({ mouseOnDrag: true })
+
+  onMouseLeaveDrag = () => this.setState({ mouseOnDrag: false })
 
   isTitle = task => {
     if (task && task.title) {
@@ -122,9 +145,10 @@ class TaskItem extends React.Component {
 
   calcClassName = () => {
     const { currentTask, task } = this.props
-    return classnames('TaskItem', {
-      'TaskItem--selected': currentTask === task.id,
-      'TaskItem--isTitle': this.isTitle(task)
+    return classnames('flex bb b--black-20 box-sizing items-center', {
+      'bt bb b--cyan': currentTask === task.id, //selected
+      b: this.isTitle(task),
+      'shadow-1': this.state.mouseOnDrag
     })
   }
 

@@ -1,5 +1,3 @@
-// import moment from 'moment'
-// import { v4 } from 'uuid'
 import axios from 'axios'
 
 //constant
@@ -16,7 +14,7 @@ const request = axios.create({
 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
 //methods
-// const encode = encodeURIComponent;
+// const encode = encodeURIComponent
 const responseBody = res => res.data.recordset
 const responseOutput = res => res.data
 
@@ -46,6 +44,8 @@ const Tasks = {
   byUser: id => ax.get(`/tasks?userId=${id}`),
   bySearch: search => ax.post(`/tasks/search`, search),
   subtasks: id => ax.get(`/tasks?upTaskId=${id}`),
+  rootTask: id => ax.get(`/tasks?rootOf=${id}`),
+  getById: id => ax.get(`/tasks/${id}`),
   // const {
   //   assignee,
   //   createdBy,
@@ -58,15 +58,14 @@ const Tasks = {
     ax.post('/tasks', { id, projectId, assignee }),
   insert: ({ id, projectId, assignee, insertAt }) =>
     ax.post('/tasks', { id, projectId, assignee, insertAt }),
-  addSubtask: ({ id, upTaskId, projectId }) =>
-    ax.post(`/tasks`, { id, upTaskId, projectId }),
-  insertSubtask: ({ id, upTaskId, insertAt, projectId }) =>
-    ax.post(`/tasks`, { id, upTaskId, insertAt, projectId }),
+  addSubtask: ({ id, upTaskId, rootTaskId, upTaskTitle }) =>
+    ax.post(`/tasks`, { id, upTaskId, rootTaskId, upTaskTitle }),
+  insertSubtask: ({ id, upTaskId, insertAt, rootTaskId, upTaskTitle }) =>
+    ax.post(`/tasks`, { id, upTaskId, insertAt, rootTaskId, upTaskTitle }),
   del: ({ id }) => ax.del(`/tasks/${id}`),
   editTitle: ({ id, title }) => ax.put(`/tasks/${id}`, { title }),
   editDetail: ({ id, detail }) => ax.put(`/tasks/${id}`, { detail }),
-  editProject: ({ id, projectId, ids }) =>
-    ax.put(`/tasks/${id}`, { projectId, idsForEditProject: ids }),
+  editProject: ({ id, projectId }) => ax.put(`/tasks/${id}`, { projectId }),
   editAssignee: ({ id, assignee }) => ax.put(`/tasks/${id}`, { assignee }),
   editDue: ({ id, dueAt }) =>
     ax.put(`/tasks/${id}`, { dueAt: dueAt ? dueAt.format() : null }),

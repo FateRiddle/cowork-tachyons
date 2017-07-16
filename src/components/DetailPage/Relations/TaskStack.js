@@ -10,12 +10,16 @@ class TaskStack extends React.Component {
     this.props.changeCurrentTask(id)
   }
   render() {
-    const { id, ids, getTask } = this.props
+    const { ids, getTask } = this.props
     return (
-      <ul>
+      <ul className="list ph3">
         {ids.map(id =>
-          <li key={id}>
-            <Link onClick={() => this.onClick(id)} to={id}>
+          <li key={id} className="pv2">
+            <Link
+              className="black-50 hover-thin-blue"
+              onClick={() => this.onClick(id)}
+              to={id}
+            >
               {getTask(id).title} >
             </Link>
           </li>

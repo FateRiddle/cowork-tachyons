@@ -27,10 +27,10 @@ class Headbar extends React.Component {
   render() {
     const { me, toggleSidebar, sidebarHidden } = this.props
     return (
-      <div className="Headbar">
+      <div className="relative flex w-100 h3 justify-between border-box items-center shadow-1">
         <div
-          className={classnames('Headbar__openSidebar', {
-            'Sidebar--hidden': !sidebarHidden
+          className={classnames('self-start absolute pa2 left-0 black-60 dim', {
+            dn: !sidebarHidden
           })}
           onClick={toggleSidebar}
         >
@@ -39,19 +39,20 @@ class Headbar extends React.Component {
         <NavLink
           to={`/${me.id}`}
           onClick={() => this.onMyTaskClick(me.id)}
-          className="Headbar__myTask"
-          activeClassName="Headbar__myTask--active"
+          className="black-60 pl4 hover-thin-blue"
         >
-          My Tasks:
+          我的任务
         </NavLink>
         <Searchform />
-        <div onClick={this.test}>test</div>
-        <div className="Headbar__user">
-          <button className="ui small green button">
-            Download
-          </button>
-          <div className="Headbar__me">{me.name}</div>
-          <div className="Headbar__logout" onClick={this.onLogout}>登出</div>
+        {/* <div onClick={this.test}>test</div> */}
+        <div className="flex" data-component="user">
+          <div className="ph3 black-60">{me.name}</div>
+          <div
+            className="pr4 black-60 hover-thin-blue pointer"
+            onClick={this.onLogout}
+          >
+            登出
+          </div>
         </div>
         <Warning />
       </div>

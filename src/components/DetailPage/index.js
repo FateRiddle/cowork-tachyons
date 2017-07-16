@@ -8,7 +8,7 @@ import Stats from './Stats'
 class DetailPage extends React.Component {
   render() {
     return (
-      <div className="DetailPage">
+      <div className="w-40 mb2 mt3 mr2 shadow-1 bg-white">
         <Toolbar />
         <Relations />
         <Editor />

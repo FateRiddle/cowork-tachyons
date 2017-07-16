@@ -42,9 +42,20 @@ class Sidebar extends React.Component {
     const project = projects.find(project => project.id === projectId) || {}
     return (
       <div
-        className={classnames('Sidebar', { 'Sidebar--hidden': sidebarHidden })}
+        className={classnames(
+          'bg-deep-blue vh-100 w5 absolute relative-ns z-1 pt3',
+          {
+            dn: sidebarHidden
+          }
+        )}
       >
-        <div className="Sidebar__closeButton" onClick={toggleSidebar}>X</div>
+        <div
+          className="absolute right-1 top-1 f4 white-60 dim"
+          data-component="closeBtn"
+          onClick={toggleSidebar}
+        >
+          X
+        </div>
         <ProjectEditor
           project={project}
           closeWindow={() => this.setState({ editorHidden: true })}
@@ -55,20 +66,24 @@ class Sidebar extends React.Component {
           onCancel={this.handlePopCancel}
           onConfirm={this.handlePopConfirm}
         /> */}
-        <div className="Sidebar__addProject">
+        <div className="pl3 f3 white-60" data-component="+Project">
           project
           <span
-            className="addIcon Sidebar__headerAddIcon"
+            className="light-blue br-100 mh2 ba dib w2 h2 tc dim pointer"
             onClick={this.handleAddProjectClick}
           >
             +
           </span>
         </div>
 
-        <ul className="Sidebar__projectList">
+        <ul className="list mt3" data-component="projectList">
           {projects.map(project =>
-            <li key={project.id}>
+            <li
+              key={project.id}
+              className="pv2 pl3 hover-bg-thin-blue deep-blue hover-light-gray"
+            >
               <NavLink
+                className="white-80 hover-white-80 mw5"
                 to={`/${project.id}`}
                 onClick={() => this.onProjectClick(project.id)}
               >

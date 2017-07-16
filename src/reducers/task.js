@@ -5,13 +5,23 @@ const task = (state, action) => {
   switch (action.type) {
     case 'ADD_TASK_LOADING':
     case 'INSERT_TASK_LOADING':
+      return {
+        id: payload.id,
+        projectId: payload.projectId,
+        assignee: payload.assignee,
+        title: '',
+        detail: '',
+        createdAt: moment(),
+        createdBy: '',
+        completed: 'active'
+      }
     case 'ADD_SUBTASK_LOADING':
     case 'INSERT_SUBTASK_LOADING':
       return {
         id: payload.id,
         upTaskId: payload.upTaskId,
-        projectId: payload.projectId,
-        assignee: payload.assignee,
+        rootTaskId: payload.rootTaskId,
+        upTaskTitle: payload.upTaskTitle,
         title: '',
         detail: '',
         createdAt: moment(),

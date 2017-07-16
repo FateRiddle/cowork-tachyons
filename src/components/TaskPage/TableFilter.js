@@ -18,6 +18,7 @@ class TableFilter extends React.Component {
   render() {
     return (
       <Dropdown
+        className="bg-white w-100 shadow-1 pv2 ph3 mb1 black-50 hover-thin-blue"
         value={this.props.completed || 'active'}
         options={options}
         onChange={this.changeTitle}

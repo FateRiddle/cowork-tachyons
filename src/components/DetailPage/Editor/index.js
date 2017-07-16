@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { getAllProjects, getTaskById } from 'reducers'
+import { getTaskById } from 'reducers'
 import {
   editTaskTitle,
   saveTaskTitle,
@@ -62,8 +62,8 @@ class ContentEditor extends React.Component {
 
   render() {
     return (
-      <div className="Editor">
-        <div className="Editor__title">
+      <div className="ph3 pv2" data-component="Editor">
+        <div className="f3 w-90 pa2 ba b--white hover-b mb3">
           <Editor
             placeholder="标题"
             editorState={this.state.titleState}
@@ -72,7 +72,7 @@ class ContentEditor extends React.Component {
             onBlur={this.handleTitleBlur}
           />
         </div>
-        <div className="Editor__detail">
+        <div className="w-90 pa2 ba b--white hover-b min-h-text">
           <Editor
             placeholder="内容"
             editorState={this.state.detailState}

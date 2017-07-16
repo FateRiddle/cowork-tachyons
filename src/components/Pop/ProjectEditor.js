@@ -1,8 +1,8 @@
 import React from 'react'
 import Pop from '../Pop'
 import { connect } from 'react-redux'
-import * as actions from '../../actions'
-import { getAllUsers } from '../../reducers'
+import * as actions from 'actions'
+import { getAllUsers } from 'reducers'
 import { isEmpty } from 'lodash'
 
 class ProjectEditor extends React.Component {
@@ -56,40 +56,60 @@ class ProjectEditor extends React.Component {
     this.props.closeWindow()
   }
 
+  toggleUserList = () => {
+    this.setState({ userListHidden: !this.state.userListHidden })
+  }
+
   children = () => {
     const { userListHidden, group, alertText } = this.state
     const { allUsers, project } = this.props
     const groupUsers = allUsers.filter(u => group.indexOf(u.id) > -1)
     const restOfUsers = allUsers.filter(u => group.indexOf(u.id) === -1)
     return (
-      <div className="ProjectEditor">
+      <div data-component="editor-content">
+        <h2 className="a">项目</h2>
         <input
-          placeholder="project name"
+          className="ph3 ba pv2 br2 w-90 b--black-30 outline-0 black-80 mb3"
+          placeholder="项目名称"
           defaultValue={project.title}
           ref={node => (this.titleDOM = node)}
         />
-        <div className="ProjectEditor__alert">{alertText}</div>
-        <div
-          className="ProjectEditor__label"
-          onClick={() => this.setState({ userListHidden: !userListHidden })}
-        >
-          user
-          <span className="addIcon">{userListHidden ? '+' : '-'}</span>
+        <div className="h2 red" data-component="warning">{alertText}</div>
+        <div className="flex flex-wrap mb2" data-component="users">
+          <span className="ph3 pv2 black-50 border-box">用户列表</span>
+          <span
+            className="ph3 pv2 ba br2 b--black-30 pointer black-50 f4 dim"
+            onClick={this.toggleUserList}
+          >
+            {userListHidden ? '+' : '-'}
+          </span>
         </div>
         {!userListHidden &&
-          <ul className="userList">
+          <ul
+            className="w-100 ph3 pv2 flex flex-wrap"
+            data-component="userList"
+          >
             {!userListHidden &&
               restOfUsers.map(user =>
-                <li key={user.id}>
+                <li
+                  key={user.id}
+                  className="pv1 ph2 ma1 ba br2 b--black-30 pointer"
+                >
                   <span onClick={() => this.addUser(user.id)}>{user.name}</span>
                 </li>
               )}
           </ul>}
 
-        <div className="ProjectEditor__label">group:</div>
-        <ul className="userList">
+        <div className="ph3 pv2 black-50 border-box">项目组员</div>
+        <ul
+          className="w-100 ph3 pv2 flex flex-wrap items-start min-h-text"
+          data-component="userList"
+        >
           {groupUsers.map(user =>
-            <li key={user.id}>
+            <li
+              key={user.id}
+              className="pv1 ph2 ma1 ba br2 b--cyan cyan bg-washed-cyan pointer"
+            >
               <span onClick={() => this.removeUser(user.id)}>{user.name}</span>
             </li>
           )}

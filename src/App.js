@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar'
 import Headbar from './components/Headbar'
 import MainContent from './components/MainContent'
 import { updateState } from './actions'
-import './App.css'
+// import './App.css'
 // import { fetchTasks } from './api/fetchData'
 
 //使用nested route的风格重写了，更清晰。这里使用match.path是精髓。之后react-roouter会出relative routes，能更方便地解决。
@@ -48,9 +48,9 @@ class App extends React.Component {
   render() {
     const { me } = this.props
     return (
-      <div className="App">
+      <div className="flex">
         <Route component={Sidebar} />
-        <div className="AppContent">
+        <div className="flex flex-column w-100 vh-100">
           <Route component={Headbar} />
           <Switch>
             <Route path="/:id" component={Project} />

@@ -11,6 +11,7 @@ const byId = (state = {}, action) => {
     case 'INSERT_SUBTASK_LOADING':
     case 'EDIT_TASK_TITLE':
     case 'EDIT_TASK_DETAIL':
+    case 'EDIT_TASK_PROJECT_LOADING':
     case 'EDIT_TASK_ASSIGNEE_LOADING':
     case 'EDIT_TASK_DUE_LOADING':
     case 'TOGGLE_TASK_LOADING':
@@ -18,12 +19,6 @@ const byId = (state = {}, action) => {
         ...state,
         [payload.id]: task(state[payload.id], action)
       }
-    case 'EDIT_TASK_PROJECT_LOADING':
-      let nextState = { ...state }
-      payload.ids.forEach(
-        id => (nextState = { ...nextState, [id]: task(state[id], action) })
-      )
-      return nextState
     case 'UPDATE_MY_TASKS_SUCCESS':
     case 'UPDATE_PROJECT_TASKS_SUCCESS':
     case 'SEARCH_TASKS_SUCCESS':
@@ -33,6 +28,8 @@ const byId = (state = {}, action) => {
       })
       return nextState1
     case 'UPDATE_SUBTASKS_SUCCESS':
+    case 'UPDATE_ROOTTASK_SUCCESS':
+    case 'UPDATE_TASK_BY_ID_SUCCESS':
       const nextState2 = { ...state }
       payload.forEach(task => {
         nextState2[task.id] = task
@@ -72,6 +69,8 @@ const allIds = (state = [], action) => {
     case 'SEARCH_TASKS_SUCCESS':
       return payload.map(task => task.id)
     case 'UPDATE_SUBTASKS_SUCCESS':
+    case 'UPDATE_ROOTTASK_SUCCESS':
+    case 'UPDATE_TASK_BY_ID_SUCCESS':
       const newTaskIds = payload.map(task => task.id)
       const _ids = newTaskIds.filter(id => state.indexOf(id) === -1) //重复的就不添加上去了
       return [..._ids, ...state]

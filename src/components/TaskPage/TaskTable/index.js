@@ -84,11 +84,11 @@ class TaskTable extends React.Component {
   render() {
     const { tasks } = this.props
     return (
-      <div className="Table__wrapper">
+      <div className="w-100 h-taskTable bg-white shadow-1">
         <AutoSizer>
           {({ height, width }) =>
             <SortableList
-              className="TaskTable"
+              className="outline-0"
               width={width}
               height={height}
               rowCount={tasks.length + 1}

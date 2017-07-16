@@ -23,7 +23,7 @@ class TaskPage extends React.Component {
 
   render() {
     return (
-      <div className="TaskPage">
+      <div className="h-100 pt3 ph3 w-60">
         <TableFilter />
         {/* <div className="Table__wrapper" onScroll={this.onScroll}> */}
         <TaskTable />

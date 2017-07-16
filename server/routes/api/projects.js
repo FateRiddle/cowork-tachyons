@@ -1,39 +1,52 @@
 const router = require('express').Router()
-const { sql,db } = require('../../db')
+const { sql, db } = require('../../db')
+
+const query = (query, res) => {
+  db
+    .then(pool => pool.request().query(query))
+    .then(data => {
+      res.send(data)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}
 
 router.get('/', (req, res, next) => {
-  db.then( pool => {
-    return pool.request()
-    .query(
-      `select * from tb_cowork_project; select * from tb_cowork_project_group`
+  db
+    .then(pool =>
+      pool.request().query(
+        `select * from tb_cowork_project
+      select * from tb_cowork_project_group`
+      )
     )
-  })
-  .then(data => {
+    .then(data => {
       //将group内容并入project
       const projects = data.recordsets[0]
       const groups = data.recordsets[1]
       data.recordset = projects.map(project => {
-        return Object.assign({},project,
-          {
-            group:groups.filter(group => group.projectId === project.id)
+        return Object.assign({}, project, {
+          group: groups
+            .filter(group => group.projectId === project.id)
             .map(group => group.userId)
-          }
-        )
+        })
       })
       res.send(data)
-  }).catch(err => {
-    console.error(err)
-  })
+    })
+    .catch(err => {
+      console.error(err)
+    })
 })
 
 router.post('/', (req, res, next) => {
-  const { id,title,group } = req.body
+  const { id, title, group } = req.body
   let groupValue = group
-    .map(item => {return `('${id}',${item})`})
-    .reduce((a,b) => a + ',' + b)
-  db.then( pool => {
-    return pool.request()
-    .query(`
+    .map(item => {
+      return `('${id}','${item}')`
+    })
+    .reduce((a, b) => a + ',' + b)
+  query(
+    `
       begin tran
         insert into tb_cowork_project (id,title)
         values('${id}','${title}')
@@ -42,23 +55,20 @@ router.post('/', (req, res, next) => {
       if @@error != 0
       rollback tran
       commit tran
-    `)
-  })
-  .then(data => {res.send(data)})
-  .catch(err => {
-    console.error(err)
-  })
+    `,
+    res
+  )
 })
 
 router.put('/', (req, res, next) => {
-  const { id,title,group } = req.body
+  const { id, title, group } = req.body
   let groupValue = group
-    .map(item => {return `('${id}',${item})`})
-    .reduce((a,b) => a + ',' + b)
-
-  db.then( pool => {
-    return pool.request()
-    .query(`
+    .map(item => {
+      return `('${id}','${item}')`
+    })
+    .reduce((a, b) => a + ',' + b)
+  query(
+    `
       begin tran
         update tb_cowork_project set
         title = '${title}'
@@ -70,12 +80,9 @@ router.put('/', (req, res, next) => {
       if @@error != 0
       rollback tran
       commit tran
-    `)
-  })
-  .then(data => {res.send(data)})
-  .catch(err => {
-    console.error(err)
-  })
+    `,
+    res
+  )
 })
 
 module.exports = router

@@ -26,11 +26,14 @@ class Subtasks extends React.Component {
   }
 
   update = () => {
-    const { updateSubtasks, currentTask, upTask } = this.props
-    console.log(currentTask, upTask)
+    const { updateSubtasks, updateRootTask, currentTask, upTask } = this.props
+    // console.log(currentTask, upTask)
     if (currentTask && upTask && upTask.title) {
       //如果任务没有内容，不去刷新是否有子任务，算是唯一能想到减少请求的优化了
       updateSubtasks(currentTask)
+      if (upTask.rootTaskId) {
+        updateRootTask(currentTask)
+      }
     }
   }
 
@@ -81,11 +84,11 @@ class Subtasks extends React.Component {
     const { tasks, allIds } = this.props
     console.log(tasks)
     return (
-      <div className="SubTasks__wrapper">
+      <div className="h5" data-component="Subtasks">
         <AutoSizer>
           {({ width, height }) =>
             <SortableList
-              className="SubtaskTable"
+              className="outline-0"
               width={width}
               height={height}
               rowCount={tasks.length}

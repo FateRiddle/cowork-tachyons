@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
@@ -9,16 +8,34 @@ import TaskStack from './TaskStack'
 
 class Relations extends React.Component {
   render() {
-    const { currentProject, currentTask } = this.props
-    console.log(currentTask)
+    const {
+      currentProject,
+      currentTask,
+      task,
+      getTask,
+      getProject
+    } = this.props
+    const rootProjectId =
+      task.rootTaskId &&
+      getTask(task.rootTaskId) &&
+      getTask(task.rootTaskId).projectId
+    let rootProjectName = '无项目'
+    if (rootProjectId) {
+      rootProjectName = getProject(rootProjectId).title || '无项目'
+    }
     return (
       <div>
-        <Dropdown
-          // className="Drop__project"
-          value={currentProject}
-          options={this.getProjectOptions()}
-          onChange={this.changeProject}
-        />
+        {task.upTaskId
+          ? <div className="ph3 pv2 black-50">
+              {rootProjectName}
+            </div>
+          : <Dropdown
+              className="ph3 pv2 black-50 hover-thin-blue"
+              value={currentProject}
+              options={this.getProjectOptions()}
+              onChange={this.changeProject}
+              // disabled={task.upTaskId ? true : false}
+            />}
         <TaskStack id={currentTask} />
       </div>
     )
@@ -27,7 +44,7 @@ class Relations extends React.Component {
   changeProject = (e, data) => {
     const projectId = data.value
     const { editTaskProject, currentTask } = this.props
-    this.props.editTaskProject(projectId, currentTask)
+    editTaskProject(projectId, currentTask)
   }
 
   getProjectOptions = () => {
@@ -37,7 +54,7 @@ class Relations extends React.Component {
       value: project.id,
       text: project.title
     }))
-    return [...projectArray, { key: 0, value: '0', text: 'No Project' }]
+    return [...projectArray, { key: 0, value: '0', text: '无项目' }]
   }
 }
 
@@ -51,7 +68,9 @@ const mapStateToProps = (state, { match }) => {
     allProjects,
     task,
     currentTask,
-    currentProject
+    currentProject,
+    getTask: id => getTaskById(state, id),
+    getProject: id => getProjectById(state, id)
   }
 }
 

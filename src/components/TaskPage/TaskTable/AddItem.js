@@ -11,7 +11,6 @@ class AddItem extends React.Component {
   }
 
   AddTask = () => {
-    console.log('haha')
     const { addTask, match } = this.props
     if (this.isActive()) {
       const currentProject = match.params.id
@@ -42,7 +41,7 @@ class AddItem extends React.Component {
     }
 
     return (
-      <li className="AddItem" style={style} onClick={this.AddTask}>
+      <li className="list pa2" style={style} onClick={this.AddTask}>
         {msg}
       </li>
     )

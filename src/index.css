@@ -7,8 +7,90 @@ ul {
   list-style: none;
 }
 
+/*Colors*/
+.bg-deep-blue {
+  background-color: rgb(40, 60, 84);
+}
+
+.deep-blue {
+  color: rgb(40, 60, 84);
+}
+
+.hover-bg-thin-blue:hover {
+  background-color: rgb(28, 157, 186);
+}
+
+.hover-thin-blue:hover {
+  color: rgb(94, 224, 255);
+}
+
+.bg-pale-grey {
+  background-color: rgb(247, 247, 248);
+}
+
+.cyan {
+  color: rgb(26, 175, 208);
+}
+
+.bg-cyan {
+  background-color: rgb(26, 175, 208);
+}
+
+.b--cyan {
+  border-color: rgb(26, 175, 208);
+}
+
+.bg-washed-cyan {
+  background-color: rgb(232, 247, 251);
+}
+
+/*metric*/
+
+.w15 {
+  width: 1.5rem;
+}
+
+.h45 {
+  height: 12rem;
+}
+
+.vh-fit {
+  height: calc(100vh - 4rem);
+}
+
+.h-taskTable {
+  height: calc(100% - 3rem);
+}
+
+.min-h-text {
+  min-height: 6rem;
+}
+
+.vw-100 {
+  width: 100vw;
+}
+
+.min-w6 {
+  min-width: 32rem;
+}
+
+/*flex*/
 .flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/*effect*/
+/*.shadow-1:hover {
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, .2);
+}*/
+
+.hover-b:focus, .hover-b:hover {
+  border: 1px solid rgba(0, 0, 0, .3);
+}
+
+.tp-h {
+  transition-property: height;
+  transition-duration: 1s;
 }
