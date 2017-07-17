@@ -6,7 +6,7 @@ import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
 // import { Dropdown } from 'semantic-ui-react'
-import { getUserByTask, getTaskById } from 'reducers'
+import { getUserByTask, getUserById } from 'reducers'
 import moment from 'moment'
 
 const DragHandle = SortableHandle(
@@ -33,11 +33,12 @@ class TaskItem extends React.Component {
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
 
   render() {
-    const { task, style, currentTask, getTask } = this.props
-    const id = task.id
-    // const { id: currentProject } = match.params
-    // const assignee = task.assignee ? task.assignee : '0'
+    const { task, style, currentTask, me, match, getUser } = this.props
+    const { id, assignee } = task
+    const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
+    const assigneeName = getUser(assignee) ? getUser(assignee).name : ''
+    //due warnings
     const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
     const isDue = diff < 0
     const closeToDue = diff < 1.5 && diff >= 0
@@ -84,6 +85,8 @@ class TaskItem extends React.Component {
             >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
             </span>}
+          {currentProject !== me.id &&
+            <div className="ph2">{assigneeName}</div>}
           {/* {currentProject !== me.id &&
           false && //react-virtualized的下边界会挡住下拉框
             <Dropdown
@@ -245,13 +248,14 @@ TaskItem.propTypes = {
   focusDown: React.PropTypes.func.isRequired
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, { match }) => ({
+  match,
   completed: state.completed,
   search: state.search,
   me: state.me,
   currentTask: state.currentTask,
   getUsers: taskId => getUserByTask(state, taskId),
-  getTask: taskId => getTaskById(state, taskId)
+  getUser: userId => getUserById(state, userId)
 })
 
 TaskItem = withRouter(connect(mapStateToProps, { ...actions })(TaskItem))

@@ -41,8 +41,13 @@ class AssigneeTab extends React.Component {
 
 const mapStateToProps = (state, { match }) => {
   const currentTask = match.params.taskId
-  const users = getUserByTask(state, currentTask)
-  const { assignee } = getTaskById(state, currentTask) || {} //in case it is undefined
+  const { assignee, rootTaskId } = getTaskById(state, currentTask) || {} //in case it is undefined
+  let users = []
+  if (rootTaskId) {
+    users = getUserByTask(state, rootTaskId)
+  } else {
+    users = getUserByTask(state, currentTask)
+  }
   const _assignee = assignee ? assignee : '0' //Dropdown插件的value不接受''，所以必须赋值'0'
   return {
     users,

@@ -7,7 +7,7 @@ import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
 // import { Dropdown } from 'semantic-ui-react'
-import { getUserByTask } from 'reducers'
+import { getUserByTask, getUserById } from 'reducers'
 import moment from 'moment'
 
 const DragHandle = SortableHandle(
@@ -34,10 +34,12 @@ class TaskItem extends React.Component {
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
 
   render() {
-    const { task, style, currentTask } = this.props
-    const id = task.id
+    const { task, style, currentTask, me, match, getUser } = this.props
+    const { id, assignee } = task
+    const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
-    // const assignee = task.assignee ? task.assignee : '0'
+    const assigneeName = getUser(assignee) ? getUser(assignee).name : ''
+    //due warnings
     const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
     const isDue = diff < 0
     const closeToDue = diff < 1.5 && diff >= 0
@@ -79,17 +81,7 @@ class TaskItem extends React.Component {
             >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
             </span>}
-          {/* {false && //react-virtualized的下边界会挡住下拉框
-            <Dropdown
-              pointing="right"
-              inline
-              icon={null}
-              upward={false}
-              // className="Drop__assignee"
-              value={assignee}
-              options={this.getAssigneeOptions()}
-              onChange={this.handleAssigneeChange}
-            />} */}
+          {assignee && <div className="ph2">{assigneeName}</div>}
           <Link
             className="ph2 black-50 hover-thin-blue f3"
             to={`${task.id}`}
@@ -105,28 +97,6 @@ class TaskItem extends React.Component {
   toTaskDetail = () => {
     this.props.changeCurrentTask(this.props.task.id)
   }
-
-  // getAssigneeOptions = () => {
-  //   const { me, getUsers, task } = this.props
-  //   const users = getUsers(task.id)
-  //   let userArray = [{ id: '0', name: 'nobody' }]
-  //   if (users.length > 0) {
-  //     userArray = [...users, ...userArray] //add this to match when task is assigned to nobody
-  //   } else {
-  //     userArray = [me, ...userArray] //if task is created without a project, it can still assign to me.
-  //   }
-  //   return userArray.map(user => ({
-  //     key: user.id,
-  //     value: user.id,
-  //     text: user.name
-  //   }))
-  // }
-  //
-  // handleAssigneeChange = (e, data) => {
-  //   const { editTaskAssignee, task } = this.props
-  //   const assignee = data.value
-  //   editTaskAssignee(assignee, task.id)
-  // }
 
   canEdit = () => {
     const { completed, match } = this.props
@@ -250,27 +220,15 @@ TaskItem.propTypes = {
 }
 
 const mapStateToProps = (state, { match }) => ({
+  match,
   completed: state.completed,
   search: state.search,
   me: state.me,
-  currentTask: state.currentSubtask,
-  upTaskId: match.params.taskId,
-  getUsers: taskId => getUserByTask(state, taskId)
+  currentTask: state.currentTask,
+  getUsers: taskId => getUserByTask(state, taskId),
+  getUser: userId => getUserById(state, userId)
 })
 
 TaskItem = withRouter(connect(mapStateToProps, { ...actions })(TaskItem))
 
 export default TaskItem
-
-/* <Dropdown text="..." inline icon={null} pointing="left">
-  <Dropdown.Menu>
-    <Dropdown.Item
-      text="modify"
-      onClick={() => this.modifyProject(project.id)}
-    />
-    <Dropdown.Item
-      text="delete"
-      onClick={() => this.deleteProject(project.id)}
-    />
-  </Dropdown.Menu>
-</Dropdown> */
