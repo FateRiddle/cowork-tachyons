@@ -17,16 +17,19 @@ class DueDateTab extends Component {
   }
 
   render() {
-    const { task } = this.props
+    const { task, disabled } = this.props
     const selectedDate = task && task.dueAt ? moment(task.dueAt) : null
     return (
       <DatePicker
-        className="ph3 ba pv2 br-pill b--black-30 pointer outline-0 black-50 hover-thin-blue"
+        className={`ph3 ba pv2 br-pill b--black-30 outline-0 black-50 ${disabled
+          ? ''
+          : 'pointer hover-thin-blue'}`}
         selected={selectedDate}
         onChange={this.handleDateChange}
         isClearable={true}
         placeholderText="截止日"
         locale="zh-cn"
+        disabled={disabled}
       />
     )
   }

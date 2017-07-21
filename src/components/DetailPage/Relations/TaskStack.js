@@ -14,9 +14,9 @@ class TaskStack extends React.Component {
     return (
       <ul className="list ph3">
         {ids.map(id =>
-          <li key={id} className="pv2">
+          <li key={id} className="pv1">
             <Link
-              className="black-50 hover-thin-blue"
+              className="black-50 hover-thin-blue bb b--dashed"
               onClick={() => this.onClick(id)}
               to={id}
             >

@@ -14,14 +14,19 @@ const byId = (state = {}, action) => {
     case 'EDIT_TASK_PROJECT_LOADING':
     case 'EDIT_TASK_ASSIGNEE_LOADING':
     case 'EDIT_TASK_DUE_LOADING':
+    case 'EDIT_TASK_PROGRESS_LOADING':
+    case 'EDIT_TASK_AMOUNT_LOADING':
     case 'TOGGLE_TASK_LOADING':
       return {
         ...state,
         [payload.id]: task(state[payload.id], action)
       }
+    // case 'EDIT_UPTASK_PROGRESS':
+
     case 'UPDATE_MY_TASKS_SUCCESS':
     case 'UPDATE_PROJECT_TASKS_SUCCESS':
     case 'SEARCH_TASKS_SUCCESS':
+    case 'UPDATE_ALL_TASKS_BY_PROJECT_SUCCESS':
       const nextState1 = {}
       payload.forEach(task => {
         nextState1[task.id] = task
@@ -67,6 +72,7 @@ const allIds = (state = [], action) => {
     case 'UPDATE_MY_TASKS_SUCCESS':
     case 'UPDATE_PROJECT_TASKS_SUCCESS':
     case 'SEARCH_TASKS_SUCCESS':
+    case 'UPDATE_ALL_TASKS_BY_PROJECT_SUCCESS':
       return payload.map(task => task.id)
     case 'UPDATE_SUBTASKS_SUCCESS':
     case 'UPDATE_ROOTTASK_SUCCESS':
@@ -79,14 +85,42 @@ const allIds = (state = [], action) => {
   }
 }
 
+const taskFetched = (state = false, action) => {
+  switch (action.type) {
+    case 'SEARCH_TASKS_SUCCESS':
+    case 'UPDATE_MY_TASKS_SUCCESS':
+    case 'UPDATE_PROJECT_TASKS_SUCCESS':
+    case 'UPDATE_ALL_TASKS_BY_PROJECT_SUCCESS':
+      return true
+    default:
+      return state
+  }
+}
+
+const subtaskFetched = (state = false, action) => {
+  switch (action.type) {
+    case 'UPDATE_SUBTASKS_SUCCESS':
+      return true
+    default:
+      return state
+  }
+}
+
 const tasks = combineReducers({
   byId,
-  allIds
+  allIds,
+  taskFetched,
+  subtaskFetched
 })
 
 export default tasks
 
-export const getAlltasks = state => state.allIds.map(id => state.byId[id])
+export const getAlltasks = state => {
+  if (state) {
+    return state.allIds.map(id => state.byId[id])
+  }
+  return []
+}
 
 export const getAllSubtasks = (state, id) => {
   const allTasks = getAlltasks(state)

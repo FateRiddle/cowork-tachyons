@@ -36,13 +36,22 @@ export const getTaskByCompleted = state =>
 export const getTaskById = (state, taskId) =>
   getAlltasks(state).find(task => task.id === taskId)
 
-export const getAllProjects = ({ projects }) =>
-  projects.allIds.map(id => projects.byId[id])
+export const getAllProjects = ({ projects }) => {
+  if (projects) {
+    return projects.allIds.map(id => projects.byId[id])
+  }
+  return []
+}
 
 export const getProjectById = (state, projectId) =>
   getAllProjects(state).find(project => project.id === projectId)
 
-export const getAllUsers = ({ users }) => users.allIds.map(id => users.byId[id])
+export const getAllUsers = ({ users }) => {
+  if (users) {
+    return users.allIds.map(id => users.byId[id])
+  }
+  return []
+}
 
 export const getUserById = (state, userId) =>
   getAllUsers(state).find(user => user.id === userId)

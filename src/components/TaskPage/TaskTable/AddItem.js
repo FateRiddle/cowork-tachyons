@@ -5,14 +5,14 @@ import { addTask } from 'actions'
 import { getFilteredTasks } from 'reducers'
 
 class AddItem extends React.Component {
-  isActive = () => {
+  canEdit = () => {
     const { completed, match } = this.props
     return completed === 'active' && match.params.id !== 'search'
   }
 
   AddTask = () => {
     const { addTask, match } = this.props
-    if (this.isActive()) {
+    if (this.canEdit()) {
       const currentProject = match.params.id
       addTask(currentProject)
       setTimeout(() => this.focusLast(), 0)
@@ -32,7 +32,7 @@ class AddItem extends React.Component {
   render() {
     const { tasks, style } = this.props
     let msg = ''
-    if (this.isActive()) {
+    if (this.canEdit()) {
       if (tasks.length === 0) {
         msg = '点击添加新任务'
       } else if (tasks.length < 2) {

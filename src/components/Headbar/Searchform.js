@@ -142,12 +142,12 @@ class Searchform extends React.Component {
     const { users, projects } = this.props
     return (
       <div className="relative" data-component="Searchbar">
-        <input
-          className="ba b--black-30 mh6 w5 pa2 br-pill pointer outline-0 indent"
-          placeholder="搜索"
-          onClick={this.toggleList}
-        />
         <ClickOutside onClickOutside={this.onClickOutside}>
+          <input
+            className="ba b--black-30 mh6 w5 pa2 br-pill pointer outline-0 indent"
+            placeholder="搜索"
+            onClick={this.toggleList}
+          />
           {!hidden &&
             <form
               className="absolute z-max mt3 ph3 pv4 w-100 ba b--black-30 shadow-1 bg-white br2"

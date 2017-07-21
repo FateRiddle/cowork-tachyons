@@ -13,7 +13,9 @@ const task = (state, action) => {
         detail: '',
         createdAt: moment(),
         createdBy: '',
-        completed: 'active'
+        completed: 'active',
+        progress: 0,
+        amount: 1
       }
     case 'ADD_SUBTASK_LOADING':
     case 'INSERT_SUBTASK_LOADING':
@@ -26,7 +28,9 @@ const task = (state, action) => {
         detail: '',
         createdAt: moment(),
         createdBy: '',
-        completed: 'active'
+        completed: 'active',
+        progress: 0,
+        amount: 1
       }
     case 'EDIT_TASK_TITLE':
       if (state.id === payload.id) {
@@ -86,7 +90,22 @@ const task = (state, action) => {
         }
       }
       return state
-
+    case 'EDIT_TASK_PROGRESS_LOADING':
+      if (state.id === payload.id) {
+        return {
+          ...state,
+          progress: payload.progress
+        }
+      }
+      return state
+    case 'EDIT_TASK_AMOUNT_LOADING':
+      if (state.id === payload.id) {
+        return {
+          ...state,
+          amount: payload.amount
+        }
+      }
+      return state
     default:
       return state
   }

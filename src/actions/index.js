@@ -187,7 +187,10 @@ export const editTaskTitle = (title, id) => ({
 
 export const saveTaskTitle = (title, id) => ({
   type: 'SAVE_TASK_TITLE',
-  payload: api.Tasks.editTitle({ title, id })
+  payload: {
+    promise: api.Tasks.editTitle({ title, id }),
+    data: { id }
+  }
 })
 
 //no async
@@ -247,11 +250,47 @@ export const editTaskDue = (dueAt, id) => {
   }
 }
 
+export const editTaskProgress = (progress, id) => {
+  const data = {
+    progress,
+    id
+  }
+  return {
+    type: 'EDIT_TASK_PROGRESS',
+    payload: {
+      promise: api.Tasks.editProgress(data),
+      data
+    }
+  }
+}
+
+export const editTaskAmount = (amount, id) => {
+  const data = {
+    amount,
+    id
+  }
+  return {
+    type: 'EDIT_TASK_AMOUNT',
+    payload: {
+      promise: api.Tasks.editAmount(data),
+      data
+    }
+  }
+}
+
 export const toggleTask = id => ({
   type: 'TOGGLE_TASK',
   payload: {
     promise: api.Tasks.toggle({ id }),
     data: { id }
+  }
+})
+
+//upTaskId is passed in, for convenience, esp when upTaskId can be null
+export const editUptaskProgress = upTaskId => ({
+  type: 'EDIT_UPTASK_PROGRESS',
+  payload: {
+    id: upTaskId
   }
 })
 
@@ -345,7 +384,9 @@ export const updateState = () => ({
 export const updateProjectTasks = id => ({
   type: 'UPDATE_PROJECT_TASKS',
   payload: {
-    promise: api.Tasks.byProject(id).then(tasks => formatDate(tasks)) //最后这步处理是为了返回的数据结构一致，可以用一个reducer case来写。
+    promise: api.Tasks.byProject(id).then(tasks => formatDate(tasks)),
+    //最后这步处理是为了返回的数据结构一致，可以用一个reducer case来写。
+    data: { id }
   }
 })
 
@@ -363,6 +404,13 @@ export const updateSubtasks = id => ({
     data: {
       id
     }
+  }
+})
+//读取一个项目里所有的task以及他们的subtask
+export const updateAllTasksByProject = id => ({
+  type: 'UPDATE_ALL_TASKS_BY_PROJECT',
+  payload: {
+    promise: api.Tasks.allByProject(id).then(tasks => formatDate(tasks))
   }
 })
 
@@ -438,3 +486,5 @@ export const signup = (name, password, password2, slogan) => ({
     promise: api.Auth.signup(name, password, password2, slogan)
   }
 })
+
+//visual

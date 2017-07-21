@@ -11,23 +11,29 @@ class Toolbar extends React.Component {
   }
 
   render() {
-    const { addSubtask, match } = this.props
+    const { addSubtask, match, canEdit } = this.props
     const taskId = match.params.taskId || ''
     return (
       <div
         className="relative flex items-center h3 bb b--black-30"
         data-component="Toolbar"
       >
-        <AssigneeTab />
-        <DueDateTab />
+        <AssigneeTab disabled={!canEdit} />
+        <DueDateTab disabled={!canEdit} />
         <div
-          className="ml2 ph2 pointer black-50 hover-thin-blue"
-          onClick={() => addSubtask(taskId)}
+          className={`ml2 ph2 ${canEdit
+            ? 'pointer hover-thin-blue'
+            : ''} black-50`}
+          onClick={_ => {
+            if (canEdit) {
+              addSubtask(taskId)
+            }
+          }}
         >
           添加子任务
         </div>
         <div
-          className="absolute right-0 pt2 pr3 self-start black-60 dim"
+          className="absolute right-0 pt2 pr3 self-start black-60 pointer dim"
           data-component="close"
           onClick={this.close}
         >
@@ -38,6 +44,10 @@ class Toolbar extends React.Component {
   }
 }
 
-Toolbar = withRouter(connect(null, { addSubtask })(Toolbar))
+const mapStateToProps = ({ completed }) => ({ completed })
 
-export default Toolbar
+const ConnectedToolbar = withRouter(
+  connect(mapStateToProps, { addSubtask })(Toolbar)
+)
+
+export default ConnectedToolbar

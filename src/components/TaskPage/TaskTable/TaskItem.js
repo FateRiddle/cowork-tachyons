@@ -148,7 +148,7 @@ class TaskItem extends React.Component {
 
   calcClassName = () => {
     const { currentTask, task } = this.props
-    return classnames('flex bb b--black-20 box-sizing items-center', {
+    return classnames('flex bb b--black-10 box-sizing items-center', {
       'bt bb b--cyan': currentTask === task.id, //selected
       b: this.isTitle(task),
       'shadow-1': this.state.mouseOnDrag
@@ -164,7 +164,6 @@ class TaskItem extends React.Component {
     const { id: projectId } = match.params
     const taskId = task.id
     changeCurrentTask(taskId)
-    console.log('item', task)
     if (projectId === 'search') {
       history.push(`/search/${taskId}`)
     } else {
@@ -183,7 +182,6 @@ class TaskItem extends React.Component {
   handleBlur = e => {
     const title = e.target.value
     const { task: { id }, saveTaskTitle } = this.props
-    console.log(title)
     saveTaskTitle(title, id)
   }
 
@@ -258,7 +256,7 @@ const mapStateToProps = (state, { match }) => ({
   getUser: userId => getUserById(state, userId)
 })
 
-TaskItem = withRouter(connect(mapStateToProps, { ...actions })(TaskItem))
+TaskItem = withRouter(connect(mapStateToProps, actions)(TaskItem))
 
 export default TaskItem
 

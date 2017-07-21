@@ -45,6 +45,7 @@ const Tasks = {
   bySearch: search => ax.post(`/tasks/search`, search),
   subtasks: id => ax.get(`/tasks?upTaskId=${id}`),
   rootTask: id => ax.get(`/tasks?rootOf=${id}`),
+  allByProject: id => ax.get(`/tasks?projectIdAll=${id}`),
   getById: id => ax.get(`/tasks/${id}`),
   // const {
   //   assignee,
@@ -69,6 +70,9 @@ const Tasks = {
   editAssignee: ({ id, assignee }) => ax.put(`/tasks/${id}`, { assignee }),
   editDue: ({ id, dueAt }) =>
     ax.put(`/tasks/${id}`, { dueAt: dueAt ? dueAt.format() : null }),
+  editProgress: ({ id, progress }) => ax.put(`/tasks/${id}`, { progress }),
+  editAmount: ({ id, amount }) => ax.put(`/tasks/${id}`, { amount }),
+
   toggle: ({ id }) => ax.put(`/tasks/${id}`, { toggle: true }),
   taskOrder: ({ id, before, targetId }) =>
     ax.put(`/tasks/order/${id}`, { before, type: 'task', targetId }),

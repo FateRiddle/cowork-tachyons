@@ -27,13 +27,14 @@ class AssigneeTab extends React.Component {
   }
 
   render() {
-    const { assignee } = this.props
+    const { assignee, disabled } = this.props
     return (
       <Dropdown
         className="pl3 pv2 w4 black-50 hover-thin-blue"
         value={assignee}
         options={this.getUserOptions()}
         onChange={this.onChange}
+        disabled={disabled}
       />
     )
   }

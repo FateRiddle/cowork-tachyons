@@ -12,20 +12,12 @@ class Relations extends React.Component {
       currentProject,
       currentTask,
       task,
-      getTask,
-      getProject
+      rootProjectName,
+      canEdit
     } = this.props
-    const rootProjectId =
-      task.rootTaskId &&
-      getTask(task.rootTaskId) &&
-      getTask(task.rootTaskId).projectId
-    let rootProjectName = '无项目'
-    if (rootProjectId) {
-      rootProjectName = getProject(rootProjectId).title || '无项目'
-    }
     return (
       <div>
-        {task.upTaskId
+        {task.upTaskId || !canEdit
           ? <div className="ph3 pv2 black-50">
               {rootProjectName}
             </div>
@@ -64,13 +56,24 @@ const mapStateToProps = (state, { match }) => {
   const task = getTaskById(state, currentTask) || {}
   const project = getProjectById(state, task.projectId) || {}
   const currentProject = project.id ? project.id : '0'
+  //calc rootTask's projectName
+  const rootProjectId =
+    task.rootTaskId &&
+    getTaskById(state, task.rootTaskId) &&
+    getTaskById(state, task.rootTaskId).projectId
+  let rootProjectName = '无项目'
+  if (rootProjectId && getProjectById(state, rootProjectId)) {
+    rootProjectName = getProjectById(state, rootProjectId).title || '无项目'
+  }
   return {
     allProjects,
     task,
     currentTask,
     currentProject,
     getTask: id => getTaskById(state, id),
-    getProject: id => getProjectById(state, id)
+    getProject: id => getProjectById(state, id),
+    rootProjectName,
+    completed: state.completed
   }
 }
 

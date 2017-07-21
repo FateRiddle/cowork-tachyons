@@ -83,6 +83,7 @@ class TaskTable extends React.Component {
 
   render() {
     const { tasks } = this.props
+    // console.log('TaskPage', tasks)
     return (
       <div className="w-100 h-taskTable bg-white shadow-1">
         <AutoSizer>
@@ -127,6 +128,8 @@ const mapStateToProps = (state, { match }) => {
   }
 }
 
-TaskTable = withRouter(connect(mapStateToProps, { ...actions })(TaskTable))
+const ConnectedTaskTable = withRouter(
+  connect(mapStateToProps, actions)(TaskTable)
+)
 
-export default TaskTable
+export default ConnectedTaskTable

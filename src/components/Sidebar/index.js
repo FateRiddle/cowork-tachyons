@@ -26,7 +26,6 @@ class Sidebar extends React.Component {
   deleteProject = projectId => {}
 
   onProjectClick = id => {
-    this.props.updateProjectTasks(id)
     this.props.changeCurrentTask()
   }
 
@@ -38,7 +37,13 @@ class Sidebar extends React.Component {
 
   render() {
     const { confirmHidden, editorHidden, projectId } = this.state
-    const { projects, toggleSidebar, sidebarHidden } = this.props
+    const {
+      projects,
+      toggleSidebar,
+      sidebarHidden,
+      fetched,
+      match
+    } = this.props
     const project = projects.find(project => project.id === projectId) || {}
     return (
       <div
@@ -50,7 +55,7 @@ class Sidebar extends React.Component {
         )}
       >
         <div
-          className="absolute right-1 top-1 f4 white-60 dim"
+          className="absolute right-1 top-1 f4 white-60 pointer dim"
           data-component="closeBtn"
           onClick={toggleSidebar}
         >
@@ -66,45 +71,56 @@ class Sidebar extends React.Component {
           onCancel={this.handlePopCancel}
           onConfirm={this.handlePopConfirm}
         /> */}
-        <div className="pl3 f3 white-60" data-component="+Project">
-          project
+        <div
+          className="pl3 f3 tracked-mega h2 mr2 white-60"
+          data-component="+Project"
+        >
+          项目
           <span
-            className="light-blue br-100 mh2 ba dib w2 h2 tc dim pointer"
+            className="light-blue br-100 ba dib pa1 dim pointer"
             onClick={this.handleAddProjectClick}
           >
             +
           </span>
         </div>
-
-        <ul className="list mt3" data-component="projectList">
-          {projects.map(project =>
-            <li
-              key={project.id}
-              className="pv2 pl3 hover-bg-thin-blue deep-blue hover-light-gray"
-            >
-              <NavLink
-                className="white-80 hover-white-80 mw5"
-                to={`/${project.id}`}
-                onClick={() => this.onProjectClick(project.id)}
+        {fetched &&
+          <ul className="list mt3" data-component="projectList">
+            {projects.map(p =>
+              <li
+                key={p.id}
+                className={`pv2 pl3 flex hover-bg-thin-blue deep-blue hover-light-gray ${p.id ===
+                  match.params.id
+                  ? 'bg-deepest-blue'
+                  : ''}`}
               >
-                {project.title}
-              </NavLink>
-              <Dropdown text="..." inline icon={null} pointing="left">
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    text="modify"
-                    onClick={() => this.modifyProject(project.id)}
-                  />
-                  <Dropdown.Item
-                    text="delete"
-                    onClick={() => this.deleteProject(project.id)}
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
-            </li>
-          )}
-        </ul>
-
+                <NavLink
+                  className="white-80 flex-grow hover-white-80 mw5"
+                  to={`/${p.id}`}
+                  onClick={() => this.onProjectClick(p.id)}
+                >
+                  {p.title}
+                </NavLink>
+                <Dropdown
+                  className="ph3 tracked white-50 lh-solid"
+                  text="..."
+                  inline
+                  icon={null}
+                  pointing="left"
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      text="修改"
+                      onClick={() => this.modifyProject(p.id)}
+                    />
+                    <Dropdown.Item
+                      text="删除"
+                      onClick={() => this.deleteProject(p.id)}
+                    />
+                  </Dropdown.Menu>
+                </Dropdown>
+              </li>
+            )}
+          </ul>}
       </div>
     )
   }
@@ -116,12 +132,11 @@ Sidebar.propTypes = {
 
 const mapStateToProps = state => ({
   projects: getAllProjects(state),
+  fetched: state.projects.fetched,
   sidebarHidden: state.sidebarHidden
 })
 
-Sidebar = connect(mapStateToProps, {
-  ...actions
-})(Sidebar)
+Sidebar = connect(mapStateToProps, actions)(Sidebar)
 
 export default Sidebar
 

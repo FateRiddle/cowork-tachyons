@@ -13,15 +13,15 @@ import { updateState } from './actions'
 //使用nested route的风格重写了，更清晰。这里使用match.path是精髓。之后react-roouter会出relative routes，能更方便地解决。
 
 let Project = ({ match, allProjectIds, me }) => {
-  const projectId = match.params.id
-  if (
-    allProjectIds.indexOf(projectId) === -1 &&
-    projectId !== me.id &&
-    projectId !== 'search'
-  ) {
-    //如果projectId不存在
-    return <Redirect to={`/${me.id}`} />
-  }
+  // const projectId = match.params.id
+  // if (
+  //   allProjectIds.indexOf(projectId) === -1 &&
+  //   projectId !== me.id &&
+  //   projectId !== 'search'
+  // ) {
+  //   //如果projectId不存在
+  //   return <Redirect to={`/${me.id}`} />
+  // }
   return (
     <Switch>
       <Route exact path={match.path} component={MainContent} />
@@ -49,9 +49,15 @@ class App extends React.Component {
     const { me } = this.props
     return (
       <div className="flex">
-        <Route component={Sidebar} />
+        <Route
+          path="/:id?/:taskId?"
+          children={props => <Sidebar {...props} />}
+        />
         <div className="flex flex-column w-100 vh-100">
-          <Route component={Headbar} />
+          <Route
+            path="/:id?/:taskId?"
+            children={props => <Headbar {...props} />}
+          />
           <Switch>
             <Route path="/:id" component={Project} />
             <Redirect to={`/${me.id}`} />

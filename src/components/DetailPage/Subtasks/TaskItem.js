@@ -34,11 +34,9 @@ class TaskItem extends React.Component {
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
 
   render() {
-    const { task, style, currentTask, me, match, getUser } = this.props
+    const { task, style, currentTask, getUser, assigneeName } = this.props
     const { id, assignee } = task
-    const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
-    const assigneeName = getUser(assignee) ? getUser(assignee).name : ''
     //due warnings
     const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
     const isDue = diff < 0
@@ -98,11 +96,6 @@ class TaskItem extends React.Component {
     this.props.changeCurrentTask(this.props.task.id)
   }
 
-  canEdit = () => {
-    const { completed, match } = this.props
-    return completed === 'active' && match.params.id !== 'search'
-  }
-
   onMouseEnter = () => this.setState({ mouseOn: true })
 
   onMouseLeave = () => this.setState({ mouseOn: false })
@@ -121,7 +114,7 @@ class TaskItem extends React.Component {
 
   calcClassName = () => {
     const { currentTask, task } = this.props
-    return classnames('flex bb b--black-20 box-sizing items-center', {
+    return classnames('flex bb b--black-10 box-sizing items-center', {
       'bt bb b--cyan': currentTask === task.id, //selected
       b: this.isTitle(task),
       'shadow-1': this.state.mouseOnDrag
@@ -134,12 +127,12 @@ class TaskItem extends React.Component {
 
   handleLineClick = () => {
     const { changeCurrentSubtask, task } = this.props
-    console.log('item', task)
+    console.log('item', task, this.props.canEdit)
     changeCurrentSubtask(task.id)
   }
 
   handleTitleChange = e => {
-    if (this.canEdit()) {
+    if (this.props.canEdit) {
       const title = e.target.value
       const { task: { id }, editTaskTitle } = this.props
       editTaskTitle(title, id)
@@ -149,7 +142,6 @@ class TaskItem extends React.Component {
   handleBlur = e => {
     const title = e.target.value
     const { task: { id }, saveTaskTitle } = this.props
-    console.log(title)
     saveTaskTitle(title, id)
   }
 
@@ -172,9 +164,9 @@ class TaskItem extends React.Component {
     const {
       task: { id },
       taskIndex,
-      upTaskId,
       deleteTask,
-      insertSubtask
+      insertSubtask,
+      match
     } = this.props
     switch (e.key) {
       case 'Tab':
@@ -182,7 +174,7 @@ class TaskItem extends React.Component {
         break
 
       case 'Backspace':
-        if (e.target.value === '' && this.canEdit()) {
+        if (e.target.value === '' && this.props.canEdit) {
           e.preventDefault()
           deleteTask(id)
           this.changeFocus(taskIndex, 'up') // TODO: 第一行被删除是特例，考虑简洁的写法
@@ -190,9 +182,9 @@ class TaskItem extends React.Component {
         break
 
       case 'Enter':
-        if (this.canEdit()) {
+        if (this.props.canEdit) {
           e.preventDefault()
-          insertSubtask(upTaskId, id)
+          insertSubtask(match.params.taskId, id)
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
         }
         break
@@ -216,19 +208,22 @@ class TaskItem extends React.Component {
 TaskItem.propTypes = {
   task: React.PropTypes.object.isRequired,
   focusUp: React.PropTypes.func.isRequired,
-  focusDown: React.PropTypes.func.isRequired
+  focusDown: React.PropTypes.func.isRequired,
+  canEdit: React.PropTypes.bool.isRequired
 }
 
-const mapStateToProps = (state, { match }) => ({
-  match,
-  completed: state.completed,
-  search: state.search,
-  me: state.me,
-  currentTask: state.currentTask,
-  getUsers: taskId => getUserByTask(state, taskId),
-  getUser: userId => getUserById(state, userId)
-})
+const mapStateToProps = (state, { task }) => {
+  const user = getUserById(state, task.assignee)
+  return {
+    completed: state.completed,
+    search: state.search,
+    currentTask: state.currentSubtask,
+    assigneeName: user ? user.name : ''
+  }
+}
 
-TaskItem = withRouter(connect(mapStateToProps, { ...actions })(TaskItem))
+const ConnectedTaskItem = withRouter(
+  connect(mapStateToProps, actions)(TaskItem)
+)
 
-export default TaskItem
+export default ConnectedTaskItem

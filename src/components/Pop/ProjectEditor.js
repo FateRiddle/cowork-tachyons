@@ -146,6 +146,6 @@ const mapStateToProps = state => {
   }
 }
 
-ProjectEditor = connect(mapStateToProps, { ...actions })(ProjectEditor)
+ProjectEditor = connect(mapStateToProps, actions)(ProjectEditor)
 
 export default ProjectEditor

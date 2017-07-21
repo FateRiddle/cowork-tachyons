@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { getTaskById } from 'reducers'
 import {
   editTaskTitle,
   saveTaskTitle,
@@ -85,29 +84,15 @@ class ContentEditor extends React.Component {
     )
   }
 
-  canEdit = () => {
-    //某些情况不允许编辑
-    const { completed, match } = this.props
-    return completed === 'active' && match.params.id !== 'search'
-  }
-
   onTitleChange = state => {
     //this is for slate.js to work
     const title = Plain.serialize(state)
-    const { editTaskTitle, currentTask } = this.props
-    if (this.canEdit()) {
+    const { editTaskTitle, currentTask, canEdit } = this.props
+    if (canEdit) {
       this.setState({ titleState: state })
       editTaskTitle(title, currentTask)
     }
   }
-
-  // handleTitleChange = (document,state) => { //this is for redux state in sync
-  //   const title = Plain.serialize(state)
-  //   const { editTaskTitle,currentTask } = this.props
-  //   if(this.canEdit()){
-  //     editTaskTitle(title,currentTask)
-  //   }
-  // }
 
   handleTitleBlur = () => {
     const title = Plain.serialize(this.state.titleState)
@@ -118,20 +103,12 @@ class ContentEditor extends React.Component {
   onDetailChange = state => {
     //this is for slate.js to work
     const detail = Plain.serialize(state)
-    const { editTaskDetail, currentTask } = this.props
-    if (this.canEdit()) {
+    const { editTaskDetail, currentTask, canEdit } = this.props
+    if (canEdit) {
       this.setState({ detailState: state })
       editTaskDetail(detail, currentTask)
     }
   }
-
-  // handleDetailChange = (document,state) => { //this is for redux state in sync
-  //   const detail = Plain.serialize(state)
-  //   const { editTaskDetail,currentTask } = this.props
-  //   if(this.canEdit()){
-  //     editTaskDetail(detail,currentTask)
-  //   }
-  // }
 
   handleDetailBlur = () => {
     const detail = Plain.serialize(this.state.detailState)
@@ -140,14 +117,11 @@ class ContentEditor extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { match }) => {
-  const currentTask = match.params.taskId
-  const task = getTaskById(state, currentTask) || {}
+const mapStateToProps = ({ completed, search }, { match }) => {
   return {
-    task,
-    currentTask,
-    completed: state.completed,
-    search: state.search
+    currentTask: match.params.taskId,
+    completed,
+    search
   }
 }
 
