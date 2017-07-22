@@ -60,9 +60,14 @@ class ContentEditor extends React.Component {
   }
 
   render() {
+    const { canEdit } = this.props
     return (
       <div className="ph3 pv2" data-component="Editor">
-        <div className="f3 w-90 pa2 ba b--white hover-b mb3">
+        <div
+          className={`f3 w-90 pa2 ba b--white lh-title mb3 ${canEdit
+            ? 'hover-b'
+            : ''}`}
+        >
           <Editor
             placeholder="标题"
             editorState={this.state.titleState}
@@ -71,7 +76,11 @@ class ContentEditor extends React.Component {
             onBlur={this.handleTitleBlur}
           />
         </div>
-        <div className="w-90 pa2 ba b--white hover-b min-h-text">
+        <div
+          className={`w-90 pa2 ba b--white min-h-text ${canEdit
+            ? 'hover-b'
+            : ''}`}
+        >
           <Editor
             placeholder="内容"
             editorState={this.state.detailState}
