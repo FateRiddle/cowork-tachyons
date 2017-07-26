@@ -58,7 +58,9 @@ class Headbar extends React.Component {
           <NavLink
             to={`/${me.id}`}
             onClick={() => this.onMyTaskClick(me.id)}
-            className="black-60 w5 pl4 hover-thin-blue"
+            className={`${isMe
+              ? 'black-60'
+              : 'black-30'} w5 pl4 hover-thin-blue`}
           >
             我的任务
           </NavLink>
@@ -105,7 +107,7 @@ const mapStateToProps = (state, { match }) => {
   return {
     sidebarHidden: state.sidebarHidden,
     me: state.me,
-    // isMe: state.me.id === match.params.id,
+    isMe: state.me.id === match.params.id,
     headbarTab: state.headbarTab,
     getSubs: id => getAllSubtasks(state, id),
     stack: id => getTaskStack(state, id)

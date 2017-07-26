@@ -1,99 +1,36 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
+import Task from './Task'
 import * as actions from 'actions'
-import { getTaskById, getUserById, getAlltasks } from 'reducers'
-import moment from 'moment'
+import { getAlltasks } from 'reducers'
 
 class TaskReport extends React.Component {
-  state = { fold: true }
-
-  toggle = () => {
-    this.setState({ fold: !this.state.fold })
-  }
-
   render() {
-    const { fold } = this.state
-    const { task, user, subIds, gray } = this.props
-    const userName = user ? user.name : ''
-    //dueDate display
-    const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
-    const isDue = diff < 0
-    const closeToDue = diff < 1.5 && diff >= 0
-    //calculate progress
-    const getProgress = task =>
-      task.completed === 'completed' ? 100 : task.progress || 0
+    const { allIds } = this.props
     return (
-      <li
-        className={`relative ba b--black-10 mb2 ph3 pv2 ${gray
-          ? 'bg-light-gray'
-          : 'bg-white'}`}
+      allIds.length > 0 &&
+      <ul
+        className="h-100 pt3 ph3 bg-white shadow-1 overflow-y-auto"
+        data-component="TaskReport"
       >
-        <div
-          className="absolute h-100 top-0 left-0 bg-cyan o-20"
-          style={{ width: `${getProgress(task)}%` }}
-          data-component="progressColor"
-        />
-        <main className="flex items-center flex-wrap">
-          <section className="w-100 flex mb3" data-component="1st-line">
-            {subIds.length > 0 &&
-              <div
-                className="f3 dim pointer w2 tracked z-1"
-                data-component="toggle"
-                onClick={this.toggle}
-              >
-                [{fold ? '+' : '-'}]
-              </div>}
-            <div className="pl2 flex-grow">
-              {task.title}
-            </div>
-            <div
-              className={`pl2 ${closeToDue ? 'orange' : ''} ${isDue
-                ? 'red'
-                : ''}`}
-            >
-              {task.dueAt && task.dueAt.format().substring(5, 10)}
-            </div>
-            <div className="pl2">
-              {userName}
-            </div>
-          </section>
-          <section className="w-100 flex mb1" data-component="2nd-line">
-            <div className="">
-              <span className="black-60">工作量：</span>{task.amount || 1}天
-            </div>
-            <div className="pl2">
-              <span className="black-60">进度：</span>
-              {Math.floor(getProgress(task))}%
-            </div>
-          </section>
-        </main>
-        {!fold &&
-          <ul>
-            {subIds.map((id, index) =>
-              <ConnectedTaskReport key={index} taskId={id} gray={!gray} />
-            )}
-          </ul>}
-      </li>
+        {allIds.map((id, index) =>
+          <Task key={index} taskId={id} gray={false} />
+        )}
+      </ul>
     )
   }
 }
 
-TaskReport.propTypes = {
-  taskId: React.PropTypes.string
-}
-
-const mapStateToProps = (state, { taskId }) => {
-  const task = getTaskById(state, taskId)
-  const subIds = getAlltasks(state)
-    .filter(t => t.upTaskId && t.upTaskId === taskId)
-    .map(t => t.id)
+const mapStateToProps = state => {
+  const tasks = getAlltasks(state).filter(t => !t.upTaskId)
   return {
-    subIds,
-    task,
-    user: getUserById(state, task.assignee)
+    allIds: tasks.map(t => t.id)
   }
 }
 
-const ConnectedTaskReport = connect(mapStateToProps, actions)(TaskReport)
+const ConnectedTaskReport = withRouter(
+  connect(mapStateToProps, actions)(TaskReport)
+)
 
 export default ConnectedTaskReport

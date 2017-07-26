@@ -32,7 +32,9 @@ class TaskPage extends React.Component {
     } = this.props
     const { id, taskId } = match.params
     if (id === 'search') {
-      searchTasks(search).then(_ => this.getSubs(taskId))
+      searchTasks(search)
+      // .then(_ => this.getSubs(taskId))
+      //why it is not thenable?
     } else if (id === me.id) {
       updateUserTasks(id).then(_ => this.getSubs(taskId))
     } else if (taskId === 'report') {
@@ -41,6 +43,19 @@ class TaskPage extends React.Component {
       updateProjectTasks(id).then(_ => this.getSubs(taskId))
     }
   }
+
+  // getSearchResult = () => {
+  //   const {
+  //     search,
+  //     updateUserTasks,
+  //     updateProjectTasks,
+  //     updateAllTasksByProject,
+  //     searchTasks,
+  //     match,
+  //     me
+  //   } = this.props
+  //   const { id, taskId } = match.params
+  // }
 
   getSubs = taskId => {
     const { updateRootTask, updateSubtasks, task } = this.props

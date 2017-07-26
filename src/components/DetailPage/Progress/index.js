@@ -6,13 +6,15 @@ import { Dropdown, Progress } from 'semantic-ui-react'
 
 class ProgressSection extends React.Component {
   options = [
-    { key: 1, text: '1天', value: 1 },
-    { key: 2, text: '2天', value: 2 },
-    { key: 3, text: '3天', value: 3 },
-    { key: 4, text: '4天', value: 4 },
-    { key: 5, text: '5天', value: 5 },
-    { key: 6, text: '6天', value: 6 },
-    { key: 7, text: '7天', value: 7 }
+    { key: 1, text: '半天', value: 0.5 },
+    { key: 2, text: '1天', value: 1 },
+    { key: 3, text: '1天半', value: 1.5 },
+    { key: 4, text: '2天', value: 2 },
+    { key: 5, text: '3天', value: 3 },
+    { key: 6, text: '4天', value: 4 },
+    { key: 7, text: '5天', value: 5 },
+    { key: 8, text: '6天', value: 6 },
+    { key: 9, text: '7天', value: 7 }
   ]
 
   progressColor = () => {

@@ -176,6 +176,14 @@ export const deleteTask = id => ({
   }
 })
 
+export const deleteSubtask = (id, upId) => ({
+  type: 'DELETE_SUBTASK',
+  payload: {
+    promise: api.Tasks.delSub({ id, upId }),
+    data: { id, upId }
+  }
+})
+
 //no async
 export const editTaskTitle = (title, id) => ({
   type: 'EDIT_TASK_TITLE',
@@ -400,7 +408,10 @@ export const updateUserTasks = id => ({
 export const updateSubtasks = id => ({
   type: 'UPDATE_SUBTASKS',
   payload: {
-    promise: api.Tasks.subtasks(id).then(tasks => formatDate(tasks)),
+    promise: api.Tasks.subtasks(id).then(tasks => {
+      console.log(tasks)
+      return formatDate(tasks)
+    }),
     data: {
       id
     }
@@ -417,7 +428,8 @@ export const updateAllTasksByProject = id => ({
 export const updateTaskById = id => ({
   type: 'UPDATE_TASK_BY_ID',
   payload: {
-    promise: api.Tasks.getById(id).then(tasks => formatDate(tasks))
+    promise: api.Tasks.byId(id).then(tasks => formatDate(tasks)),
+    data: { id }
   }
 })
 
@@ -435,6 +447,7 @@ export const changeCompleted = completed => ({
   }
 })
 
+//this is for persist state to localStorage so refresh browser will load the same query
 export const changeSearch = search => ({
   type: 'CHANGE_SEARCH',
   payload: {
@@ -443,15 +456,14 @@ export const changeSearch = search => ({
 })
 
 export const searchTasks = (search = {}) => dispatch => {
-  console.log(search)
   dispatch({
     type: 'SEARCH_TASKS',
     payload: {
-      promise: api.Tasks.bySearch(search).then(tasks => formatDate(tasks))
+      promise: api.Tasks.bySearch(search).then(res => formatDate(res.recordset))
     }
   })
-  //how do I dispatch changeSearch after api call? use .then()
-  // dispatch(changeSearch(search))
+  //how do I dispatch searchTasks after api call? use .then()
+  // dispatch(searchTasks(search))
 }
 
 //authentication & error handle

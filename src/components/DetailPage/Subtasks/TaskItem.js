@@ -97,11 +97,8 @@ class TaskItem extends React.Component {
   }
 
   onMouseEnter = () => this.setState({ mouseOn: true })
-
   onMouseLeave = () => this.setState({ mouseOn: false })
-
   onMouseEnterDrag = () => this.setState({ mouseOnDrag: true })
-
   onMouseLeaveDrag = () => this.setState({ mouseOnDrag: false })
 
   isTitle = task => {
@@ -162,9 +159,9 @@ class TaskItem extends React.Component {
 
   handleKeyDown = e => {
     const {
-      task: { id },
+      task: { id, upTaskId },
       taskIndex,
-      deleteTask,
+      deleteSubtask,
       insertSubtask,
       match
     } = this.props
@@ -172,15 +169,13 @@ class TaskItem extends React.Component {
       case 'Tab':
         e.preventDefault()
         break
-
       case 'Backspace':
         if (e.target.value === '' && this.props.canEdit) {
           e.preventDefault()
-          deleteTask(id)
+          deleteSubtask(id, upTaskId)
           this.changeFocus(taskIndex, 'up') // TODO: 第一行被删除是特例，考虑简洁的写法
         }
         break
-
       case 'Enter':
         if (this.props.canEdit) {
           e.preventDefault()
@@ -188,17 +183,14 @@ class TaskItem extends React.Component {
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
         }
         break
-
       case 'ArrowUp':
         e.preventDefault()
         this.changeFocus(taskIndex, 'up')
         break
-
       case 'ArrowDown':
         e.preventDefault()
         this.changeFocus(taskIndex, 'down')
         break
-
       default:
         return
     }
@@ -213,11 +205,12 @@ TaskItem.propTypes = {
 }
 
 const mapStateToProps = (state, { task }) => {
+  const { completed, search, currentSubtask } = state
   const user = getUserById(state, task.assignee)
   return {
-    completed: state.completed,
-    search: state.search,
-    currentTask: state.currentSubtask,
+    completed,
+    search,
+    currentTask: currentSubtask,
     assigneeName: user ? user.name : ''
   }
 }

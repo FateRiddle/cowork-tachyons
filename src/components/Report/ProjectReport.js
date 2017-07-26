@@ -6,7 +6,7 @@ import { getProjectById, getAlltasks } from 'reducers'
 class ProjectReport extends React.Component {
   render() {
     const { project = {}, tasks, progress, amount, match } = this.props
-    console.log(project, tasks, progress, amount, match.params)
+    // console.log(project, tasks, progress, amount, match.params)
     return (
       <div
         className="ml3 h-50 w-30 pa3 bg-white shadow-1"

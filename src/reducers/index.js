@@ -105,17 +105,3 @@ export const getFilteredTasks = (state, projectId) => {
   }
   return []
 }
-
-// export const getDepthOfTask = (state, taskId) => {
-//   let task = getTaskById(taskId)
-//   let depth = 0
-//   if(!task.projectId){
-//     return depth
-//   }
-//   depth = 1
-//   while (task.upTaskId) {
-//     task = getTaskById(upTaskId)
-//     depth += depth
-//   }
-//   return depth
-// }

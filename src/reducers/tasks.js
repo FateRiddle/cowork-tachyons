@@ -63,6 +63,7 @@ const allIds = (state = [], action) => {
     //   const _index = state.indexOf(payload.id)
     //   return arrayMove(state, _index, 0) //移动到第一个
     case 'DELETE_TASK_LOADING':
+    case 'DELETE_SUBTASK_LOADING':
       return state.filter(id => id !== payload.id)
     case 'CHANGE_TASK_ORDER_LOADING':
     case 'CHANGE_MY_ORDER_LOADING':

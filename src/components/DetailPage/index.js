@@ -7,7 +7,7 @@ import Editor from './Editor'
 import Progress from './Progress'
 import Subtasks from './Subtasks'
 import Stats from './Stats'
-import { updateSubtasks, updateRootTask } from 'actions'
+import * as actions from 'actions'
 import { getTaskById, getSubtasks } from 'reducers'
 
 class DetailPage extends React.Component {
@@ -17,14 +17,21 @@ class DetailPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentTask !== this.props.currentTask) {
-      console.log('detailupdate')
       this.update()
     }
   }
 
   update = () => {
-    const { updateSubtasks, updateRootTask, currentTask, task } = this.props
-    if (currentTask && task && task.title) {
+    const {
+      updateSubtasks,
+      updateRootTask,
+      updateTaskById,
+      currentTask,
+      task,
+      match
+    } = this.props
+    if (currentTask && task && task.title && match.params.id !== 'search') {
+      updateTaskById(currentTask)
       updateSubtasks(currentTask)
       if (task.rootTaskId) {
         updateRootTask(currentTask)
@@ -75,8 +82,6 @@ const mapStateToProps = (state, { match }) => {
   }
 }
 
-DetailPage = withRouter(
-  connect(mapStateToProps, { updateSubtasks, updateRootTask })(DetailPage)
-)
+DetailPage = withRouter(connect(mapStateToProps, actions)(DetailPage))
 
 export default DetailPage

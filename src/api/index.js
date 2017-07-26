@@ -46,7 +46,7 @@ const Tasks = {
   subtasks: id => ax.get(`/tasks?upTaskId=${id}`),
   rootTask: id => ax.get(`/tasks?rootOf=${id}`),
   allByProject: id => ax.get(`/tasks?projectIdAll=${id}`),
-  getById: id => ax.get(`/tasks/${id}`),
+  byId: id => ax.get(`/tasks?taskId=${id}`),
   // const {
   //   assignee,
   //   createdBy,
@@ -64,6 +64,7 @@ const Tasks = {
   insertSubtask: ({ id, upTaskId, insertAt, rootTaskId, upTaskTitle }) =>
     ax.post(`/tasks`, { id, upTaskId, insertAt, rootTaskId, upTaskTitle }),
   del: ({ id }) => ax.del(`/tasks/${id}`),
+  delSub: ({ id, upId }) => ax.del(`/tasks/${id}?upId=${upId}`),
   editTitle: ({ id, title }) => ax.put(`/tasks/${id}`, { title }),
   editDetail: ({ id, detail }) => ax.put(`/tasks/${id}`, { detail }),
   editProject: ({ id, projectId }) => ax.put(`/tasks/${id}`, { projectId }),

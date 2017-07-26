@@ -13,28 +13,56 @@ const query = (query, res) => {
     })
 }
 
+const changeUpProgress = id => `
+  declare @current varchar(50)
+  set @current = '${id}'
+  while(exists(select upTaskId from tb_cowork_task where id=@current and upTaskId<>''))
+  begin
+    select @current=upTaskId from tb_cowork_task where id=@current
+    declare @amount numeric(6,3)
+    declare @progress numeric(6,3)
+    select @amount = SUM(isnull(amount,1)) from tb_cowork_task where upTaskId = @current
+    if(@amount = 0)
+      set @progress = 0
+    else
+    begin
+      select @progress = SUM(
+        (CASE WHEN completed='completed' THEN 100 ELSE isnull(progress,0) END)
+        *isnull(amount,1)
+      ) from tb_cowork_task where upTaskId = @current
+      set @progress = @progress/@amount
+    end
+    update tb_cowork_task set amount = @amount, progress = @progress where id=@current
+  end
+`
+
 router.get('/', (req, res, next) => {
   const {
     userId = '',
     projectId = '',
     upTaskId = '',
+    taskId,
     rootOf,
     projectIdAll
   } = req.query
   console.log(req.query)
-  const GET_Root = `
+  const GET_root = `
     select a.* from tb_cowork_task a
     inner join tb_cowork_task b on a.id = b.rootTaskId
     where b.id = '${rootOf}'
   `
-  const GET_ProjectAll = `
+  const GET_byId = `
+    select * from tb_cowork_task
+    where id = '${taskId}'
+  `
+  const GET_projectAll = `
     select a.*, b.taskOrder from tb_cowork_task a
     inner join tb_cowork_task_order b on a.id = b.taskId
     left join tb_cowork_task c on a.rootTaskId = c.id
     where '${projectIdAll}' in (a.projectId,c.projectId)
     order by b.taskOrder
   `
-  const GET_Other = `
+  const GET_other = `
     select a.*, ${userId !== ''
       ? 'c.myOrder'
       : 'b.taskOrder'} from tb_cowork_task a
@@ -48,12 +76,15 @@ router.get('/', (req, res, next) => {
   `
   const searchQuery = () => {
     if (rootOf) {
-      return GET_Root
+      return GET_root
+    }
+    if (taskId) {
+      return GET_byId
     }
     if (projectIdAll) {
-      return GET_ProjectAll
+      return GET_projectAll
     }
-    return GET_Other
+    return GET_other
   }
   console.log(searchQuery())
   query(searchQuery(), res)
@@ -77,68 +108,74 @@ router.post('/', (req, res, next) => {
   } = req.body
   const now = moment().format()
 
+  //when Amount changes, progress will also change
+
+  const changeTaskOrder = `
+  ${insertAt
+    ? `
+    if('${insertAt}' = (select top 1 taskId from tb_cowork_task_order order by taskOrder desc))
+      select @order=taskOrder+1 from tb_cowork_task_order where taskId = '${insertAt}'
+    else
+    begin
+      declare @insertOrder numeric(12,6)
+      declare @nextOrder numeric(12,6)
+      select @insertOrder = taskOrder from tb_cowork_task_order where taskId='${insertAt}'
+      set @nextOrder = (select top 1 taskOrder from tb_cowork_task_order where taskOrder > @insertOrder order by taskOrder)
+      set @order = (@insertOrder + @nextOrder)/2
+    end
+    `
+    : 'select @order = isnull(max(taskOrder)+1,1) from tb_cowork_task_order'}
+  insert into tb_cowork_task_order
+  (taskId,taskOrder)
+    values
+  ('${id}', @order)
+  `
+
+  const changeMyOrder = `
+  ${insertAt
+    ? `
+    if('${insertAt}' = (select top 1 taskId from tb_cowork_task_myOrder
+        where userId='${assignee}' order by myOrder desc))
+      select @order=myOrder+1 from tb_cowork_task_myOrder
+        where userId='${assignee}' and taskId = '${insertAt}'
+    else
+    begin
+      declare @temp numeric(12,6)
+      select @order = myOrder from tb_cowork_task_myOrder
+        where userId='${assignee}' and taskId='${insertAt}'
+      set @temp = (select top 1 myOrder from tb_cowork_task_myOrder
+        where userId='${assignee}' and myOrder > @order order by myOrder)
+      set @order = (@order + @temp)/2
+    end
+    `
+    : `select @order = isnull(max(myOrder)+1,1) from tb_cowork_task_myOrder where userId='${assignee}'`}
+
+  insert into tb_cowork_task_myOrder
+  (taskId,myOrder,userId)
+    values
+  ('${id}', @order,'${assignee}')
+  `
+
+  const changeOrder = `
+  declare @order numeric(12,6)
+  set @order=1
+  ${projectId || upTaskId ? changeTaskOrder : ''}
+  ${assignee ? changeMyOrder : ''}`
+
   query(
     `
       begin tran
         ${upTaskId
           ? `insert into tb_cowork_task
-        (id,completed,createdAt,upTaskId,rootTaskId,upTaskTitle)
-          values
-        ('${id}','active','${now}','${upTaskId}','${rootTaskId}','${upTaskTitle}')`
+          (id,completed,createdAt,beginAt,progress,amount,upTaskId,rootTaskId,upTaskTitle)
+            values
+          ('${id}','active','${now}','${now}',0,1,'${upTaskId}','${rootTaskId}','${upTaskTitle}')
+          ${changeUpProgress(id)}`
           : `insert into tb_cowork_task
-        (id,assignee,projectId,completed,createdAt)
-          values
-        ('${id}','${assignee}','${projectId}','active','${now}')`}
-        declare @order numeric(12,6)
-        set @order=1
-        ${projectId || upTaskId
-          ? `
-          ${insertAt
-            ? `
-            if('${insertAt}' = (select top 1 taskId from tb_cowork_task_order order by taskOrder desc))
-              select @order=taskOrder+1 from tb_cowork_task_order where taskId = '${insertAt}'
-            else
-            begin
-              declare @insertOrder numeric(12,6)
-              declare @nextOrder numeric(12,6)
-              select @insertOrder = taskOrder from tb_cowork_task_order where taskId='${insertAt}'
-              set @nextOrder = (select top 1 taskOrder from tb_cowork_task_order where taskOrder > @insertOrder order by taskOrder)
-              set @order = (@insertOrder + @nextOrder)/2
-            end
-            `
-            : 'select @order = isnull(max(taskOrder)+1,1) from tb_cowork_task_order'}
-          insert into tb_cowork_task_order
-          (taskId,taskOrder)
+          (id,assignee,projectId,completed,createdAt,beginAt,progress,amount)
             values
-          ('${id}', @order)
-          `
-          : ''}
-        ${assignee
-          ? `
-          ${insertAt
-            ? `
-            if('${insertAt}' = (select top 1 taskId from tb_cowork_task_myOrder
-                where userId='${assignee}' order by myOrder desc))
-              select @order=myOrder+1 from tb_cowork_task_myOrder
-                where userId='${assignee}' and taskId = '${insertAt}'
-            else
-            begin
-              declare @temp numeric(12,6)
-              select @order = myOrder from tb_cowork_task_myOrder
-                where userId='${assignee}' and taskId='${insertAt}'
-              set @temp = (select top 1 myOrder from tb_cowork_task_myOrder
-                where userId='${assignee}' and myOrder > @order order by myOrder)
-              set @order = (@order + @temp)/2
-            end
-            `
-            : `select @order = isnull(max(myOrder)+1,1) from tb_cowork_task_myOrder where userId='${assignee}'`}
-
-          insert into tb_cowork_task_myOrder
-          (taskId,myOrder,userId)
-            values
-          ('${id}', @order,'${assignee}')
-          `
-          : ''}
+          ('${id}','${assignee}','${projectId}','active','${now}','${now}',0,1)`}
+        ${changeOrder}
       if @@error != 0
       rollback tran
       commit tran
@@ -147,6 +184,7 @@ router.post('/', (req, res, next) => {
   )
 })
 
+//editTitle,editDetail,editProject,editAssignee,editDue,editProgress,editAmount,toggle
 router.put('/:id', (req, res, next) => {
   const { id } = req.params
   const {
@@ -184,94 +222,27 @@ router.put('/:id', (req, res, next) => {
     ${change_project_order}
     `
     : ''
-  //when Amount changes, progress will also change
-  const changeUpProgress = `
-    declare @current varchar(50)
-    set @current = '${id}'
-    while(exists(select upTaskId from tb_cowork_task where id=@current and upTaskId<>''))
-    begin
-      select @current=upTaskId from tb_cowork_task where id=@current
-      declare @amount numeric(6,3)
-      declare @progress numeric(6,3)
-      select @amount = SUM(isnull(amount,1)) from tb_cowork_task where upTaskId = @current
-      if(@amount = 0)
-        set @progress = 0
-      else
-      begin
-        select @progress = SUM(
-          (CASE WHEN completed='completed' THEN 100 ELSE isnull(progress,0) END)
-          *isnull(amount,1)
-        ) from tb_cowork_task where upTaskId = @current
-        set @progress = @progress/@amount
-      end
-      update tb_cowork_task set amount = @amount, progress = @progress where id=@current
-    end
-  `
-  // const changeUpProgress = `
-  //   declare @current varchar(50)
-  //   set @current = '${id}'
-  //   while(exists(select upTaskId from tb_cowork_task where id=@current and upTaskId<>''))
-  //   begin
-  //     select @current=upTaskId from tb_cowork_task where id=@current
-  //     declare @progress numeric(6,3)
-  //     select @progress = AVG(
-  //       (CASE WHEN completed='completed' THEN 100 ELSE isnull(progress,0) END)
-  //       *isnull(amount,1)
-  //     ) from tb_cowork_task where upTaskId = @current
-  //     update tb_cowork_task set progress = @progress where id=@current
-  //   end
-  // `
+
   const toggleTask = toggle
     ? `begin
     if exists(select 1 from tb_cowork_task where id='${id}' and completed='active')
       update tb_cowork_task set completed='completed', completedAt='${now}' where id='${id}'
     else
       update tb_cowork_task set completed='active' where id='${id}'
-    ${changeUpProgress}
+    ${changeUpProgress(id)}
   end
   `
     : ''
-  const changeAmount = amount
+  const changeAmount = amount !== undefined && progress !== null
     ? `update tb_cowork_task set amount = ${amount} where id='${id}'
-      ${changeUpProgress}
+      ${changeUpProgress(id)}
     `
     : ''
-  const changeProgress = progress
+  const changeProgress = progress !== undefined && progress !== null
     ? `update tb_cowork_task set progress = ${progress} where id='${id}'
-      ${changeUpProgress}
+      ${changeUpProgress(id)}
     `
     : ''
-
-  console.log(`
-    begin tran
-      declare @order numeric(12,6)
-      ${assignee
-        ? `select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'`
-        : ''}
-      ${assignTask}
-      ${projectId
-        ? `select @order=max(taskOrder)+1 from tb_cowork_task_order`
-        : ''}
-      ${editProject}
-      ${title !== undefined
-        ? `update tb_cowork_task set title='${title}' where id='${id}'`
-        : ''}
-      ${detail !== undefined
-        ? `update tb_cowork_task set detail='${detail}' where id='${id}'`
-        : ''}
-      ${dueAt === undefined
-        ? ''
-        : dueAt === null
-          ? `update tb_cowork_task set dueAt=null where id='${id}'`
-          : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
-      ${toggleTask}
-      ${changeAmount}
-      ${changeProgress}
-    if @@error != 0
-    rollback tran
-    commit tran
-  `)
-  console.log(req.body)
   query(
     `
       begin tran
@@ -367,16 +338,6 @@ router.put('/order/:id', (req, res, next) => {
   } else if (type === 'my') {
     update_order = `update tb_cowork_task_myOrder set myOrder=@order where taskId='${id}'`
   }
-  //   console.log(`
-  //   begin tran
-  //   declare @order numeric(12,6)
-  //   declare @temp numeric(12,6)
-  //   ${calc_order}
-  //   ${update_order}
-  //   if @@error != 0
-  //   rollback tran
-  //   commit tran
-  // `)
   query(
     `
       begin tran
@@ -394,10 +355,17 @@ router.put('/order/:id', (req, res, next) => {
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params
-  console.log('id', req.params)
+  const { upId } = req.query
+  console.log('upid', req.query)
   query(
     `
       begin tran
+        ${upId
+          ? `
+          update tb_cowork_task set amount=0 where id = '${id}'
+          ${changeUpProgress(id)}
+          `
+          : ''}
         delete from tb_cowork_task where id = '${id}'
         delete from tb_cowork_task_order where taskId = '${id}'
       if @@error != 0
@@ -410,14 +378,8 @@ router.delete('/:id', (req, res) => {
 
 router.post('/search', (req, res, next) => {
   //it is actually a get request
-  const {
-    assignee,
-    projectId,
-    completed,
-    createdAt,
-    createdBy,
-    dueAt
-  } = req.body
+  const { assignee, projectId, beginAt, completedAt } = req.body
+  console.log(req.body)
 
   const stringify = array => {
     if (!array || array.length === 0) {
@@ -426,22 +388,53 @@ router.post('/search', (req, res, next) => {
     return array.map(a => `'${a}'`).reduce((a, b) => `${a},${b}`)
   }
   // const now = moment().format()
-  query(
+
+  const date_in_range = () => {
+    const from = beginAt ? `a.beginAt >= '${beginAt}'` : '1=1'
+    const to = completedAt ? `a.completedAt <= '${completedAt}'` : '1=1'
+    return `${from} and ${to}`
+  }
+
+  console.log(
     `
-      select a.*,b.taskOrder from tb_cowork_task a
+      select distinct a.*,b.taskOrder,
+      CASE WHEN d.id is null THEN 0
+           ELSE 1 END as hasSubtask
+      from tb_cowork_task a
       inner join tb_cowork_task_order b on a.id = b.taskId
+      left join tb_cowork_task c on a.id = c.rootTaskId
+      left join tb_cowork_task d on a.id = d.upTaskId
       where ${stringify(assignee)
-        ? `assignee in (${stringify(assignee)})`
+        ? `a.assignee in (${stringify(assignee)})`
         : '1=1'}
       and ${stringify(projectId)
-        ? `projectId in (${stringify(projectId)})`
+        ? `a.projectId in (${stringify(
+            projectId
+          )}) or c.projectId in (${stringify(projectId)})`
         : '1=1'}
-      and ${stringify(createdBy)
-        ? `createdBy in (${stringify(createdBy)})`
+      and ${date_in_range()}
+      order by b.taskOrder
+    `
+  )
+
+  query(
+    `
+      select distinct a.*,b.taskOrder,
+      CASE WHEN d.id is null THEN 0
+           ELSE 1 END as hasSubtask
+      from tb_cowork_task a
+      inner join tb_cowork_task_order b on a.id = b.taskId
+      left join tb_cowork_task c on a.rootTaskId = c.id
+      left join tb_cowork_task d on a.id = d.upTaskId
+      where ${stringify(assignee)
+        ? `a.assignee in (${stringify(assignee)})`
         : '1=1'}
-      and ${createdAt ? `createdAt = '${createdAt}'` : '1=1'}
-      and ${dueAt ? `dueAt = '${dueAt}'` : '1=1'}
-      and ('${completed}'='all' or completed = '${completed}')
+      and ${stringify(projectId)
+        ? `a.projectId in (${stringify(
+            projectId
+          )}) or c.projectId in (${stringify(projectId)})`
+        : '1=1'}
+      and ${date_in_range()}
       order by b.taskOrder
     `,
     res
@@ -449,6 +442,3 @@ router.post('/search', (req, res, next) => {
 })
 
 module.exports = router
-
-// where ('${userId}' = '' or a.assignee = '${userId}')
-// and ('${projectId}' = '' or a.projectId = '${projectId}')

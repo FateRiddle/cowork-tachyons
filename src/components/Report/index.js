@@ -1,62 +1,87 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import TaskReport from './TaskReport'
-import ProjectReport from './ProjectReport'
 import * as actions from 'actions'
-import { getAlltasks } from 'reducers'
+import TaskReport from './TaskReport'
+import PersonReport from './PersonReport'
+import ProjectReport from './ProjectReport'
+
+const Tabs = ({ tabs, tab, toggleTab }) =>
+  <ul className="flex-none self-start h2 mb1 shadow-1 flex">
+    {tabs.map(t =>
+      <li
+        key={t.value}
+        className={`w5 h-100 flex-center black-50 hover-bg-light-gray pointer ${tab ===
+          t.value
+          ? 'bg-light-gray'
+          : 'bg-white'}`}
+        onClick={() => toggleTab(t.value)}
+      >
+        {t.name}
+      </li>
+    )}
+  </ul>
 
 class Report extends React.Component {
+  state = { tab: 'task' }
   componentDidMount() {
-    const { updateAllTasksByProject, match } = this.props
-    updateAllTasksByProject(match.params.id)
+    this.update()
   }
 
   componentWillReceiveProps(nextProps) {
     const url1 = this.props.match.params.taskId
     const url2 = nextProps.match.params.taskId
     if (url1 !== url2 && url2 === 'report') {
-      this.props.updateAllTasksByProject(this.props.match.params.id)
+      this.update()
     }
   }
 
+  update = () => {
+    const { updateAllTasksByProject, searchTasks, match, search } = this.props
+    const projectId = match.params.id
+    if (projectId === 'search') {
+      searchTasks(search)
+    } else {
+      updateAllTasksByProject(match.params.id)
+    }
+  }
+
+  tabs = [{ value: 'task', name: '任务' }, { value: 'person', name: '个人' }]
+
+  toggleTab = tab => {
+    this.setState({ tab })
+  }
+
   render() {
-    const { allIds, fetched } = this.props
+    const { tab } = this.state
+    const { fetched, isSearch } = this.props
     return (
       <div
-        className="w-100 vh-fit pt3 ph3 pb1 bg-pale-grey flex justify-start"
-        data-component="wrapper"
+        className="flex w-100 vh-fit pt3 ph3 pb1 bg-pale-grey"
+        data-component="Report"
       >
-        {allIds.length > 0
-          ? <ul
-              className="h-100 border-box pt3 ph3 w-70 bg-white shadow-1 overflow-y-auto"
-              data-component="Report"
-            >
-              {fetched &&
-                allIds.map((id, index) =>
-                  <TaskReport key={index} taskId={id} gray={false} />
-                )}
-            </ul>
-          : <div className="h-100 f4 border-box pt3 ph3 w-70 bg-white shadow-1">
-              没有任务
-            </div>}
-
+        <section className="flex flex-column w-70 h-100">
+          {isSearch &&
+            <Tabs tabs={this.tabs} tab={tab} toggleTab={this.toggleTab} />}
+          {!fetched
+            ? <div className="h-100 f4 pt3 ph3 bg-white shadow-1">
+                没有任务
+              </div>
+            : tab === 'task' ? <TaskReport /> : <PersonReport />}
+        </section>
         {fetched
           ? <ProjectReport />
           : <div className="ml3 h-50 w-30 pa3 bg-white shadow-1" />}
-
       </div>
     )
   }
 }
 
-const mapStateToProps = state => {
-  const tasks = getAlltasks(state).filter(t => !t.upTaskId)
-  return {
-    allIds: tasks.map(t => t.id),
-    fetched: state.tasks.taskFetched
-  }
-}
+const mapStateToProps = ({ search, tasks }, { match }) => ({
+  search,
+  isSearch: match.params.id === 'search',
+  fetched: tasks.taskFetched
+})
 
 Report = withRouter(connect(mapStateToProps, actions)(Report))
 

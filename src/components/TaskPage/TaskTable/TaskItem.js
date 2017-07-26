@@ -6,7 +6,7 @@ import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
 // import { Dropdown } from 'semantic-ui-react'
-import { getUserByTask, getUserById } from 'reducers'
+import { getUserById } from 'reducers'
 import moment from 'moment'
 
 const DragHandle = SortableHandle(
@@ -31,13 +31,10 @@ class TaskItem extends React.Component {
     }
   }
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
-
   render() {
-    const { task, style, currentTask, me, match, getUser } = this.props
-    const { id, assignee } = task
+    const { task, style, currentTask, me, match, assigneeName } = this.props
     const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
-    const assigneeName = getUser(assignee) ? getUser(assignee).name : ''
     //due warnings
     const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
     const isDue = diff < 0
@@ -50,14 +47,14 @@ class TaskItem extends React.Component {
         onMouseLeave={this.onMouseLeave}
       >
         <DragHandle
-          show={this.state.mouseOn || currentTask === id}
+          show={this.state.mouseOn || currentTask === task.id}
           onMouseEnterDrag={this.onMouseEnterDrag}
           onMouseLeaveDrag={this.onMouseLeaveDrag}
         />
         {!isTitle &&
           <CheckIcon
             completed={task.completed === 'completed'}
-            onClick={() => this.handleCheckIconClick(id)}
+            onClick={() => this.handleCheckIconClick(task.id)}
           />}
         <span className="flex-auto flex">
           <input
@@ -104,38 +101,14 @@ class TaskItem extends React.Component {
     )
   }
 
-  // getAssigneeOptions = () => {
-  //   const { me, getUsers, task } = this.props
-  //   const users = getUsers(task.id)
-  //   let userArray = [{ id: '0', name: 'nobody' }]
-  //   if (users.length > 0) {
-  //     userArray = [...users, ...userArray] //add this to match when task is assigned to nobody
-  //   } else {
-  //     userArray = [me, ...userArray] //if task is created without a project, it can still assign to me.
-  //   }
-  //   return userArray.map(user => ({
-  //     key: user.id,
-  //     value: user.id,
-  //     text: user.name
-  //   }))
-  // }
-  //
-  // handleAssigneeChange = (e, data) => {
-  //   const { editTaskAssignee, task } = this.props
-  //   editTaskAssignee(data.value, task.id)
-  // }
-
   canEdit = () => {
     const { completed, match } = this.props
     return completed === 'active' && match.params.id !== 'search'
   }
 
   onMouseEnter = () => this.setState({ mouseOn: true })
-
   onMouseLeave = () => this.setState({ mouseOn: false })
-
   onMouseEnterDrag = () => this.setState({ mouseOnDrag: true })
-
   onMouseLeaveDrag = () => this.setState({ mouseOnDrag: false })
 
   isTitle = task => {
@@ -206,7 +179,6 @@ class TaskItem extends React.Component {
       case 'Tab':
         e.preventDefault()
         break
-
       case 'Backspace':
         if (e.target.value === '' && this.canEdit()) {
           e.preventDefault()
@@ -214,7 +186,6 @@ class TaskItem extends React.Component {
           this.changeFocus(taskIndex, 'up') // TODO: 第一行被删除是特例，考虑简洁的写法
         }
         break
-
       case 'Enter':
         if (this.canEdit()) {
           e.preventDefault()
@@ -223,17 +194,14 @@ class TaskItem extends React.Component {
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
         }
         break
-
       case 'ArrowUp':
         e.preventDefault()
         this.changeFocus(taskIndex, 'up')
         break
-
       case 'ArrowDown':
         e.preventDefault()
         this.changeFocus(taskIndex, 'down')
         break
-
       default:
         return
     }
@@ -246,19 +214,23 @@ TaskItem.propTypes = {
   focusDown: React.PropTypes.func.isRequired
 }
 
-const mapStateToProps = (state, { match }) => ({
-  match,
-  completed: state.completed,
-  search: state.search,
-  me: state.me,
-  currentTask: state.currentTask,
-  getUsers: taskId => getUserByTask(state, taskId),
-  getUser: userId => getUserById(state, userId)
-})
+const mapStateToProps = (state, { match, task }) => {
+  const { completed, search, me, currentTask } = state
+  const user = getUserById(state, task.assignee)
+  return {
+    completed,
+    search,
+    me,
+    currentTask,
+    assigneeName: user ? user.name : ''
+  }
+}
 
-TaskItem = withRouter(connect(mapStateToProps, actions)(TaskItem))
+const ConnectedTaskItem = withRouter(
+  connect(mapStateToProps, actions)(TaskItem)
+)
 
-export default TaskItem
+export default ConnectedTaskItem
 
 /* <Dropdown text="..." inline icon={null} pointing="left">
   <Dropdown.Menu>
@@ -272,3 +244,24 @@ export default TaskItem
     />
   </Dropdown.Menu>
 </Dropdown> */
+
+// getAssigneeOptions = () => {
+//   const { me, getUsers, task } = this.props
+//   const users = getUsers(task.id)
+//   let userArray = [{ id: '0', name: 'nobody' }]
+//   if (users.length > 0) {
+//     userArray = [...users, ...userArray] //add this to match when task is assigned to nobody
+//   } else {
+//     userArray = [me, ...userArray] //if task is created without a project, it can still assign to me.
+//   }
+//   return userArray.map(user => ({
+//     key: user.id,
+//     value: user.id,
+//     text: user.name
+//   }))
+// }
+//
+// handleAssigneeChange = (e, data) => {
+//   const { editTaskAssignee, task } = this.props
+//   editTaskAssignee(data.value, task.id)
+// }
