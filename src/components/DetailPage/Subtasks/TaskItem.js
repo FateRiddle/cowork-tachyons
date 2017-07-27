@@ -96,6 +96,16 @@ class TaskItem extends React.Component {
     this.props.changeCurrentTask(this.props.task.id)
   }
 
+  calcClassName = () => {
+    const { currentTask, task } = this.props
+    return classnames('flex bb b--black-10 box-sizing items-center', {
+      'bt bb b--cyan': currentTask === task.id, //selected
+      b: this.isTitle(task),
+      'shadow-1': this.state.mouseOnDrag,
+      'black-50': task.completed === 'completed'
+    })
+  }
+
   onMouseEnter = () => this.setState({ mouseOn: true })
   onMouseLeave = () => this.setState({ mouseOn: false })
   onMouseEnterDrag = () => this.setState({ mouseOnDrag: true })
@@ -107,15 +117,6 @@ class TaskItem extends React.Component {
       return titleLast === '：' || titleLast === ':'
     }
     return false
-  }
-
-  calcClassName = () => {
-    const { currentTask, task } = this.props
-    return classnames('flex bb b--black-10 box-sizing items-center', {
-      'bt bb b--cyan': currentTask === task.id, //selected
-      b: this.isTitle(task),
-      'shadow-1': this.state.mouseOnDrag
-    })
   }
 
   handleCheckIconClick = id => {

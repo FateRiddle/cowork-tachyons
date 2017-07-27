@@ -11,8 +11,10 @@ const options = [
 ]
 
 class TableFilter extends React.Component {
-  changeTitle = (e, data) => {
-    this.props.changeCompleted(data.value)
+  onChange = (e, data) => {
+    const { match, changeCompleted, history } = this.props
+    changeCompleted(data.value)
+    history.push(`/${match.params.id}`)
   }
 
   render() {
@@ -21,7 +23,7 @@ class TableFilter extends React.Component {
         className="bg-white w-100 shadow-1 pv2 ph3 mb1 black-50 hover-thin-blue"
         value={this.props.completed || 'active'}
         options={options}
-        onChange={this.changeTitle}
+        onChange={this.onChange}
       />
     )
   }
