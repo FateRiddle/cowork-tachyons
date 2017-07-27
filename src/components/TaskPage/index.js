@@ -25,37 +25,45 @@ class TaskPage extends React.Component {
       search,
       updateUserTasks,
       updateProjectTasks,
-      updateAllTasksByProject,
       searchTasks,
+      history,
       match,
       me
     } = this.props
     const { id, taskId } = match.params
+
+    const isValidTaskId = (id, tasks) => {
+      if (tasks && tasks.filter(t => t.id === id).length > 0) {
+        return true
+      }
+      return false
+    }
+
+    const updateSubIfAny = (taskId, tasks) => {
+      console.log('updateSubIfAny', tasks)
+      if (taskId && isValidTaskId(taskId, tasks)) {
+        console.log('hahaha')
+        this.getSubs(taskId)
+      } else {
+        console.log('haha')
+        history.push(`/${id}`)
+      }
+    }
+
     if (id === 'search') {
       searchTasks(search)
       // .then(_ => this.getSubs(taskId))
       //why it is not thenable?
     } else if (id === me.id) {
-      updateUserTasks(id).then(_ => this.getSubs(taskId))
-    } else if (taskId === 'report') {
-      updateAllTasksByProject(id)
+      updateUserTasks(id).then(res => {
+        updateSubIfAny(taskId, res.value)
+      })
     } else {
-      updateProjectTasks(id).then(_ => this.getSubs(taskId))
+      updateProjectTasks(id).then(res => {
+        updateSubIfAny(taskId, res.value)
+      })
     }
   }
-
-  // getSearchResult = () => {
-  //   const {
-  //     search,
-  //     updateUserTasks,
-  //     updateProjectTasks,
-  //     updateAllTasksByProject,
-  //     searchTasks,
-  //     match,
-  //     me
-  //   } = this.props
-  //   const { id, taskId } = match.params
-  // }
 
   getSubs = taskId => {
     const { updateRootTask, updateSubtasks, task } = this.props

@@ -39,9 +39,8 @@ class AddItem extends React.Component {
         msg = '选择一行回车'
       }
     }
-
     return (
-      <li className="list pa2" style={style} onClick={this.AddTask}>
+      <li className="list pa2 pointer" style={style} onClick={this.AddTask}>
         {msg}
       </li>
     )

@@ -12,7 +12,7 @@ const localStorageMiddleware = store => next => action => {
   if (action.type === 'LOGIN_SUCCESS') {
     if (!action.payload.error) {
       window.localStorage.setItem('token', action.payload.token)
-      saveUser({ me: { name: action.payload.name, id: action.payload.id } })
+      saveUser({ name: action.payload.name, id: action.payload.id })
       api.setToken(action.payload.token)
     }
   } else if (action.type === 'LOGOUT') {
@@ -40,18 +40,14 @@ const configureStore = () => {
 
   const store = createStore(
     app,
-    { ...loadUser(), ...loadSearch() },
+    { me: loadUser(), search: loadSearch() },
     applyMiddleware(...middlewares)
   )
 
   store.subscribe(
     throttle(() => {
-      saveUser({
-        me: store.getState().me
-      })
-      saveSearch({
-        search: store.getState().search
-      })
+      saveUser(store.getState().me)
+      saveSearch(store.getState().search)
       window.store = store
     }, 1000)
   )
