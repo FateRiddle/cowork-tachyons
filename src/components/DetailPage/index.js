@@ -5,6 +5,7 @@ import Toolbar from './Toolbar'
 import Relations from './Relations'
 import Editor from './Editor'
 import Progress from './Progress'
+// import Tags from './Tags'
 import Subtasks from './Subtasks'
 import Stats from './Stats'
 import * as actions from 'actions'
@@ -56,6 +57,7 @@ class DetailPage extends React.Component {
             <Relations canEdit={canEdit} />
             <Editor task={task} canEdit={canEdit} />
             <Progress task={task} hasSubtask={hasSubtask} canEdit={canEdit} />
+            {/* <Tags task={task} canEdit={canEdit} /> */}
             {subtaskFetched && <Subtasks tasks={subtasks} canEdit={canEdit} />}
             <Stats />
           </div>}

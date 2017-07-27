@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+// import { Icon } from 'semantic-ui-react'
 import AssigneeTab from './AssigneeTab'
 import DueDateTab from './DueDateTab'
 import { addSubtask } from 'actions'
@@ -20,6 +21,11 @@ class Toolbar extends React.Component {
       >
         <AssigneeTab disabled={!canEdit} />
         <DueDateTab disabled={!canEdit} />
+        {/* <Icon
+          className="black-50 hover-thin-blue ph4 pointer"
+          name="tag"
+          size="large"
+        /> */}
         <div
           className={`ml2 ph2 ${canEdit
             ? 'pointer hover-thin-blue'

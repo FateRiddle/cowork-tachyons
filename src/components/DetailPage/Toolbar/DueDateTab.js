@@ -21,7 +21,7 @@ class DueDateTab extends Component {
     const selectedDate = task && task.dueAt ? moment(task.dueAt) : null
     return (
       <DatePicker
-        className={`ph3 ba pv2 br-pill b--black-30 outline-0 black-50 ${disabled
+        className={`ph3 ba pv2 w45 br-pill b--black-30 outline-0 black-50 ${disabled
           ? ''
           : 'pointer hover-thin-blue'}`}
         selected={selectedDate}
