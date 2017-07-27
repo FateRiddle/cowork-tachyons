@@ -1,8 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { addTask } from 'actions'
-import { getFilteredTasks } from 'reducers'
+import { addTask, changeCurrentTask } from 'actions'
 
 class AddItem extends React.Component {
   canEdit = () => {
@@ -10,37 +9,28 @@ class AddItem extends React.Component {
     return completed === 'active' && match.params.id !== 'search'
   }
 
-  AddTask = () => {
-    const { addTask, match } = this.props
+  onClick = () => {
+    const { addTask, match, index } = this.props
     if (this.canEdit()) {
       const currentProject = match.params.id
       addTask(currentProject)
-      setTimeout(() => this.focusLast(), 0)
-    }
-  }
-
-  focusLast = () => {
-    const { tasks, history, match } = this.props
-    const lastId = tasks[tasks.length - 1].id
-    if (match.params.taskId) {
-      history.push(`${lastId}`)
-    } else {
-      history.push(`${match.url}/${lastId}`)
+      setTimeout(() => this.props.focusLast(index), 0)
     }
   }
 
   render() {
-    const { tasks, style } = this.props
+    const { index, style } = this.props
+    console.log(index)
     let msg = ''
     if (this.canEdit()) {
-      if (tasks.length === 0) {
+      if (index === 0) {
         msg = '点击添加新任务'
-      } else if (tasks.length < 2) {
+      } else if (index < 2) {
         msg = '选择一行回车'
       }
     }
     return (
-      <li className="list pa2 pointer" style={style} onClick={this.AddTask}>
+      <li className="list pa2 pointer" style={style} onClick={this.onClick}>
         {msg}
       </li>
     )
@@ -52,15 +42,10 @@ class AddItem extends React.Component {
 //   listLength: React.PropTypes.number.isRequired,
 // }
 
-const mapStateToProps = (state, { match }) => {
-  const { completed, search } = state
-  return {
-    tasks: getFilteredTasks(state, match.params.id),
-    completed,
-    search
-  }
-}
+const mapStateToProps = ({ completed }) => ({ completed })
 
-AddItem = withRouter(connect(mapStateToProps, { addTask })(AddItem))
+AddItem = withRouter(
+  connect(mapStateToProps, { addTask, changeCurrentTask })(AddItem)
+)
 
 export default AddItem

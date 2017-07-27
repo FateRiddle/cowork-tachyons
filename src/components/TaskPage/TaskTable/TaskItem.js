@@ -175,7 +175,15 @@ class TaskItem extends React.Component {
   }
 
   handleKeyDown = e => {
-    const { task: { id }, taskIndex, deleteTask, insertTask } = this.props
+    const {
+      task: { id },
+      taskIndex,
+      deleteTask,
+      insertTask,
+      history,
+      match,
+      isOnly
+    } = this.props
     switch (e.key) {
       case 'Tab':
         e.preventDefault()
@@ -184,7 +192,11 @@ class TaskItem extends React.Component {
         if (e.target.value === '' && this.canEdit()) {
           e.preventDefault()
           deleteTask(id)
-          this.changeFocus(taskIndex, 'up') // TODO: 第一行被删除是特例，考虑简洁的写法
+          //第一行被删除是特例
+          if (isOnly) {
+            history.push(`/${match.params.id}`)
+          }
+          this.changeFocus(taskIndex, 'up')
         }
         break
       case 'Enter':

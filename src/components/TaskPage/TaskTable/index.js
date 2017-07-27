@@ -27,6 +27,12 @@ class TaskTable extends React.Component {
       const previousId = tasks[index - 1].id
       history.push(`${previousId}`)
       changeCurrentTask(previousId)
+    } else {
+      if (tasks.length > 1) {
+        const nextId = tasks[index + 1].id
+        history.push(`${nextId}`)
+        changeCurrentTask(nextId)
+      }
     }
   }
 
@@ -39,11 +45,22 @@ class TaskTable extends React.Component {
     }
   }
 
+  focusLast = index => {
+    const { tasks, history, match, changeCurrentTask } = this.props
+    const lastId = tasks.length > 0 && tasks[index].id
+    if (lastId) {
+      history.push(`/${match.params.id}/${lastId}`)
+      changeCurrentTask(lastId)
+    } else {
+      history.push(`/${match.params.id}`)
+    }
+  }
+
   rowRenderer = props => {
     const { tasks } = this.props
     const { index } = props
     if (index === tasks.length) {
-      return <AddItem {...props} />
+      return <AddItem {...props} tasks={tasks} focusLast={this.focusLast} />
     }
     return (
       <SortableItem
@@ -51,6 +68,7 @@ class TaskTable extends React.Component {
         focusUp={this.focusUp}
         focusDown={this.focusDown}
         taskIndex={index}
+        isOnly={tasks.length === 1}
         {...props}
       />
     )
@@ -83,7 +101,6 @@ class TaskTable extends React.Component {
 
   render() {
     const { tasks } = this.props
-    // console.log('TaskPage', tasks)
     return (
       <div className="w-100 h-taskTable bg-white shadow-1">
         <AutoSizer>
@@ -118,7 +135,6 @@ const mapStateToProps = (state, { match }) => {
     //项目任务，排除所有子任务
     tasks = tasks.filter(t => t.projectId === id).filter(t => !t.upTaskId)
   }
-
   return {
     tasks,
     allIds: state.tasks.allIds,

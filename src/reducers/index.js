@@ -80,28 +80,28 @@ export const getAllSubtasks = ({ tasks }, id) =>
 
 export const getTaskStack = ({ tasks }, id) => fromTasks.getTaskStack(tasks, id)
 
-export const getFilteredTasks = (state, projectId) => {
-  const allTasks = getAlltasks(state)
-  const { projects, search, completed } = state
-  if (projectId === 'search' && !isEmpty(search)) {
-    return allTasks.filter(t => {
-      return (
-        (!search.assignee || t.assignee === search.assignee) &&
-        (!search.createdBy || t.createdBy === search.createdBy) &&
-        (!search.createdAt || t.createdAt === search.createdAt) &&
-        (!search.dueAt || t.dueAt === search.dueAt)
-      )
-    })
-  }
-  if (projectId === state.me.id) {
-    return allTasks
-      .filter(t => completed === 'all' || t.completed === completed)
-      .filter(t => t.assignee === projectId)
-  }
-  if (projects.allIds.indexOf(projectId) > -1) {
-    return allTasks
-      .filter(t => completed === 'all' || t.completed === completed)
-      .filter(t => t.projectId === projectId)
-  }
-  return []
-}
+// export const getFilteredTasks = (state, projectId) => {
+//   const allTasks = getAlltasks(state)
+//   const { projects, search, completed } = state
+//   if (projectId === 'search' && !isEmpty(search)) {
+//     return allTasks.filter(t => {
+//       return (
+//         (!search.assignee || t.assignee === search.assignee) &&
+//         (!search.createdBy || t.createdBy === search.createdBy) &&
+//         (!search.createdAt || t.createdAt === search.createdAt) &&
+//         (!search.dueAt || t.dueAt === search.dueAt)
+//       )
+//     })
+//   }
+//   if (projectId === state.me.id) {
+//     return allTasks
+//       .filter(t => completed === 'all' || t.completed === completed)
+//       .filter(t => t.assignee === projectId)
+//   }
+//   if (projects.allIds.indexOf(projectId) > -1) {
+//     return allTasks
+//       .filter(t => completed === 'all' || t.completed === completed)
+//       .filter(t => t.projectId === projectId)
+//   }
+//   return []
+// }
