@@ -18,7 +18,6 @@ const loggedIn = () => {
 
 const PrivateRoute = ({ component, ...rest }) => {
   if (loggedIn()) {
-    console.log('im logged in')
     return <Route {...rest} component={component} />
   } else {
     return <Redirect to="/Home" />

@@ -1,18 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import { Icon } from 'semantic-ui-react'
 import classnames from 'classnames'
 import Searchform from './Searchform'
-import Warning from '../parts/Warning'
+// import Warning from '../parts/Warning'
 import * as actions from 'actions'
 import { getAllSubtasks, getTaskStack } from 'reducers'
+import UserSettings from './UserSettings'
 
 class Headbar extends React.Component {
-  onLogout = () => {
-    this.props.logout()
-    this.props.history.push('/home')
-  }
-
   onMyTaskClick = id => {
     this.props.updateUserTasks(id)
     this.props.changeCurrentTask()
@@ -36,14 +33,7 @@ class Headbar extends React.Component {
   // }
 
   render() {
-    const {
-      me,
-      isMe,
-      toggleSidebar,
-      match,
-      sidebarHidden,
-      headbarTab
-    } = this.props
+    const { me, isMe, toggleSidebar, match, sidebarHidden } = this.props
     return (
       <div className="relative shadow-1" data-component="headbar">
         <div
@@ -52,7 +42,7 @@ class Headbar extends React.Component {
           })}
           onClick={toggleSidebar}
         >
-          三
+          <Icon name="content" />
         </div>
         <div className="h3rem flex w-100 justify-between border-box items-center bb b--black-20">
           <NavLink
@@ -60,21 +50,13 @@ class Headbar extends React.Component {
             onClick={() => this.onMyTaskClick(me.id)}
             className={`${isMe
               ? 'black-60'
-              : 'black-30'} w5 pl4 hover-thin-blue`}
+              : 'black-30'} w5 tracked pl4 hover-thin-blue`}
           >
             我的任务
           </NavLink>
           <Searchform />
-          <div className="flex w5 justify-end" data-component="user">
-            <div className="ph3 black-60">{me.name}</div>
-            <div
-              className="pr4 black-60 hover-thin-blue pointer"
-              onClick={this.onLogout}
-            >
-              登出
-            </div>
-          </div>
-          <Warning />
+          <UserSettings />
+          {/* <Warning className="absolute h2 w-100 bg-red" /> */}
         </div>
         <ul className="flex justify-center h2" data-component="tabs 任务/报表">
           <li
@@ -105,10 +87,9 @@ class Headbar extends React.Component {
 
 const mapStateToProps = (state, { match }) => {
   return {
-    sidebarHidden: state.sidebarHidden,
+    sidebarHidden: state.visual.sidebarHidden,
     me: state.me,
     isMe: state.me.id === match.params.id,
-    headbarTab: state.headbarTab,
     getSubs: id => getAllSubtasks(state, id),
     stack: id => getTaskStack(state, id)
   }

@@ -5,7 +5,7 @@ import { getProjectById, getAlltasks } from 'reducers'
 
 class ProjectReport extends React.Component {
   render() {
-    const { project = {}, tasks, progress, amount, match } = this.props
+    const { project = {}, progress, amount } = this.props
     // console.log(project, tasks, progress, amount, match.params)
     return (
       <div
@@ -37,7 +37,7 @@ class ProjectReport extends React.Component {
 const mapStateToProps = (state, { match }) => {
   const currentProject = match.params.id
   const project = getProjectById(state, currentProject)
-  const tasks = getAlltasks(state).filter(t => !t.upTaskId)
+  const tasks = getAlltasks(state).filter(t => !t.upTaskId && t.projectId)
   const amount = tasks.map(t => t.amount || 1).reduce((t1, t2) => t1 + t2, 0)
   const getProgress = task =>
     task.completed === 'completed' ? 100 : task.progress || 0
@@ -46,7 +46,6 @@ const mapStateToProps = (state, { match }) => {
     .reduce((t1, t2) => t1 + t2, 0)
   const progress = tasks.length > 0 ? weightedAmount / amount : 0
   return {
-    tasks,
     project,
     amount,
     progress

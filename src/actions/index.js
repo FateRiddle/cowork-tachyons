@@ -19,11 +19,13 @@ const nullToEmptyString = obj => {
 
 const formatDate = tasks => {
   const format = task => {
-    const { createdAt, dueAt, modifiedAt } = task
+    const { createdAt, beginAt, dueAt, completedAt, modifiedAt } = task
     return {
       ...task,
       createdAt: createdAt ? moment(createdAt) : null,
+      beginAt: beginAt ? moment(beginAt) : null,
       dueAt: dueAt ? moment(dueAt) : null,
+      completedAt: completedAt ? moment(completedAt) : null,
       modifiedAt: modifiedAt ? moment(modifiedAt) : null
     }
   }
@@ -117,6 +119,7 @@ export const insertTask = (projectId, taskId) => (dispatch, getState) => {
   const isMe = projectId === me.id
   const data = {
     id,
+    createdBy: me.id,
     assignee: isMe ? projectId : '',
     projectId: isMe ? '' : projectId,
     insertAt: taskId
@@ -134,8 +137,10 @@ export const insertTask = (projectId, taskId) => (dispatch, getState) => {
 
 export const addSubtask = taskId => (dispatch, getState) => {
   const { rootTaskId, title } = getTaskById(getState(), taskId)
+  const { me } = getState()
   const data = {
     id: v4(),
+    createdBy: me.id,
     upTaskId: taskId,
     rootTaskId: rootTaskId ? rootTaskId : taskId,
     upTaskTitle: title ? title : ''
@@ -152,8 +157,10 @@ export const addSubtask = taskId => (dispatch, getState) => {
 
 export const insertSubtask = (taskId, subTaskId) => (dispatch, getState) => {
   const { rootTaskId, title } = getTaskById(getState(), taskId)
+  const { me } = getState()
   const data = {
     id: v4(),
+    createdBy: me.id,
     upTaskId: taskId,
     insertAt: subTaskId,
     rootTaskId: rootTaskId ? rootTaskId : taskId,
@@ -239,6 +246,20 @@ export const editTaskAssignee = (assignee, id) => {
     type: 'EDIT_TASK_ASSIGNEE',
     payload: {
       promise: api.Tasks.editAssignee(data),
+      data
+    }
+  }
+}
+
+export const editTaskBeginAt = (beginAt, id) => {
+  const data = {
+    beginAt: beginAt,
+    id
+  }
+  return {
+    type: 'EDIT_TASK_BEGINAT',
+    payload: {
+      promise: api.Tasks.editBeginAt(data),
       data
     }
   }
@@ -364,10 +385,6 @@ export const changeCurrentSubtask = (id = '') => ({
   id
 })
 
-export const toggleSidebar = () => ({
-  type: 'TOGGLE_SIDEBAR'
-})
-
 ////////////////////////////new actions /////////////////////////
 //async
 export const updateState = () => ({
@@ -409,7 +426,6 @@ export const updateSubtasks = id => ({
   type: 'UPDATE_SUBTASKS',
   payload: {
     promise: api.Tasks.subtasks(id).then(tasks => {
-      console.log(tasks)
       return formatDate(tasks)
     }),
     data: {
@@ -466,7 +482,12 @@ export const searchTasks = (search = {}) => dispatch => {
   // dispatch(searchTasks(search))
 }
 
-//authentication & error handle
+//user & error handle
+
+export const changeUserWarning = warning => ({
+  type: 'CHANGE_USER_WARNING',
+  warning
+})
 
 export const resetErrorMessage = () => ({
   type: 'RESET_ERROR_MESSAGE'
@@ -499,4 +520,27 @@ export const signup = (name, password, password2, slogan) => ({
   }
 })
 
+export const editMyName = (name, id) => ({
+  type: 'EDIT_MY_NAME',
+  payload: api.Users.editName(name, id)
+})
+
+export const editMyPassword = (password, id) => ({
+  type: 'EDIT_MY_PASSWORD',
+  payload: api.Users.editPassword(password, id)
+})
+
 //visual
+
+export const toggleSidebar = () => ({
+  type: 'TOGGLE_SIDEBAR'
+})
+
+export const toggleUserSettings = () => ({
+  type: 'TOGGLE_USERSETTINGS'
+})
+
+export const changeUserSettingsTab = tab => ({
+  type: 'CHANGE_USERSETTINGS_TAB',
+  tab
+})

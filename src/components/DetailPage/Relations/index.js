@@ -54,24 +54,20 @@ const mapStateToProps = (state, { match }) => {
   const allProjects = getAllProjects(state)
   const currentTask = match.params.taskId
   const task = getTaskById(state, currentTask) || {}
-  const project = getProjectById(state, task.projectId) || {}
-  const currentProject = project.id ? project.id : '0'
-  //calc rootTask's projectName
-  const rootProjectId =
-    task.rootTaskId &&
-    getTaskById(state, task.rootTaskId) &&
-    getTaskById(state, task.rootTaskId).projectId
+  //calc rootTask's projectName, 如果是子任务，读顶层任务的projectId，如果已经是顶层，直接读projectId
+  const currentProject = task.rootTaskId
+    ? getTaskById(state, task.rootTaskId) &&
+        getTaskById(state, task.rootTaskId).projectId
+    : task.projectId
   let rootProjectName = '无项目'
-  if (rootProjectId && getProjectById(state, rootProjectId)) {
-    rootProjectName = getProjectById(state, rootProjectId).title || '无项目'
+  if (currentProject && getProjectById(state, currentProject)) {
+    rootProjectName = getProjectById(state, currentProject).title || '无项目'
   }
   return {
     allProjects,
     task,
     currentTask,
-    currentProject,
-    getTask: id => getTaskById(state, id),
-    getProject: id => getProjectById(state, id),
+    currentProject: currentProject ? currentProject : '0',
     rootProjectName,
     completed: state.completed
   }

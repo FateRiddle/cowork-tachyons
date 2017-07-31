@@ -40,12 +40,9 @@ class TaskPage extends React.Component {
     }
 
     const updateSubIfAny = (taskId, tasks) => {
-      console.log('updateSubIfAny', tasks)
       if (taskId && isValidTaskId(taskId, tasks)) {
-        console.log('hahaha')
         this.getSubs(taskId)
       } else {
-        console.log('haha')
         history.push(`/${id}`)
       }
     }

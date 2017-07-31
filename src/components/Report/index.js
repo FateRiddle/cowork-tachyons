@@ -69,9 +69,12 @@ class Report extends React.Component {
               </div>
             : tab === 'task' ? <TaskReport /> : <PersonReport />}
         </section>
-        {fetched
-          ? <ProjectReport />
-          : <div className="ml3 h-50 w-30 pa3 bg-white shadow-1" />}
+        {isSearch
+          ? null
+          : fetched
+            ? <ProjectReport />
+            : <div className="ml3 h-50 w-30 pa3 bg-white shadow-1" />}
+
       </div>
     )
   }

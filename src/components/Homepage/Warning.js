@@ -21,7 +21,10 @@ class HomePageWarning extends React.PureComponent {
 
   render() {
     return this.props.warning
-      ? <div className="Warning">
+      ? <div
+          data-component="Warning"
+          className="absolute top-0 left-0 w-80 h2 flex items-center pl3 tracked bg-red white"
+        >
           {this.props.warning}
         </div>
       : null

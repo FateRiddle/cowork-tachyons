@@ -48,8 +48,7 @@ class Signup extends React.Component {
           placeholder="我们的口号是？"
         />
         <div
-          className="ph3 pv2 dim tracked-mega f4 br2 ba b--black-50 black-60"
-          href="#"
+          className="ph3 pv2 dim tracked-mega f4 br2 ba b--black-50 black-60 pointer"
           onClick={this.signup}
         >
           注册

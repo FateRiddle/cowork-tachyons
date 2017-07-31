@@ -6,8 +6,8 @@ import { SortableHandle } from 'react-sortable-hoc'
 import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
-// import { Dropdown } from 'semantic-ui-react'
-import { getUserByTask, getUserById } from 'reducers'
+import { Icon } from 'semantic-ui-react'
+import { getUserById } from 'reducers'
 import moment from 'moment'
 
 const DragHandle = SortableHandle(
@@ -34,8 +34,8 @@ class TaskItem extends React.Component {
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
 
   render() {
-    const { task, style, currentTask, getUser, assigneeName } = this.props
-    const { id, assignee } = task
+    const { task, style, currentTask, assigneeName } = this.props
+    const { id } = task
     const isTitle = this.isTitle(task)
     //due warnings
     const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
@@ -72,20 +72,23 @@ class TaskItem extends React.Component {
           />
           {!isTitle &&
             <span
-              className={classnames('ph2', {
+              className={classnames('ph2 f6', {
                 orange: closeToDue,
                 'dark-red': isDue
               })}
             >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
             </span>}
-          {assignee && <div className="ph2">{assigneeName}</div>}
+          {assigneeName &&
+            <div className="ph2 bg-black-10 br-pill f6 black-50">
+              {assigneeName}
+            </div>}
           <Link
-            className="ph2 black-50 hover-thin-blue f3"
+            className="pl2 black-50 hover-thin-blue f3 flex-center"
             to={`${task.id}`}
             onClick={this.toTaskDetail}
           >
-            >
+            <Icon name="chevron right" size="tiny" />
           </Link>
         </span>
       </li>

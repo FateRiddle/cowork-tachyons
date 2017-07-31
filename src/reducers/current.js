@@ -1,4 +1,6 @@
-const warning = (state = '', action) => {
+import { combineReducers } from 'redux'
+
+const main = (state = '', action) => {
   switch (action.type) {
     case 'EDIT_PROJECT_ERROR':
     case 'ADD_TASK_ERROR':
@@ -18,6 +20,20 @@ const warning = (state = '', action) => {
       return state
   }
 }
+
+const userSettings = (state = '', action) => {
+  switch (action.type) {
+    case 'CHANGE_USER_WARNING':
+      return action.warning
+    default:
+      return state
+  }
+}
+
+const warning = combineReducers({
+  main,
+  userSettings
+})
 
 const task = (state = '', action) => {
   switch (action.type) {

@@ -57,7 +57,6 @@ class Subtasks extends React.Component {
 
   render() {
     const { tasks, allIds } = this.props
-    console.log(tasks)
     return (
       <div className="h5" data-component="Subtasks">
         <AutoSizer>
@@ -67,7 +66,7 @@ class Subtasks extends React.Component {
               width={width}
               height={height}
               rowCount={tasks.length}
-              rowHeight={30}
+              rowHeight={35}
               rowRenderer={this.rowRenderer}
               onSortEnd={this.onSortEnd}
               useDragHandle={true}

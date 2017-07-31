@@ -11,10 +11,16 @@ class Home extends React.Component {
       <div className="flex flex-column">
         <Warning />
         <header className="absolute flex justify-end items-center w-100 h3">
-          <Link className="ph4 f4 black-50 hover-thin-blue" to="/home/login">
+          <Link
+            className="ph4 f4 tracked black-50 hover-thin-blue"
+            to="/home/login"
+          >
             登陆
           </Link>
-          <Link className="ph4 f4 black-50 hover-thin-blue" to="/home/signup">
+          <Link
+            className="ph4 f4 tracked black-50 hover-thin-blue"
+            to="/home/signup"
+          >
             注册
           </Link>
         </header>
@@ -23,8 +29,10 @@ class Home extends React.Component {
             ? 'vh-100'
             : 'vh-50'} flex-column tp-h`}
         >
-          <h1 className="f-6">Cowork</h1>
-          <div className="f3">things make easy</div>
+          <h1 className="f-6 tracked">
+            C<span className="red">o</span>w<span className="red">o</span>rk
+          </h1>
+          <div className="f3 tracked">Work made simple</div>
         </main>
         <Route exact path="/home/login" component={Login} />
         <Route exact path="/home/signup" component={Signup} />

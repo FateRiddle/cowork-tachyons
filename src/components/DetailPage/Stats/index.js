@@ -6,17 +6,16 @@ import { getTaskById, getUserById } from 'reducers'
 
 class Stats extends React.Component {
   render() {
-    const { task, getUser } = this.props
-    const user = getUser(task.assignee) || { name: '' }
+    const { task, creator } = this.props
     return (
       <div className="ph3 pv2 black-50" data-component="Stats">
-        {task.assignee &&
-          task.createdAt &&
+        {creator &&
+          task.beginAt &&
           <div>
-            {user.name}创建于{task.createdAt.locale('zh-cn').fromNow()}
+            {creator.name}创建。开始于{task.beginAt.locale('zh-cn').fromNow()}。
           </div>}
         {task.completedAt &&
-          <div>完成于{task.completedAt.toString().substring(0, 10)}</div>}
+          <div>完成于{task.completedAt.locale('zh-cn').fromNow()}。</div>}
       </div>
     )
   }
@@ -25,9 +24,10 @@ class Stats extends React.Component {
 const mapStateToProps = (state, { match }) => {
   const currentTask = match.params.taskId
   const task = getTaskById(state, currentTask) || {}
+  const creator = getUserById(state, task.createdBy) || {}
   return {
     task,
-    getUser: user => getUserById(state, user)
+    creator
   }
 }
 

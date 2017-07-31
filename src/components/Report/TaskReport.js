@@ -23,7 +23,7 @@ class TaskReport extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const tasks = getAlltasks(state).filter(t => !t.upTaskId)
+  const tasks = getAlltasks(state).filter(t => !t.upTaskId && t.projectId)
   return {
     allIds: tasks.map(t => t.id)
   }

@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { getAllUsers } from 'reducers'
 import Person from './Person'
 
 const Timeline = ({ begin, end }) =>
@@ -11,8 +10,7 @@ const Timeline = ({ begin, end }) =>
 
 class PersonReport extends React.Component {
   render() {
-    const { search, isSearch, fetched, assignees, begin, end } = this.props
-    console.log(search, assignees)
+    const { fetched, assignees, begin, end } = this.props
     return (
       <section className="pv3 bg-white shadow-1 h-100 flex-auto">
         {fetched
@@ -39,7 +37,6 @@ const mapStateToProps = ({ search, tasks, projects, users }) => {
   }
   return {
     fetched: tasks.taskFetched && projects.fetched,
-    search,
     assignees: search.assignee.length > 0 ? search.assignee : users.allIds,
     begin: search.beginAt ? formatDate(search.beginAt) : '很久以前',
     end: formatDate(search.completedAt)

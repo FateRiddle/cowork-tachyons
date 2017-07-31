@@ -2,17 +2,21 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { editTaskAssignee } from 'actions'
-import { getUserByTask, getTaskById } from 'reducers'
+import { getUserByTask, getTaskById, getUserById } from 'reducers'
 import { Dropdown } from 'semantic-ui-react'
 
 class AssigneeTab extends React.Component {
   getUserOptions = () => {
-    const { users, me } = this.props
+    const { users, currentUser, me } = this.props
     let userArray = []
     if (users.length > 0) {
       userArray = [...users, { id: '0', name: '无人' }] //add this to match when task is assigned to nobody
     } else {
-      userArray = [me, { id: '0', name: '无人' }] //if task is created without a project, it can still assign to me.
+      if (currentUser.id !== me.id) {
+        userArray = [currentUser, me, { id: '0', name: '无人' }] //if task is created without a project, it can still assign to me.
+      } else {
+        userArray = [me, { id: '0', name: '无人' }]
+      }
     }
     return userArray.map(user => ({
       key: user.id,
@@ -52,6 +56,7 @@ const mapStateToProps = (state, { match }) => {
   const _assignee = assignee ? assignee : '0' //Dropdown插件的value不接受''，所以必须赋值'0'
   return {
     users,
+    currentUser: getUserById(state, _assignee),
     me: state.me,
     currentTask,
     assignee: _assignee

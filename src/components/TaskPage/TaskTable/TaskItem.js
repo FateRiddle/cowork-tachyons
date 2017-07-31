@@ -6,7 +6,7 @@ import * as actions from 'actions'
 import CheckIcon from './CheckIcon'
 import classnames from 'classnames'
 // import { Dropdown } from 'semantic-ui-react'
-import { getUserById } from 'reducers'
+import { getUserById, getProjectByTask } from 'reducers'
 import moment from 'moment'
 
 const DragHandle = SortableHandle(
@@ -32,7 +32,15 @@ class TaskItem extends React.Component {
   }
   //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
   render() {
-    const { task, style, currentTask, me, match, assigneeName } = this.props
+    const {
+      project,
+      task,
+      style,
+      currentTask,
+      me,
+      match,
+      assigneeName
+    } = this.props
     const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
     //due warnings
@@ -69,33 +77,30 @@ class TaskItem extends React.Component {
             onBlur={this.handleBlur}
           />
           {task.upTaskId &&
-            <span
-              className="ph2 black-50"
-              data-component="uptask"
-            >{`< ${task.upTaskTitle}`}</span>}
+            <span data-component="uptask" className="ph2 black-50">
+              {`< `}<span className="f6">{task.upTaskTitle}</span>
+            </span>}
+          {!isTitle &&
+            currentProject === me.id &&
+            project &&
+            project.title &&
+            <span className="ph2 bg-black-10 br-pill f6 black-50">
+              {project.title}
+            </span>}
           {!isTitle &&
             <span
-              className={classnames('ph2', {
+              className={classnames('ph2 f6', {
                 orange: closeToDue,
                 'dark-red': isDue
               })}
             >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
             </span>}
-          {currentProject !== me.id &&
-            <div className="ph2">{assigneeName}</div>}
-          {/* {currentProject !== me.id &&
-          false && //react-virtualized的下边界会挡住下拉框
-            <Dropdown
-              pointing="right"
-              inline
-              icon={null}
-              upward={false}
-              // className="Drop__assignee"
-              value={assignee}
-              options={this.getAssigneeOptions()}
-              onChange={this.handleAssigneeChange}
-            />} */}
+          {!isTitle &&
+            currentProject !== me.id &&
+            <div className="ph2 mr2 bg-black-10 br-pill f6 black-50">
+              {assigneeName}
+            </div>}
         </span>
       </li>
     )
@@ -135,6 +140,7 @@ class TaskItem extends React.Component {
 
   handleLineClick = () => {
     const { history, match, changeCurrentTask, task } = this.props
+    console.log(task)
     const { id: projectId } = match.params
     const taskId = task.id
     changeCurrentTask(taskId)
@@ -231,6 +237,7 @@ const mapStateToProps = (state, { match, task }) => {
   const { completed, search, me, currentTask } = state
   const user = getUserById(state, task.assignee)
   return {
+    project: getProjectByTask(state, task),
     completed,
     search,
     me,

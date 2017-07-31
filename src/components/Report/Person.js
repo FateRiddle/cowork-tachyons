@@ -12,8 +12,7 @@ class Person extends React.Component {
 
   render() {
     const { user, amount, completedAmount } = this.props
-    console.log(user, amount, completedAmount)
-
+    // console.log(user, amount, completedAmount)
     return (
       <li className="flex flex-wrap items-center">
         <div className="w-100 pv2">{user ? user.name : ''}:</div>

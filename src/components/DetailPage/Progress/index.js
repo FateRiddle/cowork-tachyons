@@ -3,6 +3,8 @@ import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import * as actions from 'actions'
 import { Dropdown, Progress } from 'semantic-ui-react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 class ProgressSection extends React.Component {
   options = [
@@ -57,24 +59,46 @@ class ProgressSection extends React.Component {
     editTaskAmount(amount, currentTask)
   }
 
+  handleDateChange = date => {
+    const { task, editTaskBeginAt } = this.props
+    if (task) {
+      editTaskBeginAt(date, task.id)
+    }
+  }
+
   render() {
-    const { progress, amount, hasSubtask, canEdit } = this.props
+    const { task, progress, amount, hasSubtask, canEdit } = this.props
+    const selectedDate = task && task.beginAt
     const editable = canEdit && !hasSubtask
     return (
-      <div className="ph3">
-        <div className="mr3 pv1 flex">
-          <div className="black-50 pr2">工作量：</div>
+      <div data-component="Progress" className="ph3 flex flex-wrap black-50">
+        <div className="mr3 flex items-center">
+          <div className="pr2">工作量：</div>
           {editable
             ? <Dropdown
-                className="pb2 tracked-mega black-50 hover-thin-blue"
+                className="pv2 tracked-mega hover-thin-blue"
                 value={amount}
                 options={this.options}
                 onChange={this.changeAmount}
               />
-            : <div className="pb2 tracked-mega black-50">{amount}天</div>}
+            : <div className="pv2 tracked-mega">{amount}天</div>}
         </div>
-        <div className="flex pv1">
-          <div className="black-50 pr2">进度：</div>
+        <div className="flex items-center">
+          <span className="mr2">开始于：</span>
+          <DatePicker
+            className={`pv1 ph2 w4 bb b--dashed b--black-30 outline-0 ${editable
+              ? 'pointer hover-thin-blue'
+              : 'bg-white'}`}
+            selected={selectedDate}
+            onChange={this.handleDateChange}
+            placeholderText="开始于"
+            locale="zh-cn"
+            disabled={!editable}
+          />
+        </div>
+
+        <div className="pt2 flex w-100">
+          <div className="pr2">进度：</div>
           <Progress
             className={`w5 ${editable ? 'pointer' : ''}`}
             onClick={this.increaseProgress}

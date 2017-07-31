@@ -75,6 +75,14 @@ const task = (state, action) => {
         }
       }
       return state
+    case 'EDIT_TASK_BEGINAT_LOADING':
+      if (state.id === payload.id) {
+        return {
+          ...state,
+          beginAt: payload.beginAt
+        }
+      }
+      return state
     case 'TOGGLE_TASK_LOADING':
       if (state.id === payload.id) {
         const completed = state.completed === 'active' ? 'completed' : 'active'

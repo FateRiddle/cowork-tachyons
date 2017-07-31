@@ -14,6 +14,7 @@ const byId = (state = {}, action) => {
     case 'EDIT_TASK_PROJECT_LOADING':
     case 'EDIT_TASK_ASSIGNEE_LOADING':
     case 'EDIT_TASK_DUE_LOADING':
+    case 'EDIT_TASK_BEGINAT_LOADING':
     case 'EDIT_TASK_PROGRESS_LOADING':
     case 'EDIT_TASK_AMOUNT_LOADING':
     case 'TOGGLE_TASK_LOADING':

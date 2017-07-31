@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'actions'
-import { getTaskById, getUserById, getAlltasks } from 'reducers'
+import { getTaskById, getUserById, getAlltasks, getProjectById } from 'reducers'
 import moment from 'moment'
 
 class Task extends React.Component {
@@ -13,7 +13,7 @@ class Task extends React.Component {
 
   render() {
     const { fold } = this.state
-    const { task, user, subIds, gray } = this.props
+    const { task, projectName, user, subIds, gray } = this.props
     const userName = user ? user.name : ''
     //dueDate display
     const diff = task.dueAt && task.dueAt.diff(moment(), 'days', true)
@@ -47,6 +47,7 @@ class Task extends React.Component {
               {task.title}
             </div>
             <div
+              data-component="dueAt"
               className={`pl2 ${closeToDue ? 'orange' : ''} ${isDue
                 ? 'red'
                 : ''}`}
@@ -64,6 +65,9 @@ class Task extends React.Component {
             <div className="pl2">
               <span className="black-60">进度：</span>
               {Math.floor(getProgress(task))}%
+            </div>
+            <div className="flex-auto tr">
+              {projectName}
             </div>
           </section>
         </main>
@@ -87,7 +91,11 @@ const mapStateToProps = (state, { taskId }) => {
   const subIds = getAlltasks(state)
     .filter(t => t.upTaskId && t.upTaskId === taskId)
     .map(t => t.id)
+  const rootId = task.upTaskId ? task.rootTaskId : taskId
+  const projectId = getTaskById(state, rootId).projectId
+  const projectName = projectId ? getProjectById(state, projectId).title : ''
   return {
+    projectName,
     subIds,
     task,
     user: getUserById(state, task.assignee)

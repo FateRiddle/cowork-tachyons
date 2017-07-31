@@ -39,11 +39,11 @@ class Toolbar extends React.Component {
           添加子任务
         </div>
         <div
-          className="absolute right-0 pt2 pr3 self-start black-60 pointer dim"
+          className="absolute right-0 pt2 pr3 self-start black-60 f4 pointer hover-thin-blue"
           data-component="close"
           onClick={this.close}
         >
-          X
+          x
         </div>
       </div>
     )

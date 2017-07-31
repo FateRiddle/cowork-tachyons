@@ -20,7 +20,6 @@ class AddItem extends React.Component {
 
   render() {
     const { index, style } = this.props
-    console.log(index)
     let msg = ''
     if (this.canEdit()) {
       if (index === 0) {

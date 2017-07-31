@@ -110,7 +110,7 @@ class TaskTable extends React.Component {
               width={width}
               height={height}
               rowCount={tasks.length + 1}
-              rowHeight={30}
+              rowHeight={35}
               rowRenderer={this.rowRenderer}
               onSortEnd={this.onSortEnd}
               useDragHandle={true}

@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { getAllProjects } from 'reducers'
 import * as actions from 'actions'
 import ProjectEditor from '../Pop/ProjectEditor'
-import { Dropdown, Confirm } from 'semantic-ui-react'
+import { Dropdown, Icon } from 'semantic-ui-react'
 
 class Sidebar extends React.Component {
   state = {
@@ -47,6 +47,7 @@ class Sidebar extends React.Component {
     const project = projects.find(project => project.id === projectId) || {}
     return (
       <div
+        data-component="Sidebar"
         className={classnames(
           'bg-deep-blue vh-100 w5 absolute relative-ns z-1 pt3',
           {
@@ -55,11 +56,11 @@ class Sidebar extends React.Component {
         )}
       >
         <div
-          className="absolute right-1 top-1 f4 white-60 pointer dim"
+          className="absolute right-0 top-0 pt2 pr3 f4 white-60 pointer dim"
           data-component="closeBtn"
           onClick={toggleSidebar}
         >
-          X
+          x
         </div>
         <ProjectEditor
           project={project}
@@ -76,36 +77,35 @@ class Sidebar extends React.Component {
           data-component="+Project"
         >
           项目
-          <span
-            className="light-blue br-100 ba dib pa1 dim pointer"
+          <Icon
+            className="ph2 light-blue dim pointer"
+            name="plus"
             onClick={this.handleAddProjectClick}
-          >
-            +
-          </span>
+          />
         </div>
         {fetched &&
           <ul className="list mt3" data-component="projectList">
             {projects.map(p =>
               <li
                 key={p.id}
-                className={`pv2 pl3 flex hover-bg-thin-blue deep-blue hover-light-gray ${p.id ===
+                className={`pl3 flex hover-bg-thin-blue deep-blue hover-light-gray ${p.id ===
                   match.params.id
                   ? 'bg-deepest-blue'
                   : ''}`}
               >
                 <NavLink
-                  className="white-80 flex-grow hover-white-80 mw5"
+                  className="pv2 white-80 flex-grow hover-white-80 mw5"
                   to={`/${p.id}`}
                   onClick={() => this.onProjectClick(p.id)}
                 >
                   {p.title}
                 </NavLink>
                 <Dropdown
-                  className="ph3 tracked white-50 lh-solid"
+                  className="pv2 ph3 tracked white-50 lh-solid"
                   text="..."
                   inline
                   icon={null}
-                  pointing="left"
+                  // pointing="left"
                 >
                   <Dropdown.Menu>
                     <Dropdown.Item
@@ -133,7 +133,7 @@ Sidebar.propTypes = {
 const mapStateToProps = state => ({
   projects: getAllProjects(state),
   fetched: state.projects.fetched,
-  sidebarHidden: state.sidebarHidden
+  sidebarHidden: state.visual.sidebarHidden
 })
 
 Sidebar = connect(mapStateToProps, actions)(Sidebar)

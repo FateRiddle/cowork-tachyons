@@ -99,6 +99,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
   let {
     id,
+    createdBy = '',
     projectId = '',
     assignee = '',
     upTaskId,
@@ -167,14 +168,14 @@ router.post('/', (req, res, next) => {
       begin tran
         ${upTaskId
           ? `insert into tb_cowork_task
-          (id,completed,createdAt,beginAt,progress,amount,upTaskId,rootTaskId,upTaskTitle)
+          (id,createdBy,completed,createdAt,beginAt,progress,amount,upTaskId,rootTaskId,upTaskTitle)
             values
-          ('${id}','active','${now}','${now}',0,1,'${upTaskId}','${rootTaskId}','${upTaskTitle}')
+          ('${id}','${createdBy}','active','${now}','${now}',0,1,'${upTaskId}','${rootTaskId}','${upTaskTitle}')
           ${changeUpProgress(id)}`
           : `insert into tb_cowork_task
-          (id,assignee,projectId,completed,createdAt,beginAt,progress,amount)
+          (id,createdBy,assignee,projectId,completed,createdAt,beginAt,progress,amount)
             values
-          ('${id}','${assignee}','${projectId}','active','${now}','${now}',0,1)`}
+          ('${id}','${createdBy}','${assignee}','${projectId}','active','${now}','${now}',0,1)`}
         ${changeOrder}
       if @@error != 0
       rollback tran
@@ -193,6 +194,7 @@ router.put('/:id', (req, res, next) => {
     projectId,
     assignee,
     dueAt,
+    beginAt,
     toggle,
     amount,
     progress
@@ -266,6 +268,11 @@ router.put('/:id', (req, res, next) => {
           : dueAt === null
             ? `update tb_cowork_task set dueAt=null where id='${id}'`
             : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
+        ${beginAt === undefined
+          ? ''
+          : beginAt === null
+            ? `update tb_cowork_task set beginAt=null where id='${id}'`
+            : `update tb_cowork_task set beginAt='${beginAt}' where id='${id}'`}
         ${toggleTask}
         ${changeAmount}
         ${changeProgress}
@@ -416,7 +423,8 @@ router.post('/search', (req, res, next) => {
       order by b.taskOrder
     `
   )
-
+  // `(a.projectId <> '' and a.projectId is not null) or
+  //   (c.projectId <> '' and c.projectId is not null)`
   query(
     `
       select distinct a.*,b.taskOrder,
@@ -433,7 +441,8 @@ router.post('/search', (req, res, next) => {
         ? `a.projectId in (${stringify(
             projectId
           )}) or c.projectId in (${stringify(projectId)})`
-        : '1=1'}
+        : `(a.projectId <> '' and a.projectId is not null) or
+            (c.projectId <> '' and c.projectId is not null)`}
       and ${date_in_range()}
       order by b.taskOrder
     `,
