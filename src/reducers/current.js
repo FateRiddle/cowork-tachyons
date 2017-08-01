@@ -1,21 +1,17 @@
 import { combineReducers } from 'redux'
 
 const main = (state = '', action) => {
-  switch (action.type) {
-    case 'EDIT_PROJECT_ERROR':
-    case 'ADD_TASK_ERROR':
-    case 'INSERT_TASK_ERROR':
-      const { errors } = action.payload.response.data
-      if (errors) {
-        return errors
-      } else {
-        return '连接服务器失败。请刷新重试。'
-      }
-    case 'RESET_ERROR_MESSAGE':
-      return ''
-    default:
-      return state
+  if (action.type.endsWith('_ERROR')) {
+    const { status } = action.payload.response
+    if (status === 401) {
+      return '授权失败，请尝试重新登录。'
+    }
+    return '连接服务器失败。请刷新重试。'
   }
+  if (action.type === 'RESET_ERROR_MESSAGE') {
+    return ''
+  }
+  return state
 }
 
 const home = (state = '', action) => {

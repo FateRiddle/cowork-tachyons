@@ -2,18 +2,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { login } from 'actions'
+import api from 'api'
 
 class Login extends React.Component {
   state = { message: '' }
 
   login = () => {
-    this.props
-      .login(this.input_name.value, this.input_password.value)
-      .then(res => {
-        if (res.value.token && res.value.id) {
-          this.props.history.push('/')
-        }
-      })
+    const { login, history } = this.props
+    login(this.input_name.value, this.input_password.value).then(res => {
+      if (res.value.token && res.value.id) {
+        api.setToken(res.value.token)
+        history.push('/')
+      }
+    })
   }
 
   render() {

@@ -4,18 +4,17 @@ import { connect } from 'react-redux'
 import { resetErrorMessage } from 'actions'
 
 class Warning extends React.Component {
-  componentDidUpdate(prevProps, prevState) {
-    const { resetErrorMessage, warning } = this.props
-    if (warning && prevProps.warning !== warning) {
-      setTimeout(resetErrorMessage, 2000)
-    }
-  }
-
   render() {
-    const { warning, className } = this.props
+    const { warning, className, resetErrorMessage } = this.props
     console.log(this.props)
     return warning
-      ? <div data-component="Warning" className={className}>
+      ? <div data-component="Warning" className={`relative ${className}`}>
+          <div
+            className="absolute top-0 right-0 ma2 white dim f4 pointer"
+            onClick={resetErrorMessage}
+          >
+            x
+          </div>
           {warning}
         </div>
       : null

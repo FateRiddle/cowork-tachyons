@@ -18,6 +18,8 @@ const byId = (state = {}, action) => {
         nextState[project.id] = project
       })
       return nextState
+    case 'LOGOUT':
+      return {}
     default:
       return state
   }
@@ -32,6 +34,8 @@ const allIds = (state = [], action) => {
       return state.filter(id => id !== payload.id)
     case 'UPDATE_ALL_SUCCESS':
       return payload.projects.map(project => project.id)
+    case 'LOGOUT':
+      return []
     default:
       return state
   }
@@ -41,6 +45,8 @@ const fetched = (state = false, action) => {
   switch (action.type) {
     case 'UPDATE_ALL_SUCCESS':
       return true
+    case 'LOGOUT':
+      return false
     default:
       return state
   }

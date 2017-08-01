@@ -2,16 +2,20 @@ import axios from 'axios'
 
 //constant
 const API_ROOT = '/api'
-let token = null
 
-token = window.localStorage.getItem('token')
+//when refresh,seems to need reset it
+const token = window.localStorage.getItem('token')
+axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+//first time setToken
+const setToken = _token => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${_token}`
+}
 
 //setting up request
 const request = axios.create({
   baseURL: API_ROOT
 })
-
-axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
 //methods
 // const encode = encodeURIComponent
@@ -106,10 +110,7 @@ export default {
   Projects,
   Tasks,
   Users,
-  setToken: _token => {
-    token = _token
-  }
-  // getToken: () => { return token }
+  setToken
 }
 
 //

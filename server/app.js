@@ -5,25 +5,26 @@ const path = require('path')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express()
-const expressJwt = require('express-jwt');
+const expressJwt = require('express-jwt')
 
 const secret = 'djit9379'
 
 app.use(cors())
 // Setup logger
-app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'))
+app.use(
+  morgan(
+    ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'
+  )
+)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')))
-app.use('/api', expressJwt({ secret }).unless({path: ['/api/auth/login','/api/auth']}))
+app.use(
+  '/api',
+  expressJwt({ secret }).unless({ path: ['/api/auth/login', '/api/auth'] })
+)
 app.use(require('./routes'))
-
-// test
-// app.get('/api',(req,res,next) => {
-//   console.log('haha');
-//   next()
-// })
 
 // Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {

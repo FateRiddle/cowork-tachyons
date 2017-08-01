@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Sidebar from './components/Sidebar'
 import Headbar from './components/Headbar'
 import MainContent from './components/MainContent'
+import Warning from './components/Warning'
 import { updateState } from 'actions'
 // import './App.css'
 // import { fetchTasks } from './api/fetchData'
@@ -42,7 +43,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { me, fetched } = this.props
+    const { me, fetched, warning } = this.props
     return (
       <div className="flex">
         <Route
@@ -59,15 +60,18 @@ class App extends React.Component {
               <Route path="/:id" component={Project} />
               <Redirect to={`/${me.id}`} />
             </Switch>}
+          {warning &&
+            <Warning className="absolute bottom-0 left-0 ma2 pa3 white b f5 bg-light-red w5 h3 z-2" />}
         </div>
       </div>
     )
   }
 }
 
-const mapStateToProps = ({ me, tasks, projects }) => ({
+const mapStateToProps = ({ me, projects, warning }) => ({
   fetched: projects.fetched,
-  me
+  me,
+  warning: warning.main
 })
 
 App = withRouter(connect(mapStateToProps, { updateState })(App))

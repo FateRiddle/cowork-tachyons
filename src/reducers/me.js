@@ -1,10 +1,9 @@
-export const me = (state=null, action) => {
-
+export const me = (state = null, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
-      return  {
+      return {
         name: action.payload.name,
-        id: action.payload.id,
+        id: action.payload.id
       }
     case 'LOGOUT':
       return null

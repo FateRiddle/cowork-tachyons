@@ -41,6 +41,8 @@ const byId = (state = {}, action) => {
         nextState2[task.id] = task
       })
       return nextState2
+    case 'LOGOUT':
+      return {}
     default:
       return state
   }
@@ -82,6 +84,8 @@ const allIds = (state = [], action) => {
       const newTaskIds = payload.map(task => task.id)
       const _ids = newTaskIds.filter(id => state.indexOf(id) === -1) //重复的就不添加上去了
       return [..._ids, ...state]
+    case 'LOGOUT':
+      return []
     default:
       return state
   }
@@ -94,6 +98,8 @@ const taskFetched = (state = false, action) => {
     case 'UPDATE_PROJECT_TASKS_SUCCESS':
     case 'UPDATE_ALL_TASKS_BY_PROJECT_SUCCESS':
       return true
+    case 'LOGOUT':
+      return false
     default:
       return state
   }
@@ -103,6 +109,8 @@ const subtaskFetched = (state = false, action) => {
   switch (action.type) {
     case 'UPDATE_SUBTASKS_SUCCESS':
       return true
+    case 'LOGOUT':
+      return false
     default:
       return state
   }

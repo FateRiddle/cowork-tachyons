@@ -15,6 +15,11 @@ const localStorageMiddleware = store => next => action => {
       saveUser({ name: action.payload.name, id: action.payload.id })
       api.setToken(action.payload.token)
     }
+  } else if (
+    action.type.endsWith('_ERROR') &&
+    action.payload.response.status === 401
+  ) {
+    window.localStorage.setItem('token', '')
   } else if (action.type === 'LOGOUT') {
     window.localStorage.setItem('token', '')
     window.localStorage.setItem('me', '')
