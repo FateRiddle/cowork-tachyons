@@ -5,10 +5,26 @@ const main = (state = '', action) => {
     case 'EDIT_PROJECT_ERROR':
     case 'ADD_TASK_ERROR':
     case 'INSERT_TASK_ERROR':
+      const { errors } = action.payload.response.data
+      if (errors) {
+        return errors
+      } else {
+        return '连接服务器失败。请刷新重试。'
+      }
+    case 'RESET_ERROR_MESSAGE':
+      return ''
+    default:
+      return state
+  }
+}
+
+const home = (state = '', action) => {
+  switch (action.type) {
     case 'LOGIN_ERROR':
     case 'SIGNUP_ERROR':
-      if (action.payload.response.data.errors) {
-        return action.payload.response.data.errors
+      const { errors } = action.payload.response.data
+      if (errors) {
+        return errors
       } else {
         return '连接服务器失败。请刷新重试。'
       }
@@ -32,6 +48,7 @@ const userSettings = (state = '', action) => {
 
 const warning = combineReducers({
   main,
+  home,
   userSettings
 })
 

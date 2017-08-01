@@ -14,6 +14,6 @@ Warning.propTypes = {
 
 const mapStateToProps = ({ warning }) => ({ warning: warning.userSettings })
 
-Warning = connect(mapStateToProps)(Warning)
+const ConnectedWarning = connect(mapStateToProps)(Warning)
 
-export default Warning
+export default ConnectedWarning

@@ -32,7 +32,7 @@ class HomePageWarning extends React.PureComponent {
 }
 
 HomePageWarning = withRouter(
-  connect(({ warning }) => ({ warning }), {
+  connect(({ warning }) => ({ warning: warning.home }), {
     resetErrorMessage
   })(HomePageWarning)
 )
