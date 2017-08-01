@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { resetErrorMessage } from 'actions'
 
@@ -22,7 +23,7 @@ class Warning extends React.Component {
 }
 
 Warning.propTypes = {
-  className: React.PropTypes.string.isRequired
+  className: PropTypes.string.isRequired
 }
 
 const mapStateToProps = ({ warning }) => ({ warning: warning.main })

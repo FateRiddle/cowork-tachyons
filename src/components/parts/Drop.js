@@ -2,6 +2,7 @@
 // TODO: 2. auto-suggest
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 import classnames from 'classnames'
 
@@ -48,10 +49,10 @@ class Drop extends React.Component {
 }
 
 Drop.propTypes = {
-  title: React.PropTypes.string.isRequired, // if nothing: ''
-  dropArray: React.PropTypes.array.isRequired,
-  changeTitle: React.PropTypes.func.isRequired,
-  className: React.PropTypes.string
+  title: PropTypes.string.isRequired, // if nothing: ''
+  dropArray: PropTypes.array.isRequired,
+  changeTitle: PropTypes.func.isRequired,
+  className: PropTypes.string
 }
 
 Drop = withRouter(Drop)

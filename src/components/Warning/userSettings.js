@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 const Warning = ({ warning, className }) =>
@@ -9,7 +10,7 @@ const Warning = ({ warning, className }) =>
     : null
 
 Warning.propTypes = {
-  className: React.PropTypes.string.isRequired
+  className: PropTypes.string.isRequired
 }
 
 const mapStateToProps = ({ warning }) => ({ warning: warning.userSettings })

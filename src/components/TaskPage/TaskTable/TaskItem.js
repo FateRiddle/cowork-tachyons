@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { SortableHandle } from 'react-sortable-hoc'
@@ -228,9 +229,9 @@ class TaskItem extends React.Component {
 }
 
 TaskItem.propTypes = {
-  task: React.PropTypes.object.isRequired,
-  focusUp: React.PropTypes.func.isRequired,
-  focusDown: React.PropTypes.func.isRequired
+  task: PropTypes.object.isRequired,
+  focusUp: PropTypes.func.isRequired,
+  focusDown: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, { match, task }) => {

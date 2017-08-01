@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import ClickOutside from 'react-click-outside'
 
 class Pop extends React.Component {
@@ -23,9 +24,9 @@ class Pop extends React.Component {
 }
 
 Pop.propTypes = {
-  hidden: React.PropTypes.bool.isRequired,
-  close: React.PropTypes.func.isRequired,
-  children: React.PropTypes.element
+  hidden: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  children: PropTypes.element
 }
 
 export default Pop

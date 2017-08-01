@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class Pop extends React.Component {
   render() {
@@ -16,9 +17,9 @@ class Pop extends React.Component {
 }
 
 Pop.propTypes = {
-  hidden: React.PropTypes.bool.isRequired,
-  onOKClick: React.PropTypes.func.isRequired,
-  children: React.PropTypes.element
+  hidden: PropTypes.bool.isRequired,
+  onOKClick: PropTypes.func.isRequired,
+  children: PropTypes.element
 }
 
 export default Pop

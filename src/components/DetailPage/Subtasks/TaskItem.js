@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -202,10 +203,10 @@ class TaskItem extends React.Component {
 }
 
 TaskItem.propTypes = {
-  task: React.PropTypes.object.isRequired,
-  focusUp: React.PropTypes.func.isRequired,
-  focusDown: React.PropTypes.func.isRequired,
-  canEdit: React.PropTypes.bool.isRequired
+  task: PropTypes.object.isRequired,
+  focusUp: PropTypes.func.isRequired,
+  focusDown: PropTypes.func.isRequired,
+  canEdit: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state, { task }) => {

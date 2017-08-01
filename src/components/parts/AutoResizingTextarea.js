@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { getTaskById } from 'reducers'
@@ -45,9 +46,9 @@ class Textarea extends React.Component {
 }
 
 Textarea.propTypes = {
-  className: React.PropTypes.string,
-  placeholder: React.PropTypes.string,
-  lineHeight: React.PropTypes.number.isRequired
+  className: PropTypes.string,
+  placeholder: PropTypes.string,
+  lineHeight: PropTypes.number.isRequired
 }
 
 const mapStateToProps = (state, { match }) => {

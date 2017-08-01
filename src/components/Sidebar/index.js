@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import classnames from 'classnames'
@@ -127,7 +128,7 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-  projects: React.PropTypes.array.isRequired
+  projects: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => ({

@@ -1,4 +1,5 @@
 import React from 'react'
+// import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { addTask, changeCurrentTask } from 'actions'
@@ -37,8 +38,8 @@ class AddItem extends React.Component {
 }
 
 // AddItem.propTypes = {
-//   focusLast: React.PropTypes.func.isRequired,
-//   listLength: React.PropTypes.number.isRequired,
+//   focusLast: PropTypes.func.isRequired,
+//   listLength: PropTypes.number.isRequired,
 // }
 
 const mapStateToProps = ({ completed }) => ({ completed })

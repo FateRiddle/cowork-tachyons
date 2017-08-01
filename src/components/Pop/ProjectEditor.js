@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Pop from '../Pop'
 import { connect } from 'react-redux'
 import * as actions from 'actions'
@@ -132,9 +133,9 @@ class ProjectEditor extends React.Component {
 }
 
 ProjectEditor.PropTypes = {
-  project: React.PropTypes.object.isRequired,
-  hidden: React.PropTypes.bool.isRequired,
-  onClick: React.PropTypes.func.isRequired
+  project: PropTypes.object.isRequired,
+  hidden: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {

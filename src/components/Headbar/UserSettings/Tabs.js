@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Tabs = ({ tabs, tab, toggle, className }) =>
   <ul className={className} data-component="tabs 信息/密码">
@@ -17,10 +18,10 @@ const Tabs = ({ tabs, tab, toggle, className }) =>
   </ul>
 
 Tabs.propTypes = {
-  tabs: React.PropTypes.array.isRequired, //{value,name}
-  tab: React.PropTypes.string.isRequired, //value
-  toggle: React.PropTypes.func.isRequired,
-  className: React.PropTypes.string.isRequired
+  tabs: PropTypes.array.isRequired, //{value,name}
+  tab: PropTypes.string.isRequired, //value
+  toggle: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired
 }
 
 export default Tabs

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import * as actions from 'actions'
 import { getTaskById, getUserById, getAlltasks, getProjectById } from 'reducers'
@@ -83,7 +84,7 @@ class Task extends React.Component {
 }
 
 Task.propTypes = {
-  taskId: React.PropTypes.string
+  taskId: PropTypes.string
 }
 
 const mapStateToProps = (state, { taskId }) => {
