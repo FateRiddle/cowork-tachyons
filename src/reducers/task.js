@@ -1,6 +1,7 @@
 import moment from 'moment'
 
 const task = (state, action) => {
+  const now = moment()
   const { payload } = action
   switch (action.type) {
     case 'ADD_TASK_LOADING':
@@ -11,8 +12,8 @@ const task = (state, action) => {
         assignee: payload.assignee,
         title: '',
         detail: '',
-        createdAt: moment(),
-        beginAt: moment(),
+        createdAt: now,
+        beginAt: now,
         createdBy: '',
         completed: 'active',
         progress: 0,
@@ -27,8 +28,8 @@ const task = (state, action) => {
         upTaskTitle: payload.upTaskTitle,
         title: '',
         detail: '',
-        createdAt: moment(),
-        beginAt: moment(),
+        createdAt: now,
+        beginAt: now,
         createdBy: '',
         completed: 'active',
         progress: 0,
@@ -86,9 +87,11 @@ const task = (state, action) => {
     case 'TOGGLE_TASK_LOADING':
       if (state.id === payload.id) {
         const completed = state.completed === 'active' ? 'completed' : 'active'
+        const completedAt = state.completed === 'active' ? now : null
         return {
           ...state,
-          completed
+          completed,
+          completedAt
         }
       }
       return state

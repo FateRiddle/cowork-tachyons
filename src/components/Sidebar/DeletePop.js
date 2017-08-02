@@ -4,7 +4,7 @@ import Pop from 'components/Pop'
 import { deleteProject } from 'actions'
 
 const DeletePop = ({ id, hidden, toggle, deleteProject }) => {
-  const onOKClick = id => {
+  const onOKClick = _ => {
     deleteProject(id)
     toggle()
   }
@@ -17,4 +17,4 @@ const DeletePop = ({ id, hidden, toggle, deleteProject }) => {
 
 const ConnectedDeletePop = connect(null, { deleteProject })(DeletePop)
 
-export default DeletePop
+export default ConnectedDeletePop

@@ -41,7 +41,7 @@ Pop.propTypes = {
   hidden: PropTypes.bool.isRequired,
   onOKClick: PropTypes.func.isRequired,
   onCancelClick: PropTypes.func.isRequired,
-  children: PropTypes.element
+  children: PropTypes.node
 }
 
 export default Pop

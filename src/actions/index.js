@@ -51,7 +51,8 @@ export const addProject = (title = '', group = []) => {
 export const deleteProject = id => ({
   type: 'DELETE_PROJECT',
   payload: {
-    id
+    promise: api.Projects.del(id),
+    data: { id }
   }
 })
 
@@ -522,12 +523,15 @@ export const signup = (name, password, password2, slogan) => ({
 
 export const editMyName = (name, id) => ({
   type: 'EDIT_MY_NAME',
-  payload: api.Users.editName(name, id)
+  payload: {
+    promise: api.Users.editName({ name, id }),
+    data: { name, id }
+  }
 })
 
-export const editMyPassword = (password, id) => ({
+export const editMyPassword = (oldPass, newPass, id) => ({
   type: 'EDIT_MY_PASSWORD',
-  payload: api.Users.editPassword(password, id)
+  payload: api.Users.editPassword({ oldPass, newPass, id })
 })
 
 //visual

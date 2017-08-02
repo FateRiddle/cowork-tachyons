@@ -45,7 +45,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    const { confirmHidden, editorHidden, popHidden, projectId } = this.state
+    const { editorHidden, popHidden, projectId } = this.state
     const {
       projects,
       toggleSidebar,

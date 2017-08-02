@@ -39,7 +39,8 @@ const Auth = {
 const Projects = {
   all: () => ax.get('/projects'),
   add: ({ id, title, group }) => ax.post('/projects', { id, title, group }),
-  update: ({ id, title, group }) => ax.put('/projects', { id, title, group })
+  update: ({ id, title, group }) => ax.put('/projects', { id, title, group }),
+  del: id => ax.del(`/projects/${id}`)
 }
 
 const Tasks = {
@@ -98,8 +99,9 @@ const Tasks = {
 
 const Users = {
   all: () => ax.get('/users'),
-  editName: (name, id) => ax.put('/users/:id', { name }),
-  editPassword: (password, id) => ax.put('/users/:id', { password })
+  editName: ({ name, id }) => ax.put(`/users/${id}`, { name }),
+  editPassword: ({ oldPass, newPass, id }) =>
+    ax.put(`/users/${id}`, { oldPass, newPass })
   // current: () => ax.get('/user'),
   // save: (id,name) => ax.put('/user', { user: { id,name } }),
 }

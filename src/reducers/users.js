@@ -4,10 +4,11 @@ import user from './user'
 const byId = (state = {}, action) => {
   const { payload } = action
   switch (action.type) {
-    case 'ADD_USER':
+    // case 'ADD_USER':
+    case 'EDIT_MY_NAME_LOADING':
       return {
         ...state,
-        [payload.qq]: user(state[payload.qq], action)
+        [payload.id]: user(state[payload.id], action)
       }
     case 'UPDATE_ALL_SUCCESS':
       const nextState = {}

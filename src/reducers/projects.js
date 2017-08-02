@@ -30,7 +30,7 @@ const allIds = (state = [], action) => {
   switch (action.type) {
     case 'ADD_PROJECT_LOADING':
       return [...state, payload.id]
-    case 'DELETE_PROJECT':
+    case 'DELETE_PROJECT_LOADING':
       return state.filter(id => id !== payload.id)
     case 'UPDATE_ALL_SUCCESS':
       return payload.projects.map(project => project.id)

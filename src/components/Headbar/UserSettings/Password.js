@@ -10,26 +10,6 @@ class Password extends React.Component {
     passAgain: ''
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { warning } = prevProps
-    const { changeUserWarning } = this.props
-    const { oldPass, newPass, passAgain } = this.state
-    const {
-      oldPass: _oldPass,
-      newPass: _newPass,
-      passAgain: _passAgain
-    } = prevState
-    if (oldPass === '' && _oldPass !== '') {
-      changeUserWarning('请填写原密码。')
-    } else if (newPass === '' && _newPass !== '') {
-      changeUserWarning('新密码不能为空。')
-    } else if (newPass && passAgain && newPass !== passAgain) {
-      changeUserWarning('两次密码填写不一致。')
-    } else if (warning) {
-      changeUserWarning('')
-    }
-  }
-
   componentWillUnmount() {
     this.setState({
       oldPass: '',
@@ -39,21 +19,52 @@ class Password extends React.Component {
     this.props.changeUserWarning('')
   }
 
-  onChangeOldPass = e => this.setState({ oldPass: e.target.value })
+  onChangeOldPass = e => {
+    const { changeUserWarning, warning } = this.props
+    const pass = e.target.value
+    if (this.state.oldPass !== '' && pass === '') {
+      changeUserWarning('请填写原密码。')
+    } else if (warning === '请填写原密码。') {
+      changeUserWarning('')
+    }
+    this.setState({ oldPass: pass })
+  }
 
-  onChangeNewPass = e => this.setState({ newPass: e.target.value })
+  onChangeNewPass = e => {
+    const { changeUserWarning, warning } = this.props
+    const { newPass, passAgain } = this.state
+    const pass = e.target.value
+    if (newPass !== '' && pass === '') {
+      changeUserWarning('新密码不能为空。')
+    } else if (passAgain && pass !== passAgain && warning !== '两次密码填写不一致。') {
+      changeUserWarning('两次密码填写不一致。')
+    } else if (warning === '新密码不能为空。' || warning === '两次密码填写不一致。') {
+      changeUserWarning('')
+    }
+    this.setState({ newPass: pass })
+  }
 
-  onChangePassAgain = e => this.setState({ passAgain: e.target.value })
+  onChangePassAgain = e => {
+    const { changeUserWarning, warning } = this.props
+    const pass = e.target.value
+    if (pass && pass !== this.state.newPass && warning !== '两次密码填写不一致。') {
+      changeUserWarning('两次密码填写不一致。')
+    } else if (warning === '两次密码填写不一致。') {
+      changeUserWarning('')
+    }
+    this.setState({ passAgain: pass })
+  }
 
   onCancel = () => {
     this.props.close()
   }
   onConfirm = () => {
-    const { editMyPassword, close, warning } = this.props
+    const { oldPass, newPass } = this.state
+    const { editMyPassword, close, warning, me } = this.props
     if (!warning) {
-      this.props.editMyPassword(this.state.newPass).then(_ => {
-        if (!warning) {
-          this.props.close()
+      editMyPassword(oldPass, newPass, me.id).then(res => {
+        if (res.value.output.message === '') {
+          close()
         }
       })
     }

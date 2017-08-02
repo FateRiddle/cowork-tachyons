@@ -25,7 +25,7 @@ class UserSettings extends React.Component {
       >
         <Dropdown
           data-component="User"
-          className="tracked pa3"
+          className="tracked pv3 pl5 pr3"
           text={me.name}
           inline
           icon={null}

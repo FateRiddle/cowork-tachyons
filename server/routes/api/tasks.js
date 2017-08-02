@@ -9,7 +9,7 @@ const query = (query, res) => {
       res.send(data)
     })
     .catch(err => {
-      console.error(err)
+      res.status(500).json({ errors: err.toString() })
     })
 }
 
@@ -230,7 +230,7 @@ router.put('/:id', (req, res, next) => {
     if exists(select 1 from tb_cowork_task where id='${id}' and completed='active')
       update tb_cowork_task set completed='completed', completedAt='${now}' where id='${id}'
     else
-      update tb_cowork_task set completed='active' where id='${id}'
+      update tb_cowork_task set completed='active',completedAt='' where id='${id}'
     ${changeUpProgress(id)}
   end
   `
@@ -245,43 +245,86 @@ router.put('/:id', (req, res, next) => {
       ${changeUpProgress(id)}
     `
     : ''
-  query(
-    `
-      begin tran
-        declare @order numeric(12,6)
-        ${assignee
-          ? `select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'`
-          : ''}
-        ${assignTask}
-        ${projectId
-          ? `select @order=max(taskOrder)+1 from tb_cowork_task_order`
-          : ''}
-        ${editProject}
-        ${title !== undefined
-          ? `update tb_cowork_task set title='${title}' where id='${id}'`
-          : ''}
-        ${detail !== undefined
-          ? `update tb_cowork_task set detail='${detail}' where id='${id}'`
-          : ''}
-        ${dueAt === undefined
-          ? ''
-          : dueAt === null
-            ? `update tb_cowork_task set dueAt=null where id='${id}'`
-            : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
-        ${beginAt === undefined
-          ? ''
-          : beginAt === null
-            ? `update tb_cowork_task set beginAt=null where id='${id}'`
-            : `update tb_cowork_task set beginAt='${beginAt}' where id='${id}'`}
-        ${toggleTask}
-        ${changeAmount}
-        ${changeProgress}
-      if @@error != 0
-      rollback tran
-      commit tran
-    `,
-    res
-  )
+  console.log(`
+  begin tran
+    declare @order numeric(12,6)
+    ${assignee
+      ? `select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'`
+      : ''}
+    ${assignTask}
+    ${projectId
+      ? `select @order=max(taskOrder)+1 from tb_cowork_task_order`
+      : ''}
+    ${editProject}
+    ${title !== undefined
+      ? `update tb_cowork_task set title=@title where id='${id}'`
+      : ''}
+    ${detail !== undefined
+      ? `update tb_cowork_task set detail=@detail where id='${id}'`
+      : ''}
+    ${dueAt === undefined
+      ? ''
+      : dueAt === null
+        ? `update tb_cowork_task set dueAt=null where id='${id}'`
+        : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
+    ${beginAt === undefined
+      ? ''
+      : beginAt === null
+        ? `update tb_cowork_task set beginAt=null where id='${id}'`
+        : `update tb_cowork_task set beginAt='${beginAt}' where id='${id}'`}
+    ${toggleTask}
+    ${changeAmount}
+    ${changeProgress}
+  if @@error != 0
+  rollback tran
+  commit tran
+`)
+  db
+    .then(pool =>
+      pool
+        .request() //user params to prevent sql injection
+        .input('title', sql.NVarChar(500), title)
+        .input('detail', sql.NVarChar(500), detail).query(`
+        begin tran
+          declare @order numeric(12,6)
+          ${assignee
+            ? `select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'`
+            : ''}
+          ${assignTask}
+          ${projectId
+            ? `select @order=max(taskOrder)+1 from tb_cowork_task_order`
+            : ''}
+          ${editProject}
+          ${title !== undefined
+            ? `update tb_cowork_task set title=@title where id='${id}'`
+            : ''}
+          ${detail !== undefined
+            ? `update tb_cowork_task set detail=@detail where id='${id}'`
+            : ''}
+          ${dueAt === undefined
+            ? ''
+            : dueAt === null
+              ? `update tb_cowork_task set dueAt=null where id='${id}'`
+              : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
+          ${beginAt === undefined
+            ? ''
+            : beginAt === null
+              ? `update tb_cowork_task set beginAt=null where id='${id}'`
+              : `update tb_cowork_task set beginAt='${beginAt}' where id='${id}'`}
+          ${toggleTask}
+          ${changeAmount}
+          ${changeProgress}
+        if @@error != 0
+        rollback tran
+        commit tran
+      `)
+    )
+    .then(data => {
+      res.send(data)
+    })
+    .catch(err => {
+      res.status(500).json({ errors: err.toString() })
+    })
 })
 
 router.put('/order/:id', (req, res, next) => {

@@ -10,7 +10,7 @@ class Warning extends React.Component {
     return warning
       ? <div data-component="Warning" className={`relative ${className}`}>
           <div
-            className="absolute top-0 right-0 ma2 white dim f4 pointer"
+            className="absolute top-0 right-0 pv1 ph2 white dim f4 pointer"
             onClick={resetErrorMessage}
           >
             x

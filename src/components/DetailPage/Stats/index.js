@@ -12,10 +12,10 @@ class Stats extends React.Component {
         {creator &&
           task.beginAt &&
           <div>
-            {creator.name}创建。开始于{task.beginAt.locale('zh-cn').fromNow()}。
+            {creator.name}创建。开始于{task.beginAt.format().substring(0, 10)}。
           </div>}
         {task.completedAt &&
-          <div>完成于{task.completedAt.locale('zh-cn').fromNow()}。</div>}
+          <div>完成于{task.completedAt.format().substring(0, 10)}。</div>}
       </div>
     )
   }

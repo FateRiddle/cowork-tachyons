@@ -10,7 +10,7 @@ class AssigneeTab extends React.Component {
     const { users, currentAssigned, me } = this.props
     let userArray = []
     if (users.length > 0) {
-      if (me && users.indexOf(me) === -1) {
+      if (me && users.findIndex(u => u.id === me.id) === -1) {
         userArray = [me, ...users, { id: '0', name: '无人' }]
       } else {
         userArray = [...users, { id: '0', name: '无人' }] //add this to match when task is assigned to nobody
@@ -67,8 +67,8 @@ const mapStateToProps = (state, { match }) => {
   }
 }
 
-AssigneeTab = withRouter(
+const ConnectedAssigneeTab = withRouter(
   connect(mapStateToProps, { editTaskAssignee })(AssigneeTab)
 )
 
-export default AssigneeTab
+export default ConnectedAssigneeTab

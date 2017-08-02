@@ -6,7 +6,13 @@ const main = (state = '', action) => {
     if (status === 401) {
       return '授权失败，请尝试重新登录。'
     }
-    return '连接服务器失败。请刷新重试。'
+    if (status === 404) {
+      return '404 Not Found'
+    }
+    if (status === 500) {
+      return '500 服务器内部错误。'
+    }
+    return '连接服务器失败。请检查网络。'
   }
   if (action.type === 'RESET_ERROR_MESSAGE') {
     return ''
@@ -37,6 +43,11 @@ const userSettings = (state = '', action) => {
   switch (action.type) {
     case 'CHANGE_USER_WARNING':
       return action.warning
+    case 'EDIT_MY_PASSWORD_SUCCESS':
+      if (action.payload.output.message) {
+        return action.payload.output.message
+      }
+      return state
     default:
       return state
   }

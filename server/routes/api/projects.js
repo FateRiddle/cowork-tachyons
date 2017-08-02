@@ -8,7 +8,7 @@ const query = (query, res) => {
       res.send(data)
     })
     .catch(err => {
-      console.error(err)
+      res.status(500).json({ errors: err.toString() })
     })
 }
 
@@ -34,7 +34,7 @@ router.get('/', (req, res, next) => {
       res.send(data)
     })
     .catch(err => {
-      console.error(err)
+      res.status(500).json({ errors: err.toString() })
     })
 })
 
@@ -77,6 +77,21 @@ router.put('/', (req, res, next) => {
         where projectId = '${id}'
         insert into tb_cowork_project_group(projectId,userId)
         values ${groupValue}
+      if @@error != 0
+      rollback tran
+      commit tran
+    `,
+    res
+  )
+})
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params
+  query(
+    `
+      begin tran
+        delete from tb_cowork_project where id = '${id}'
+        delete from tb_cowork_project_group where projectId = '${id}'
       if @@error != 0
       rollback tran
       commit tran
