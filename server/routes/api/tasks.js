@@ -406,8 +406,12 @@ router.post('/search', (req, res, next) => {
   // const now = moment().format()
 
   const date_in_range = () => {
-    const from = beginAt ? `a.beginAt >= '${beginAt}'` : '1=1'
-    const to = completedAt ? `a.completedAt <= '${completedAt}'` : '1=1'
+    const from = beginAt
+      ? `a.beginAt >= '${beginAt}' or a.completedAt >= '${beginAt}'`
+      : '1=1'
+    const to = completedAt
+      ? `a.beginAt <= '${completedAt}' or a.completedAt <= '${completedAt}'`
+      : '1=1'
     return `${from} and ${to}`
   }
   // `(a.projectId <> '' and a.projectId is not null) or
