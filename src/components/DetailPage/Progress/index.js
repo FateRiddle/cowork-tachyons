@@ -90,6 +90,7 @@ class ProgressSection extends React.Component {
               ? 'pointer hover-thin-blue'
               : 'bg-white'}`}
             selected={selectedDate}
+            readOnly={true}
             onChange={this.handleDateChange}
             placeholderText="开始于"
             locale="zh-cn"

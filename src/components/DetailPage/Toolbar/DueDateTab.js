@@ -26,6 +26,7 @@ class DueDateTab extends Component {
           : 'pointer hover-thin-blue'}`}
         selected={selectedDate}
         onChange={this.handleDateChange}
+        readOnly={true}
         isClearable={true}
         placeholderText="截止日"
         locale="zh-cn"

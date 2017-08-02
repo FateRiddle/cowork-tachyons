@@ -232,6 +232,7 @@ class Searchform extends React.Component {
                       selected={beginAt}
                       onChange={this.onBeginAtChange}
                       isClearable={true}
+                      readOnly={true}
                       placeholderText="开始时间"
                       locale="zh-cn"
                       onFocus={this.onDateOpen}
@@ -245,6 +246,7 @@ class Searchform extends React.Component {
                       selected={completedAt}
                       onChange={this.onCompletedAtChange}
                       isClearable={true}
+                      readOnly={true}
                       placeholderText="完成时间"
                       locale="zh-cn"
                       onFocus={this.onDateOpen}
