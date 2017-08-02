@@ -129,7 +129,7 @@ class TaskItem extends React.Component {
 
   handleLineClick = () => {
     const { changeCurrentSubtask, task } = this.props
-    console.log('item', task, this.props.canEdit)
+    console.log('item', task)
     changeCurrentSubtask(task.id)
   }
 

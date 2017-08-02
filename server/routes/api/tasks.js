@@ -86,7 +86,6 @@ router.get('/', (req, res, next) => {
     }
     return GET_other
   }
-  console.log(searchQuery())
   query(searchQuery(), res)
 })
 
@@ -245,40 +244,7 @@ router.put('/:id', (req, res, next) => {
       ${changeUpProgress(id)}
     `
     : ''
-  console.log(`
-  begin tran
-    declare @order numeric(12,6)
-    ${assignee
-      ? `select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'`
-      : ''}
-    ${assignTask}
-    ${projectId
-      ? `select @order=max(taskOrder)+1 from tb_cowork_task_order`
-      : ''}
-    ${editProject}
-    ${title !== undefined
-      ? `update tb_cowork_task set title=@title where id='${id}'`
-      : ''}
-    ${detail !== undefined
-      ? `update tb_cowork_task set detail=@detail where id='${id}'`
-      : ''}
-    ${dueAt === undefined
-      ? ''
-      : dueAt === null
-        ? `update tb_cowork_task set dueAt=null where id='${id}'`
-        : `update tb_cowork_task set dueAt='${dueAt}' where id='${id}'`}
-    ${beginAt === undefined
-      ? ''
-      : beginAt === null
-        ? `update tb_cowork_task set beginAt=null where id='${id}'`
-        : `update tb_cowork_task set beginAt='${beginAt}' where id='${id}'`}
-    ${toggleTask}
-    ${changeAmount}
-    ${changeProgress}
-  if @@error != 0
-  rollback tran
-  commit tran
-`)
+
   db
     .then(pool =>
       pool
@@ -444,29 +410,6 @@ router.post('/search', (req, res, next) => {
     const to = completedAt ? `a.completedAt <= '${completedAt}'` : '1=1'
     return `${from} and ${to}`
   }
-
-  console.log(
-    `
-      select distinct a.*,b.taskOrder,
-      CASE WHEN d.id is null THEN 0
-           ELSE 1 END as hasSubtask
-      from tb_cowork_task a
-      inner join tb_cowork_task_order b on a.id = b.taskId
-      left join tb_cowork_task c on a.rootTaskId = c.id
-      left join tb_cowork_task d on a.id = d.upTaskId
-      where ${stringify(assignee)
-        ? `a.assignee in (${stringify(assignee)})`
-        : '1=1'}
-      and ${stringify(projectId)
-        ? `(a.projectId in (${stringify(
-            projectId
-          )}) or c.projectId in (${stringify(projectId)}))`
-        : `((a.projectId <> '' and a.projectId is not null) or
-            (c.projectId <> '' and c.projectId is not null))`}
-      and ${date_in_range()}
-      order by b.taskOrder
-    `
-  )
   // `(a.projectId <> '' and a.projectId is not null) or
   //   (c.projectId <> '' and c.projectId is not null)`
   query(

@@ -5,7 +5,6 @@ import { withRouter } from 'react-router'
 
 class HomePageWarning extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
-    console.log('this', this.props.warning, 'next', nextProps.warning)
     if (
       !nextProps.warning ||
       this.props.location.pathname !== nextProps.location.pathname

@@ -28,7 +28,7 @@ class AddItem extends React.Component {
       } else if (index < 2) {
         msg = '选择一行回车'
       }
-    } else if (match.params.id === 'search') {
+    } else if (match.params.id === 'search' && index === 0) {
       msg = '没有符合要求的结果。'
     }
     return (

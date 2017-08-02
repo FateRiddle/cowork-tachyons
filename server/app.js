@@ -4,9 +4,10 @@ const morgan = require('morgan')
 const path = require('path')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const compression = require('compression')
 const app = express()
-const expressJwt = require('express-jwt')
 
+const expressJwt = require('express-jwt')
 const secret = 'djit9379'
 
 app.use(cors())
@@ -18,6 +19,8 @@ app.use(
 )
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(compression())
+
 // Serve static assets
 app.use(express.static(path.resolve(__dirname, '..', 'build')))
 app.use(

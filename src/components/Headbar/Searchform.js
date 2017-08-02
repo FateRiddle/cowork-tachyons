@@ -86,7 +86,6 @@ class Searchform extends React.Component {
   }
 
   onSubmit = () => {
-    console.log('haha sub')
     this.toggleList()
     const {
       assigneeList,

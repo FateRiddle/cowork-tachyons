@@ -39,8 +39,7 @@ router.put('/:id', (req, res, next) => {
     commit tran
     `
     : ''
-  console.log(`${updateName}
-    ${updatePassword}`)
+
   db
     .then(pool =>
       pool

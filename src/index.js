@@ -8,8 +8,7 @@ import 'tachyons/css/tachyons.min.css' //在semantic之后，覆盖
 import './index.css' //要在tachyons之后，覆盖
 
 const store = configureStore()
-
-console.log(store.getState())
+// console.log(store.getState())
 // getting state as global object accessible from outside React, if needed
 // store.subscribe(() => window.reduxStore = store.getState())
 

@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
+    "compression": "^1.7.0",
     "cors": "^2.8.4",
     "draft-js": "^0.10.1",
     "es6-shim": "^0.35.3",

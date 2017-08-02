@@ -6,7 +6,6 @@ import { resetErrorMessage } from 'actions'
 class Warning extends React.Component {
   render() {
     const { warning, className, resetErrorMessage } = this.props
-    console.log(this.props)
     return warning
       ? <div data-component="Warning" className={`relative ${className}`}>
           <div
