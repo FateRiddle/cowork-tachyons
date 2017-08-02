@@ -6,14 +6,14 @@ import classnames from 'classnames'
 import { getAllProjects } from 'reducers'
 import * as actions from 'actions'
 import ProjectEditor from '../Pop/ProjectEditor'
+import DeletePop from './DeletePop'
 import { Dropdown, Icon } from 'semantic-ui-react'
 
 class Sidebar extends React.Component {
   state = {
-    // dropHidden:true,popHidden:true,
-    confirmHidden: true,
+    popHidden: true,
     editorHidden: true,
-    projectId: '' //which project to pass into ProjectEditor
+    projectId: '' //which project to pass into ProjectEditor/DeletePop
   }
 
   handleAddProjectClick = () => {
@@ -30,6 +30,14 @@ class Sidebar extends React.Component {
     this.props.changeCurrentTask()
   }
 
+  onDeleteClick = projectId => {
+    this.setState({ popHidden: false, projectId })
+  }
+
+  toggleDeletePop = () => {
+    this.setState({ popHidden: !this.state.popHidden })
+  }
+
   openProjectEditor = (projectId = '') => {
     if (this.state.editorHidden) {
       this.setState({ editorHidden: false, projectId })
@@ -37,7 +45,7 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    const { confirmHidden, editorHidden, projectId } = this.state
+    const { confirmHidden, editorHidden, popHidden, projectId } = this.state
     const {
       projects,
       toggleSidebar,
@@ -68,11 +76,11 @@ class Sidebar extends React.Component {
           closeWindow={() => this.setState({ editorHidden: true })}
           hidden={editorHidden}
         />
-        {/* <Confirm
-          open={!confirmHidden}
-          onCancel={this.handlePopCancel}
-          onConfirm={this.handlePopConfirm}
-        /> */}
+        <DeletePop
+          id={projectId}
+          hidden={popHidden}
+          toggle={this.toggleDeletePop}
+        />
         <div
           className="pl3 f3 tracked-mega h2 mr2 white-60"
           data-component="+Project"
@@ -115,7 +123,7 @@ class Sidebar extends React.Component {
                     />
                     <Dropdown.Item
                       text="删除"
-                      onClick={() => this.deleteProject(p.id)}
+                      onClick={() => this.onDeleteClick(p.id)}
                     />
                   </Dropdown.Menu>
                 </Dropdown>

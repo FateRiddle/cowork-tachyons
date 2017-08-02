@@ -4,7 +4,7 @@ import Pop from '../Pop'
 import { connect } from 'react-redux'
 import * as actions from 'actions'
 import { getAllUsers } from 'reducers'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 
 class ProjectEditor extends React.Component {
   state = { alertText: '', userListHidden: true, group: [] }

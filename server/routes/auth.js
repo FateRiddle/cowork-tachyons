@@ -69,18 +69,6 @@ router.post('/auth', (req, res, next) => {
   if (slogan !== '永远领先一步') {
     return res.status(422).json({ errors: '口号不正确' })
   }
-
-  console.log(
-    `
-      if exists(select 1 from tb_cowork_user where name='${name}')
-      begin
-        set flag = '1'
-        set message = '此用户名已被注册'
-        return
-      end
-      insert into tb_cowork_user (id,name,password) values ('${v4()}','${name}','${password}')
-    `
-  )
   db
     .then(pool =>
       pool

@@ -20,7 +20,7 @@ class AddItem extends React.Component {
   }
 
   render() {
-    const { index, style } = this.props
+    const { index, style, match } = this.props
     let msg = ''
     if (this.canEdit()) {
       if (index === 0) {
@@ -28,9 +28,16 @@ class AddItem extends React.Component {
       } else if (index < 2) {
         msg = '选择一行回车'
       }
+    } else if (match.params.id === 'search') {
+      msg = '没有符合要求的结果。'
     }
     return (
-      <li className="list pa2 pointer" style={style} onClick={this.onClick}>
+      <li
+        className={`list pa2 ${this.canEdit() ? 'pointer' : ''}`}
+        data-component="AddItem"
+        style={style}
+        onClick={this.onClick}
+      >
         {msg}
       </li>
     )

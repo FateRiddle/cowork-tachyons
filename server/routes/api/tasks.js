@@ -409,16 +409,17 @@ router.post('/search', (req, res, next) => {
            ELSE 1 END as hasSubtask
       from tb_cowork_task a
       inner join tb_cowork_task_order b on a.id = b.taskId
-      left join tb_cowork_task c on a.id = c.rootTaskId
+      left join tb_cowork_task c on a.rootTaskId = c.id
       left join tb_cowork_task d on a.id = d.upTaskId
       where ${stringify(assignee)
         ? `a.assignee in (${stringify(assignee)})`
         : '1=1'}
       and ${stringify(projectId)
-        ? `a.projectId in (${stringify(
+        ? `(a.projectId in (${stringify(
             projectId
-          )}) or c.projectId in (${stringify(projectId)})`
-        : '1=1'}
+          )}) or c.projectId in (${stringify(projectId)}))`
+        : `((a.projectId <> '' and a.projectId is not null) or
+            (c.projectId <> '' and c.projectId is not null))`}
       and ${date_in_range()}
       order by b.taskOrder
     `
@@ -438,11 +439,11 @@ router.post('/search', (req, res, next) => {
         ? `a.assignee in (${stringify(assignee)})`
         : '1=1'}
       and ${stringify(projectId)
-        ? `a.projectId in (${stringify(
+        ? `(a.projectId in (${stringify(
             projectId
-          )}) or c.projectId in (${stringify(projectId)})`
-        : `(a.projectId <> '' and a.projectId is not null) or
-            (c.projectId <> '' and c.projectId is not null)`}
+          )}) or c.projectId in (${stringify(projectId)}))`
+        : `((a.projectId <> '' and a.projectId is not null) or
+            (c.projectId <> '' and c.projectId is not null))`}
       and ${date_in_range()}
       order by b.taskOrder
     `,

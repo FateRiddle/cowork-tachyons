@@ -99,6 +99,7 @@ class TaskItem extends React.Component {
             </span>}
           {!isTitle &&
             currentProject !== me.id &&
+            assigneeName &&
             <div className="ph2 mr2 bg-black-10 br-pill f6 black-50">
               {assigneeName}
             </div>}

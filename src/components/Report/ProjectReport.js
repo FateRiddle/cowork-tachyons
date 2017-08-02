@@ -18,7 +18,7 @@ class ProjectReport extends React.Component {
           <div className="relative h2 w-100 bg-light-gray">
             <div
               className="absolute top-0 left-0 h-100 bg-cyan tc lh-copy"
-              style={{ width: `${progress / 10 * 9 + 10}%` }}
+              style={{ width: `${progress / 100 * 87 + 13}%` }}
             >
               {Math.floor(progress)} %
             </div>
