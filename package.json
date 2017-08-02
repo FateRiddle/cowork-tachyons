@@ -34,7 +34,7 @@
     "react-sortable-hoc": "^0.4.5",
     "react-virtualized": "^9.8.0",
     "redux": "^3.6.0",
-    "redux-promise-middleware": "^4.3.0",
+    "redux-promise-middleware": "4.2.1",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.68.5",
