@@ -40,7 +40,7 @@ const Projects = {
   all: () => ax.get('/projects'),
   add: ({ id, title, group }) => ax.post('/projects', { id, title, group }),
   update: ({ id, title, group }) => ax.put('/projects', { id, title, group }),
-  del: id => ax.del(`/projects/${id}`)
+  del: id => ax.put(`/projects/${id}`, { toDelete: true })
 }
 
 const Tasks = {

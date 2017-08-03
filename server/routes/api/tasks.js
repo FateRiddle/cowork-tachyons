@@ -63,12 +63,14 @@ router.get('/', (req, res, next) => {
     order by b.taskOrder
   `
   const GET_other = `
-    select a.*, ${userId !== ''
-      ? 'c.myOrder'
-      : 'b.taskOrder'} from tb_cowork_task a
+    select distinct a.*, ${userId !== '' ? 'c.myOrder' : 'b.taskOrder'},
+      CASE WHEN d.id is null THEN 0
+           ELSE 1 END as hasSubtask
+    from tb_cowork_task a
     ${userId === ''
       ? `inner join tb_cowork_task_order b on a.id = b.taskId`
       : `inner join tb_cowork_task_myOrder c on a.id = c.taskId and c.userId = '${userId}' `}
+    left join tb_cowork_task d on a.id = d.upTaskId
     where ('${userId}' = '' or a.assignee = '${userId}')
     and ('${projectId}' = '' or a.projectId = '${projectId}')
     and ('${upTaskId}' = '' or a.upTaskId = '${upTaskId}')

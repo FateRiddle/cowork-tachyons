@@ -20,13 +20,13 @@ class Pop extends React.Component {
             {children}
           </div>
           <div
-            className="ph3 pv2 dim tracked f5 br2 ba b--cyan cyan mr3"
+            className="ph3 pv2 dim tracked f5 br2 ba b--cyan cyan mr3 pointer"
             onClick={onCancelClick}
           >
             取消
           </div>
           <div
-            className="ph3 pv2 dim tracked f5 br2 b--cyan bg-cyan white"
+            className="ph3 pv2 dim tracked f5 br2 b--cyan bg-cyan white pointer"
             onClick={onOKClick}
           >
             确定

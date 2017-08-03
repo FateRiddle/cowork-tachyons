@@ -16,8 +16,16 @@ router.get('/', (req, res, next) => {
   db
     .then(pool =>
       pool.request().query(
-        `select * from tb_cowork_project
-      select * from tb_cowork_project_group`
+        `select distinct a.*,
+        CASE WHEN b.id is null THEN 0
+             ELSE 1 END as hasTask
+        from tb_cowork_project a
+        left join tb_cowork_task b on a.id = b.projectId
+        where isNull(a.deleted,0) != 1
+        select * from tb_cowork_project_group a
+        inner join tb_cowork_project b on a.projectId = b.id
+        where isNull(b.deleted,0) != 1
+        `
       )
     )
     .then(data => {
@@ -48,8 +56,8 @@ router.post('/', (req, res, next) => {
   query(
     `
       begin tran
-        insert into tb_cowork_project (id,title)
-        values('${id}','${title}')
+        insert into tb_cowork_project (id,title,deleted)
+        values('${id}','${title}',0)
         insert into tb_cowork_project_group (projectId,userId)
         values ${groupValue}
       if @@error != 0
@@ -60,6 +68,7 @@ router.post('/', (req, res, next) => {
   )
 })
 
+//edit project
 router.put('/', (req, res, next) => {
   const { id, title, group } = req.body
   let groupValue = group
@@ -85,13 +94,18 @@ router.put('/', (req, res, next) => {
   )
 })
 
-router.delete('/:id', (req, res) => {
+//delete project
+router.put('/:id', (req, res) => {
   const { id } = req.params
+  const { toDelete } = req.body
+  console.log(id, toDelete)
+  const deleteProject = toDelete
+    ? `update tb_cowork_project set deleted = 1 where id = '${id}'`
+    : ''
   query(
     `
       begin tran
-        delete from tb_cowork_project where id = '${id}'
-        delete from tb_cowork_project_group where projectId = '${id}'
+      ${deleteProject}
       if @@error != 0
       rollback tran
       commit tran

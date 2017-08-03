@@ -184,7 +184,7 @@ class TaskItem extends React.Component {
 
   handleKeyDown = e => {
     const {
-      task: { id },
+      task: { id, hasSubtask },
       taskIndex,
       deleteTask,
       insertTask,
@@ -197,7 +197,7 @@ class TaskItem extends React.Component {
         e.preventDefault()
         break
       case 'Backspace':
-        if (e.target.value === '' && this.canEdit()) {
+        if (e.target.value === '' && this.canEdit() && hasSubtask === 0) {
           e.preventDefault()
           deleteTask(id)
           //第一行被删除是特例

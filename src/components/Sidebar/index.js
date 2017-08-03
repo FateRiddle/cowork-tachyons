@@ -78,6 +78,7 @@ class Sidebar extends React.Component {
         />
         <DeletePop
           id={projectId}
+          canDelete={project.hasTask ? false : true}
           hidden={popHidden}
           toggle={this.toggleDeletePop}
         />
