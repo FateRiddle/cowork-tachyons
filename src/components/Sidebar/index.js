@@ -141,7 +141,9 @@ Sidebar.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  projects: getAllProjects(state),
+  projects: getAllProjects(state).filter(
+    p => p.group.indexOf(state.me.id) > -1
+  ),
   fetched: state.projects.fetched,
   sidebarHidden: state.visual.sidebarHidden
 })
