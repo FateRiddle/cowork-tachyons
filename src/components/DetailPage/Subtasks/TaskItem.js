@@ -164,7 +164,7 @@ class TaskItem extends React.Component {
 
   handleKeyDown = e => {
     const {
-      task: { id, upTaskId },
+      task: { id, upTaskId, hasSubtask },
       taskIndex,
       deleteSubtask,
       insertSubtask,
@@ -175,7 +175,7 @@ class TaskItem extends React.Component {
         e.preventDefault()
         break
       case 'Backspace':
-        if (e.target.value === '' && this.props.canEdit) {
+        if (e.target.value === '' && this.props.canEdit && hasSubtask !== 1) {
           e.preventDefault()
           deleteSubtask(id, upTaskId)
           this.changeFocus(taskIndex, 'up') // TODO: 第一行被删除是特例，考虑简洁的写法

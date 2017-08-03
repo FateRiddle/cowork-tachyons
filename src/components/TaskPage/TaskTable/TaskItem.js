@@ -197,7 +197,7 @@ class TaskItem extends React.Component {
         e.preventDefault()
         break
       case 'Backspace':
-        if (e.target.value === '' && this.canEdit() && hasSubtask === 0) {
+        if (e.target.value === '' && this.canEdit() && hasSubtask !== 1) {
           e.preventDefault()
           deleteTask(id)
           //第一行被删除是特例
