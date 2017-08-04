@@ -12,7 +12,7 @@ class Login extends React.Component {
     login(this.input_name.value, this.input_password.value).then(res => {
       if (res.value.token && res.value.id) {
         api.setToken(res.value.token)
-        history.push('/')
+        setTimeout(_ => history.push('/'), 500)
       }
     })
   }
@@ -21,18 +21,18 @@ class Login extends React.Component {
     return (
       <div className="flex flex-column items-center vh-25">
         <input
-          className="pa2 mb3 w5 f4 ba b--black-50 br2"
+          className="pv2 pl3 mb3 w5 f4 outline-0 ba b--black-50 br-pill br2-ns"
           ref={n => (this.input_name = n)}
           placeholder="用户名"
         />
         <input
-          className="pa2 mb3 w5 f4 ba b--black-50 br2"
+          className="pv2 pl3 mb3 w5 f4 outline-0 ba b--black-50 br-pill br2-ns"
           type="password"
           ref={n => (this.input_password = n)}
           placeholder="密码"
         />
         <div
-          className="ph3 pv2 dim tracked-mega f4 br2 ba b--black-50 black-60 pointer"
+          className="pv-btn tracked-mega w5 tc f4 br-pill br2-ns white bg-red hover-bg-dark-red pointer"
           onClick={this.login}
         >
           登陆

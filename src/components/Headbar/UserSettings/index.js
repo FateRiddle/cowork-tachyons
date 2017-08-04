@@ -13,7 +13,7 @@ class UserSettings extends React.Component {
   onLogout = () => {
     const { logout, history } = this.props
     logout()
-    history.push('/home')
+    history.push('/home/login')
   }
 
   render() {

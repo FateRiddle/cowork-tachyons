@@ -1,5 +1,5 @@
 import React from 'react'
-// import { Route } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { signup } from 'actions'
 
@@ -18,6 +18,7 @@ class Signup extends React.Component {
           this.input_password.value = ''
           this.input_password_repeat.value = ''
           this.input_slogan.value = ''
+          setTimeout(_ => this.props.history.push('./login'), 1500)
         }
       })
   }
@@ -26,29 +27,29 @@ class Signup extends React.Component {
     return (
       <div className="flex flex-column items-center vh-25">
         <input
-          className="pa2 mb3 w5 f4 ba b--black-50 br2"
+          className="pv2 pl3 mb3 w5 f4 outline-0 ba b--black-50 br-pill br2-ns"
           ref={n => (this.input_name = n)}
           placeholder="用户名"
         />
         <input
-          className="pa2 mb3 w5 f4 ba b--black-50 br2"
+          className="pv2 pl3 mb3 w5 f4 outline-0 ba b--black-50 br-pill br2-ns"
           type="password"
           ref={n => (this.input_password = n)}
           placeholder="密码"
         />
         <input
-          className="pa2 mb3 w5 f4 ba b--black-50 br2"
+          className="pv2 pl3 mb3 w5 f4 outline-0 ba b--black-50 br-pill br2-ns"
           type="password"
           ref={n => (this.input_password_repeat = n)}
           placeholder="再写一遍密码"
         />
         <input
-          className="pa2 mb3 w5 f4 ba b--black-50 br2"
+          className="pv2 pl3 mb3 w5 f4 outline-0 ba b--black-50 br-pill br2-ns"
           ref={n => (this.input_slogan = n)}
           placeholder="我们的口号是？"
         />
         <div
-          className="ph3 pv2 dim tracked-mega f4 br2 ba b--black-50 black-60 pointer"
+          className="ph3 pv-btn tracked-mega w5 tc f4 br-pill br2-ns bg-red white hover-bg-dark-red pointer"
           onClick={this.signup}
         >
           注册
@@ -58,6 +59,6 @@ class Signup extends React.Component {
   }
 }
 
-Signup = connect(null, { signup })(Signup)
+Signup = withRouter(connect(null, { signup })(Signup))
 
 export default Signup

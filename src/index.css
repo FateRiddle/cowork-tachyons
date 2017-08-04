@@ -51,6 +51,11 @@ ul {
 
 /*metric*/
 
+.pv-btn {
+  padding-top: .6rem;
+  padding-bottom: .6rem;
+}
+
 .w15 {
   width: 1.5rem;
 }
@@ -113,7 +118,12 @@ ul {
 
 .tp-h {
   transition-property: height;
-  transition-duration: 1s;
+  transition-duration: .6s;
+}
+
+.tp-h-quick {
+  transition-property: height;
+  transition-duration: .2s;
 }
 
 .hover-b--red:hover {
@@ -123,3 +133,19 @@ ul {
 .flex-grow {
   flex-grow: 1;
 }
+
+/*.deepen {
+  opacity: .7;
+  -webkit-transition: opacity .15s ease-in;
+  transition: opacity .15s ease-in;
+}
+.deepen:hover, .deepen:focus {
+  opacity: 1;
+  -webkit-transition: opacity .15s ease-in;
+  transition: opacity .15s ease-in;
+}
+.deepen:active {
+  opacity: .8;
+  -webkit-transition: opacity .15s ease-out;
+  transition: opacity .15s ease-out;
+}*/

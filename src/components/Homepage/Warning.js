@@ -19,10 +19,14 @@ class HomePageWarning extends React.PureComponent {
   }
 
   render() {
-    return this.props.warning
+    const { warning } = this.props
+    return warning
       ? <div
           data-component="Warning"
-          className="absolute top-0 left-0 w-80 h2 flex items-center pl3 tracked bg-red white"
+          className={`w-100 h3 f4 flex items-center pl3 tracked white ${warning ===
+            '注册成功！请登录'
+            ? 'bg-green'
+            : 'bg-red'}`}
         >
           {this.props.warning}
         </div>
