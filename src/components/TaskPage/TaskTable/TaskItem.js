@@ -108,9 +108,14 @@ class TaskItem extends React.Component {
     )
   }
 
+  //权限
   canEdit = () => {
-    const { completed, match } = this.props
-    return completed === 'active' && match.params.id !== 'search'
+    const { completed, match, me, task } = this.props
+    return (
+      completed === 'active' &&
+      match.params.id !== 'search' &&
+      (task.createdBy === me.id || task.assignee === me.id)
+    )
   }
 
   calcClassName = () => {

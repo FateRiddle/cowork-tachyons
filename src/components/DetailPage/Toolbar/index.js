@@ -16,7 +16,7 @@ class Toolbar extends React.Component {
     const taskId = match.params.taskId || ''
     return (
       <div
-        className="relative flex items-center h3 bb b--black-30"
+        className="relative w-100 flex items-center h3 bb b--black-30"
         data-component="Toolbar"
       >
         <AssigneeTab disabled={!canEdit} />

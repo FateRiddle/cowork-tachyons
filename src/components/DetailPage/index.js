@@ -50,16 +50,19 @@ class DetailPage extends React.Component {
       canEdit
     } = this.props
     return (
-      <div className="w-40 mb2 mt3 mr2 shadow-1 bg-white">
+      <div className="w-40 border-box mb2 mt3 mr2 shadow-1 bg-white">
         {taskFetched &&
-          <div>
+          <div className="h-100 flex flex-column">
             <Toolbar canEdit={canEdit} />
-            <Relations canEdit={canEdit} />
-            <Editor task={task} canEdit={canEdit} />
-            <Progress task={task} hasSubtask={hasSubtask} canEdit={canEdit} />
-            {/* <Tags task={task} canEdit={canEdit} /> */}
-            {subtaskFetched && <Subtasks tasks={subtasks} canEdit={canEdit} />}
-            <Stats />
+            <main className="h-100 overflow-y-auto">
+              <Relations canEdit={canEdit} />
+              <Editor task={task} canEdit={canEdit} />
+              <Progress task={task} hasSubtask={hasSubtask} canEdit={canEdit} />
+              {/* <Tags task={task} canEdit={canEdit} /> */}
+              {subtaskFetched &&
+                <Subtasks tasks={subtasks} canEdit={canEdit} />}
+              <Stats />
+            </main>
           </div>}
       </div>
     )
@@ -71,7 +74,10 @@ const mapStateToProps = (state, { match }) => {
   const subtasks = getSubtasks(state)
   const task = getTaskById(state, currentTask)
   const canEdit =
-    task && task.completed === 'active' && match.params.id !== 'search'
+    task &&
+    task.completed === 'active' &&
+    match.params.id !== 'search' &&
+    (task.createdBy === state.me.id || task.assignee === state.me.id)
   const { taskFetched, subtaskFetched } = state.tasks
   return {
     taskFetched,
