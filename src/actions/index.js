@@ -156,6 +156,13 @@ export const addSubtask = taskId => (dispatch, getState) => {
   })
 }
 
+export const hasSubtask = id => ({
+  type: 'HAS_SUBTASK',
+  payload: {
+    id
+  }
+})
+
 export const insertSubtask = (taskId, subTaskId) => (dispatch, getState) => {
   const { rootTaskId, title } = getTaskById(getState(), taskId)
   const { me } = getState()

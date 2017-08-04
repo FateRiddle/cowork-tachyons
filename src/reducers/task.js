@@ -119,6 +119,14 @@ const task = (state, action) => {
         }
       }
       return state
+    case 'HAS_SUBTASK':
+      if (state.id === payload.id) {
+        return {
+          ...state,
+          hasSubtask: 1
+        }
+      }
+      return state
     default:
       return state
   }

@@ -31,7 +31,7 @@ class DetailPage extends React.Component {
       task,
       match
     } = this.props
-    if (currentTask && task && task.title && match.params.id !== 'search') {
+    if (currentTask && task && match.params.id !== 'search') {
       updateTaskById(currentTask)
       updateSubtasks(currentTask)
       if (task.rootTaskId) {

@@ -46,13 +46,24 @@ router.get('/', (req, res, next) => {
     projectIdAll
   } = req.query
   console.log(req.query)
-  const GET_root = `
-    select a.* from tb_cowork_task a
+
+  const add_hasSubtask = `
+    with tasktable as
+    (
+      SELECT distinct a.*,
+      CASE WHEN b.id is null THEN 0
+           ELSE 1 END as hasSubtask
+      FROM tb_cowork_task a
+      left join tb_cowork_task b on a.id = b.upTaskId
+    )
+  `
+  const GET_root = `${add_hasSubtask}
+    select a.* from tasktable a
     inner join tb_cowork_task b on a.id = b.rootTaskId
     where b.id = '${rootOf}'
   `
-  const GET_byId = `
-    select * from tb_cowork_task
+  const GET_byId = `${add_hasSubtask}
+    select * from tasktable
     where id = '${taskId}'
   `
   const GET_projectAll = `
@@ -62,15 +73,12 @@ router.get('/', (req, res, next) => {
     where '${projectIdAll}' in (a.projectId,c.projectId)
     order by b.taskOrder
   `
-  const GET_other = `
-    select distinct a.*, ${userId !== '' ? 'c.myOrder' : 'b.taskOrder'},
-      CASE WHEN d.id is null THEN 0
-           ELSE 1 END as hasSubtask
-    from tb_cowork_task a
+  const GET_other = `${add_hasSubtask}
+    select a.*, ${userId !== '' ? 'c.myOrder' : 'b.taskOrder'}
+    from tasktable a
     ${userId === ''
       ? `inner join tb_cowork_task_order b on a.id = b.taskId`
       : `inner join tb_cowork_task_myOrder c on a.id = c.taskId and c.userId = '${userId}' `}
-    left join tb_cowork_task d on a.id = d.upTaskId
     where ('${userId}' = '' or a.assignee = '${userId}')
     and ('${projectId}' = '' or a.projectId = '${projectId}')
     and ('${upTaskId}' = '' or a.upTaskId = '${upTaskId}')
@@ -88,6 +96,7 @@ router.get('/', (req, res, next) => {
     }
     return GET_other
   }
+  console.log(searchQuery())
   query(searchQuery(), res)
 })
 

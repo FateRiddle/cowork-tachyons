@@ -18,6 +18,7 @@ const byId = (state = {}, action) => {
     case 'EDIT_TASK_PROGRESS_LOADING':
     case 'EDIT_TASK_AMOUNT_LOADING':
     case 'TOGGLE_TASK_LOADING':
+    case 'HAS_SUBTASK':
       return {
         ...state,
         [payload.id]: task(state[payload.id], action)
