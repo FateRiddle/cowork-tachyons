@@ -13,6 +13,7 @@ dist
 # misc
 .DS_Store
 npm-debug.log
+.vscode
 
 # private
 memo.js

@@ -61,7 +61,7 @@ class App extends React.Component {
               <Redirect to={`/${me.id}`} />
             </Switch>}
           {warning &&
-            <Warning className="absolute bottom-0 left-0 ma2 pa3 white b bg-light-red w5 h3 flex-center z-2" />}
+            <Warning className="absolute bottom-0 left-0 ma3 pa3 white b bg-light-red w5 h3 flex-center z-2" />}
         </div>
       </div>
     )

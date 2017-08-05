@@ -214,16 +214,18 @@ class TaskItem extends React.Component {
         e.preventDefault()
         break
       case 'Backspace':
-        if (e.target.value === '' && this.canEdit() && hasSubtask !== 1) {
-          e.preventDefault()
-          deleteTask(id)
-          //第一行被删除是特例
-          if (isOnly) {
-            history.push(`/${match.params.id}`)
+        if (e.target.value === '') {
+          if (this.canEdit() && hasSubtask !== 1) {
+            e.preventDefault()
+            deleteTask(id)
+            //第一行被删除是特例
+            if (isOnly) {
+              history.push(`/${match.params.id}`)
+            }
+            this.changeFocus(taskIndex, 'up')
+          } else {
+            changeMainWarning('此状态下任务不能编辑')
           }
-          this.changeFocus(taskIndex, 'up')
-        } else {
-          changeMainWarning('此状态下任务不能编辑')
         }
         break
       case 'Enter':
