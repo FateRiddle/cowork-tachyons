@@ -494,7 +494,12 @@ export const searchTasks = (search = {}) => dispatch => {
 
 export const changeUserWarning = warning => ({
   type: 'CHANGE_USER_WARNING',
-  warning
+  payload: { warning }
+})
+
+export const changeMainWarning = warning => ({
+  type: 'CHANGE_MAIN_WARNING',
+  payload: { warning }
 })
 
 export const resetErrorMessage = () => ({

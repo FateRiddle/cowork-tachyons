@@ -124,7 +124,16 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
-    this.props.toggleTask(id)
+    const {
+      task: { progress, hasSubtask },
+      toggleTask,
+      changeMainWarning
+    } = this.props
+    if (!hasSubtask || (hasSubtask && progress === 100)) {
+      toggleTask(id)
+    } else {
+      changeMainWarning('还有子任务未完成。')
+    }
   }
 
   handleLineClick = () => {
@@ -138,6 +147,8 @@ class TaskItem extends React.Component {
       const title = e.target.value
       const { task: { id }, editTaskTitle } = this.props
       editTaskTitle(title, id)
+    } else {
+      this.props.changeMainWarning('此状态下任务不能编辑')
     }
   }
 
@@ -168,24 +179,30 @@ class TaskItem extends React.Component {
       taskIndex,
       deleteSubtask,
       insertSubtask,
-      match
+      match,
+      canEdit,
+      changeMainWarning
     } = this.props
     switch (e.key) {
       case 'Tab':
         e.preventDefault()
         break
       case 'Backspace':
-        if (e.target.value === '' && this.props.canEdit && hasSubtask !== 1) {
+        if (e.target.value === '' && canEdit && hasSubtask !== 1) {
           e.preventDefault()
           deleteSubtask(id, upTaskId)
           this.changeFocus(taskIndex, 'up') // TODO: 第一行被删除是特例，考虑简洁的写法
+        } else {
+          changeMainWarning('此状态下任务不能编辑')
         }
         break
       case 'Enter':
-        if (this.props.canEdit) {
+        if (canEdit) {
           e.preventDefault()
           insertSubtask(match.params.taskId, id)
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
+        } else {
+          changeMainWarning('此状态下不能插入任务')
         }
         break
       case 'ArrowUp':

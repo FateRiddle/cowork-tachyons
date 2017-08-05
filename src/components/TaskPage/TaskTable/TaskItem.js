@@ -112,7 +112,7 @@ class TaskItem extends React.Component {
   canEdit = () => {
     const { completed, match, me, task } = this.props
     return (
-      completed === 'active' &&
+      task.completed === 'active' &&
       match.params.id !== 'search' &&
       (task.createdBy === me.id || task.assignee === me.id)
     )
@@ -142,7 +142,16 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
-    this.props.toggleTask(id)
+    const {
+      task: { progress, hasSubtask },
+      toggleTask,
+      changeMainWarning
+    } = this.props
+    if (!hasSubtask || (hasSubtask && progress === 100)) {
+      toggleTask(id)
+    } else {
+      changeMainWarning('还有子任务未完成。')
+    }
   }
 
   handleLineClick = () => {
@@ -163,6 +172,8 @@ class TaskItem extends React.Component {
       const title = e.target.value
       const { task: { id }, editTaskTitle } = this.props
       editTaskTitle(title, id)
+    } else {
+      this.props.changeMainWarning('此状态下任务不能编辑')
     }
   }
 
@@ -195,7 +206,8 @@ class TaskItem extends React.Component {
       insertTask,
       history,
       match,
-      isOnly
+      isOnly,
+      changeMainWarning
     } = this.props
     switch (e.key) {
       case 'Tab':
@@ -210,6 +222,8 @@ class TaskItem extends React.Component {
             history.push(`/${match.params.id}`)
           }
           this.changeFocus(taskIndex, 'up')
+        } else {
+          changeMainWarning('此状态下任务不能编辑')
         }
         break
       case 'Enter':
@@ -218,6 +232,8 @@ class TaskItem extends React.Component {
           const currentProject = this.props.match.params.id
           insertTask(currentProject, id)
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
+        } else {
+          changeMainWarning('此状态下不能插入任务')
         }
         break
       case 'ArrowUp':

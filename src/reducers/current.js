@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
 
 const main = (state = '', action) => {
-  if (action.type.endsWith('_ERROR')) {
-    const { status } = action.payload.response
+  const { type, payload } = action
+  if (type.endsWith('_ERROR')) {
+    const { status } = payload.response
     if (status === 401) {
       return '授权失败，请尝试重新登录。'
     }
@@ -14,7 +15,10 @@ const main = (state = '', action) => {
     }
     return '连接服务器失败。请检查网络。'
   }
-  if (action.type === 'RESET_ERROR_MESSAGE') {
+  if (type === 'CHANGE_MAIN_WARNING') {
+    return payload.warning
+  }
+  if (type === 'RESET_ERROR_MESSAGE') {
     return ''
   }
   return state
@@ -42,7 +46,7 @@ const home = (state = '', action) => {
 const userSettings = (state = '', action) => {
   switch (action.type) {
     case 'CHANGE_USER_WARNING':
-      return action.warning
+      return action.payload.warning
     case 'EDIT_MY_PASSWORD_SUCCESS':
       if (action.payload.output.message) {
         return action.payload.output.message
