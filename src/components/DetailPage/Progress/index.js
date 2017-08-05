@@ -114,11 +114,11 @@ class ProgressSection extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { task }) => {
+const mapStateToProps = (state, { task, match }) => {
   const getProgress = task =>
     task.completed === 'completed' ? 100 : task.progress || 0
   return {
-    currentTask: task.id,
+    currentTask: match.params.taskId,
     progress: Math.floor(getProgress(task)),
     amount: task.amount || 1,
     completed: state.completed

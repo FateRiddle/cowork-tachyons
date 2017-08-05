@@ -106,6 +106,16 @@ const taskFetched = (state = false, action) => {
   }
 }
 
+const detailFetched = (state = false, action) => {
+  if (action.type === 'UPDATE_TASK_BY_ID_SUCCESS') {
+    return true
+  }
+  if (action.type === 'LOGOUT') {
+    return false
+  }
+  return state
+}
+
 const subtaskFetched = (state = false, action) => {
   switch (action.type) {
     case 'UPDATE_SUBTASKS_SUCCESS':
@@ -121,6 +131,7 @@ const tasks = combineReducers({
   byId,
   allIds,
   taskFetched,
+  detailFetched,
   subtaskFetched
 })
 

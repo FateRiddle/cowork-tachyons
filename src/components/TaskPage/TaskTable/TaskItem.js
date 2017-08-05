@@ -110,7 +110,7 @@ class TaskItem extends React.Component {
 
   //权限
   canEdit = () => {
-    const { completed, match, me, task } = this.props
+    const { match, me, task } = this.props
     return (
       task.completed === 'active' &&
       match.params.id !== 'search' &&
@@ -229,7 +229,7 @@ class TaskItem extends React.Component {
       case 'Enter':
         if (this.canEdit()) {
           e.preventDefault()
-          const currentProject = this.props.match.params.id
+          const currentProject = match.params.id
           insertTask(currentProject, id)
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
         } else {

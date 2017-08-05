@@ -31,18 +31,22 @@ class DetailPage extends React.Component {
       task,
       match
     } = this.props
-    if (currentTask && task && match.params.id !== 'search') {
-      updateTaskById(currentTask)
-      updateSubtasks(currentTask)
-      if (task.rootTaskId) {
-        updateRootTask(currentTask)
-      }
+    if (currentTask && match.params.id !== 'search') {
+      updateTaskById(currentTask).then(_ => {
+        if (task) {
+          updateSubtasks(currentTask)
+          if (task.rootTaskId) {
+            updateRootTask(currentTask)
+          }
+        }
+      })
     }
   }
 
   render() {
     const {
       taskFetched,
+      detailFetched,
       subtaskFetched,
       hasSubtask,
       task,
@@ -52,6 +56,7 @@ class DetailPage extends React.Component {
     return (
       <div className="w-40 border-box mb2 mt3 mr2 shadow-1 bg-white">
         {taskFetched &&
+          detailFetched &&
           <div className="h-100 flex flex-column">
             <Toolbar canEdit={canEdit} />
             <main className="h-100 overflow-y-auto">
@@ -78,9 +83,10 @@ const mapStateToProps = (state, { match }) => {
     task.completed === 'active' &&
     match.params.id !== 'search' &&
     (task.createdBy === state.me.id || task.assignee === state.me.id)
-  const { taskFetched, subtaskFetched } = state.tasks
+  const { taskFetched, detailFetched, subtaskFetched } = state.tasks
   return {
     taskFetched,
+    detailFetched,
     subtaskFetched,
     currentTask,
     task,

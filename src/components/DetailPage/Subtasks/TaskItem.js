@@ -85,7 +85,9 @@ class TaskItem extends React.Component {
               {assigneeName}
             </div>}
           <Link
-            className="pl2 black-50 hover-thin-blue f3 flex-center"
+            className={`pl2 hover-thin-blue f3 flex-center ${task.hasSubtask
+              ? 'light-red'
+              : 'black-50'}`}
             to={`${task.id}`}
             onClick={this.toTaskDetail}
           >

@@ -1,12 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import {
-  editTaskTitle,
-  saveTaskTitle,
-  editTaskDetail,
-  saveTaskDetail
-} from 'actions'
+import * as actions from 'actions'
 // import { Editor,Plain } from 'slate'
 import 'draft-js/dist/Draft.css'
 
@@ -101,34 +97,71 @@ class ContentEditor extends React.Component {
   onTitleChange = state => {
     //this is for slate.js to work
     const title = Plain.serialize(state)
-    const { editTaskTitle, currentTask, canEdit } = this.props
+    const {
+      editTaskTitle,
+      currentTask,
+      canEdit,
+      changeMainWarning
+    } = this.props
     if (canEdit) {
       this.setState({ titleState: state })
       editTaskTitle(title, currentTask)
+    } else {
+      changeMainWarning('不可编辑')
     }
   }
 
   handleTitleBlur = () => {
     const title = Plain.serialize(this.state.titleState)
-    const { currentTask, saveTaskTitle } = this.props
-    saveTaskTitle(title, currentTask)
+    const { currentTask, saveTaskTitle, canEdit } = this.props
+    if (canEdit) {
+      saveTaskTitle(title, currentTask)
+    }
   }
 
   onDetailChange = state => {
     //this is for slate.js to work
     const detail = Plain.serialize(state)
-    const { editTaskDetail, currentTask, canEdit } = this.props
+    const {
+      editTaskDetail,
+      currentTask,
+      canEdit,
+      changeMainWarning
+    } = this.props
     if (canEdit) {
       this.setState({ detailState: state })
       editTaskDetail(detail, currentTask)
+    } else {
+      changeMainWarning('不可编辑')
     }
   }
 
   handleDetailBlur = () => {
     const detail = Plain.serialize(this.state.detailState)
-    const { currentTask, saveTaskDetail } = this.props
-    saveTaskDetail(detail, currentTask)
+    const { currentTask, saveTaskDetail, canEdit } = this.props
+    if (canEdit) {
+      saveTaskDetail(detail, currentTask)
+    }
   }
+}
+
+ContentEditor.propTypes = {
+  task: PropTypes.object.isRequired,
+  canEdit: PropTypes.bool.isRequired,
+  //redux
+  currentTask: PropTypes.string,
+  completed: PropTypes.string,
+  search: PropTypes.object,
+  editTaskTitle: PropTypes.func.isRequired,
+  saveTaskTitle: PropTypes.func.isRequired,
+  editTaskDetail: PropTypes.func.isRequired,
+  saveTaskDetail: PropTypes.func.isRequired,
+  changeMainWarning: PropTypes.func.isRequired
+}
+
+ContentEditor.defaultProps = {
+  task: {},
+  canEdit: false
 }
 
 const mapStateToProps = ({ completed, search }, { match }) => {
@@ -139,13 +172,8 @@ const mapStateToProps = ({ completed, search }, { match }) => {
   }
 }
 
-ContentEditor = withRouter(
-  connect(mapStateToProps, {
-    editTaskTitle,
-    saveTaskTitle,
-    editTaskDetail,
-    saveTaskDetail
-  })(ContentEditor)
+const ConnectedContentEditor = withRouter(
+  connect(mapStateToProps, actions)(ContentEditor)
 )
 
-export default ContentEditor
+export default ConnectedContentEditor
