@@ -51,7 +51,9 @@ class Relations extends React.Component {
 }
 
 const mapStateToProps = (state, { match }) => {
-  const allProjects = getAllProjects(state)
+  const allProjects = getAllProjects(state).filter(
+    p => p.group.indexOf(state.me.id) > -1
+  )
   const currentTask = match.params.taskId
   const task = getTaskById(state, currentTask) || {}
   //calc rootTask's projectName, 如果是子任务，读顶层任务的projectId，如果已经是顶层，直接读projectId
