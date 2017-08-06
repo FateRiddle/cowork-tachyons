@@ -28,7 +28,7 @@ class TaskPage extends React.Component {
       searchTasks,
       history,
       match,
-      me
+      me,
     } = this.props
     const { id, taskId } = match.params
 
@@ -74,10 +74,11 @@ class TaskPage extends React.Component {
   }
 
   render() {
+    const { fetched, match } = this.props
     return (
-      <div className="h-100 pt3 ph3 w-60">
+      <div className={`h-100 pt3 ph3 ${match.params.taskId ? 'w-60' : 'w-80'}`}>
         <TableFilter />
-        {this.props.fetched
+        {fetched
           ? <TaskTable />
           : <div className="w-100 h-taskTable bg-white shadow-1" />}
       </div>
@@ -86,13 +87,11 @@ class TaskPage extends React.Component {
 }
 
 const mapStateToProps = (state, { match }) => {
-  const { taskId } = match.params
   return {
     search: state.search,
-    taskId,
-    task: getTaskById(state, taskId),
+    task: getTaskById(state, match.params.taskId),
     me: state.me,
-    fetched: state.tasks.taskFetched
+    fetched: state.tasks.taskFetched,
   }
 }
 
