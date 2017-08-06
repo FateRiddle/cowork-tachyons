@@ -113,7 +113,6 @@ export const addTask = projectId => (dispatch, getState) => {
 }
 
 //insert the task right after taskId in allIds array
-
 export const insertTask = (projectId, taskId) => (dispatch, getState) => {
   const id = v4()
   const { me } = getState()
@@ -134,8 +133,6 @@ export const insertTask = (projectId, taskId) => (dispatch, getState) => {
   })
 }
 
-//insert the task right after taskId in allIds array
-
 export const addSubtask = taskId => (dispatch, getState) => {
   const { rootTaskId, title } = getTaskById(getState(), taskId)
   const { me } = getState()
@@ -155,7 +152,7 @@ export const addSubtask = taskId => (dispatch, getState) => {
     },
   })
 }
-
+// sub-action of adding subtask
 export const havingSubtask = id => ({
   type: 'HAVING_SUBTASK',
   payload: {
@@ -383,6 +380,8 @@ export const changeMyOrder = (oldIndex, newIndex) => (dispatch, getState) => {
   })
 }
 
+////////////Other state
+
 export const changeCurrentTask = (id = '') => ({
   type: 'CHANGE_CURRENT_TASK',
   id,
@@ -393,7 +392,22 @@ export const changeCurrentSubtask = (id = '') => ({
   id,
 })
 
-////////////////////////////new actions /////////////////////////
+export const changeCompleted = completed => ({
+  type: 'CHANGE_COMPLETED',
+  payload: {
+    completed,
+  },
+})
+
+//this is for persist state to localStorage so refresh browser will load the same query
+export const changeSearch = search => ({
+  type: 'CHANGE_SEARCH',
+  payload: {
+    search,
+  },
+})
+
+////// Loading data /////////////////////////
 //async
 export const updateState = () => ({
   // update projects and users
@@ -464,21 +478,6 @@ export const updateRootTask = id => ({
   },
 })
 
-export const changeCompleted = completed => ({
-  type: 'CHANGE_COMPLETED',
-  payload: {
-    completed,
-  },
-})
-
-//this is for persist state to localStorage so refresh browser will load the same query
-export const changeSearch = search => ({
-  type: 'CHANGE_SEARCH',
-  payload: {
-    search,
-  },
-})
-
 export const searchTasks = (search = {}) => dispatch => {
   dispatch({
     type: 'SEARCH_TASKS',
@@ -492,7 +491,7 @@ export const searchTasks = (search = {}) => dispatch => {
   // dispatch(searchTasks(search))
 }
 
-//user & error handle
+/////////////////// user & error handle
 
 export const changeUserWarning = warning => ({
   type: 'CHANGE_USER_WARNING',
@@ -548,7 +547,7 @@ export const editMyPassword = (oldPass, newPass, id) => ({
   payload: api.Users.editPassword({ oldPass, newPass, id }),
 })
 
-//visual
+//////////// visual
 
 export const toggleSidebar = () => ({
   type: 'TOGGLE_SIDEBAR',
