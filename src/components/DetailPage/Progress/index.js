@@ -16,7 +16,7 @@ class ProgressSection extends React.Component {
     { key: 6, text: '4天', value: 4 },
     { key: 7, text: '5天', value: 5 },
     { key: 8, text: '6天', value: 6 },
-    { key: 9, text: '7天', value: 7 }
+    { key: 9, text: '7天', value: 7 },
   ]
 
   progressColor = () => {
@@ -41,7 +41,7 @@ class ProgressSection extends React.Component {
       progress,
       editTaskProgress,
       hasSubtask,
-      canEdit
+      canEdit,
     } = this.props
     if (hasSubtask || !canEdit) {
       return
@@ -67,7 +67,7 @@ class ProgressSection extends React.Component {
   }
 
   render() {
-    const { task, progress, amount, hasSubtask, canEdit } = this.props
+    const { task, progress, hasSubtask, amount, canEdit } = this.props
     const selectedDate = task && task.beginAt
     const editable = canEdit && !hasSubtask
     return (
@@ -81,7 +81,9 @@ class ProgressSection extends React.Component {
                 options={this.options}
                 onChange={this.changeAmount}
               />
-            : <div className="pv2 tracked-mega">{amount}天</div>}
+            : <div className="pv2 tracked-mega">
+                {amount}天
+              </div>}
         </div>
         <div className="flex items-center">
           <span className="mr2">开始于：</span>
@@ -121,7 +123,7 @@ const mapStateToProps = (state, { task, match }) => {
     currentTask: match.params.taskId,
     progress: Math.floor(getProgress(task)),
     amount: task.amount || 1,
-    completed: state.completed
+    completed: state.completed,
   }
 }
 

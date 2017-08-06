@@ -17,7 +17,7 @@ const task = (state, action) => {
         createdBy: '',
         completed: 'active',
         progress: 0,
-        amount: 1
+        amount: 1,
       }
     case 'ADD_SUBTASK_LOADING':
     case 'INSERT_SUBTASK_LOADING':
@@ -33,13 +33,13 @@ const task = (state, action) => {
         createdBy: '',
         completed: 'active',
         progress: 0,
-        amount: 1
+        amount: 1,
       }
     case 'EDIT_TASK_TITLE':
       if (state.id === payload.id) {
         return {
           ...state,
-          title: payload.title
+          title: payload.title,
         }
       }
       return state
@@ -47,7 +47,7 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          detail: payload.detail
+          detail: payload.detail,
         }
       }
       return state
@@ -55,7 +55,7 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          assignee: payload.assignee
+          assignee: payload.assignee,
         }
       }
       return state
@@ -64,7 +64,7 @@ const task = (state, action) => {
         return {
           ...state,
           assignee: payload.assignee,
-          myOrder: payload.myOrder
+          myOrder: payload.myOrder,
         }
       }
       return state
@@ -72,7 +72,7 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          dueAt: payload.dueAt
+          dueAt: payload.dueAt,
         }
       }
       return state
@@ -80,7 +80,7 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          beginAt: payload.beginAt
+          beginAt: payload.beginAt,
         }
       }
       return state
@@ -91,7 +91,7 @@ const task = (state, action) => {
         return {
           ...state,
           completed,
-          completedAt
+          completedAt,
         }
       }
       return state
@@ -99,7 +99,7 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          projectId: payload.projectId
+          projectId: payload.projectId,
         }
       }
       return state
@@ -107,7 +107,7 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          progress: payload.progress
+          progress: payload.progress,
         }
       }
       return state
@@ -115,15 +115,15 @@ const task = (state, action) => {
       if (state.id === payload.id) {
         return {
           ...state,
-          amount: payload.amount
+          amount: payload.amount,
         }
       }
       return state
-    case 'HAS_SUBTASK':
+    case 'HAVING_SUBTASK':
       if (state.id === payload.id) {
         return {
           ...state,
-          hasSubtask: 1
+          hasSubtask: 1,
         }
       }
       return state

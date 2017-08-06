@@ -4,7 +4,7 @@ import { withRouter } from 'react-router'
 // import { Icon } from 'semantic-ui-react'
 import AssigneeTab from './AssigneeTab'
 import DueDateTab from './DueDateTab'
-import { addSubtask, hasSubtask } from 'actions'
+import { addSubtask, havingSubtask } from 'actions'
 
 class Toolbar extends React.Component {
   close = () => {
@@ -12,7 +12,7 @@ class Toolbar extends React.Component {
   }
 
   render() {
-    const { addSubtask, hasSubtask, match, canEdit } = this.props
+    const { addSubtask, havingSubtask, match, canEdit } = this.props
     const taskId = match.params.taskId || ''
     return (
       <div
@@ -33,7 +33,7 @@ class Toolbar extends React.Component {
           onClick={_ => {
             if (canEdit) {
               addSubtask(taskId)
-              hasSubtask(taskId)
+              havingSubtask(taskId)
             }
           }}
         >
@@ -54,7 +54,7 @@ class Toolbar extends React.Component {
 const mapStateToProps = ({ completed }) => ({ completed })
 
 const ConnectedToolbar = withRouter(
-  connect(mapStateToProps, { addSubtask, hasSubtask })(Toolbar)
+  connect(mapStateToProps, { addSubtask, havingSubtask })(Toolbar)
 )
 
 export default ConnectedToolbar
