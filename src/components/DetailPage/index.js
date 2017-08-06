@@ -29,7 +29,7 @@ class DetailPage extends React.Component {
       updateTaskById,
       currentTask,
       task,
-      match
+      match,
     } = this.props
     if (currentTask && match.params.id !== 'search') {
       updateTaskById(currentTask).then(_ => {
@@ -51,7 +51,7 @@ class DetailPage extends React.Component {
       hasSubtask,
       task,
       subtasks,
-      canEdit
+      canEdit,
     } = this.props
     return (
       <div className="w-40 border-box mb2 mt3 mr2 shadow-1 bg-white">
@@ -64,8 +64,7 @@ class DetailPage extends React.Component {
               <Editor task={task} canEdit={canEdit} />
               <Progress task={task} hasSubtask={hasSubtask} canEdit={canEdit} />
               {/* <Tags task={task} canEdit={canEdit} /> */}
-              {subtaskFetched &&
-                <Subtasks tasks={subtasks} canEdit={canEdit} />}
+              {subtaskFetched && <Subtasks tasks={subtasks} />}
               <Stats />
             </main>
           </div>}
@@ -92,7 +91,7 @@ const mapStateToProps = (state, { match }) => {
     task,
     canEdit,
     subtasks,
-    hasSubtask: subtasks.length > 0
+    hasSubtask: subtasks.length > 0,
   }
 }
 

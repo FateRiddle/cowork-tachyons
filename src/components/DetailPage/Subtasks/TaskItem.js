@@ -75,7 +75,7 @@ class TaskItem extends React.Component {
             <span
               className={classnames('ph2 f6', {
                 orange: closeToDue,
-                'dark-red': isDue
+                'dark-red': isDue,
               })}
             >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
@@ -108,7 +108,7 @@ class TaskItem extends React.Component {
       'bt bb b--cyan': currentTask === task.id, //selected
       b: this.isTitle(task),
       'shadow-1': this.state.mouseOnDrag,
-      'black-50': task.completed === 'completed'
+      'black-50': task.completed === 'completed',
     })
   }
 
@@ -129,7 +129,7 @@ class TaskItem extends React.Component {
     const {
       task: { progress, hasSubtask },
       toggleTask,
-      changeMainWarning
+      changeMainWarning,
     } = this.props
     if (!hasSubtask || (hasSubtask && progress === 100)) {
       toggleTask(id)
@@ -140,17 +140,25 @@ class TaskItem extends React.Component {
 
   handleLineClick = () => {
     const { changeCurrentSubtask, task } = this.props
-    console.log('item', task)
+    console.log('item', task, this.props.canEdit, this.props.canIEdit)
     changeCurrentSubtask(task.id)
   }
 
   handleTitleChange = e => {
-    if (this.props.canEdit) {
+    const {
+      task: { id },
+      editTaskTitle,
+      canEdit,
+      canIEdit,
+      changeMainWarning,
+    } = this.props
+    if (canEdit) {
       const title = e.target.value
-      const { task: { id }, editTaskTitle } = this.props
       editTaskTitle(title, id)
+    } else if (canIEdit) {
+      changeMainWarning('此状态下任务不能编辑')
     } else {
-      this.props.changeMainWarning('此状态下任务不能编辑')
+      changeMainWarning('不能修改别人的任务')
     }
   }
 
@@ -183,7 +191,7 @@ class TaskItem extends React.Component {
       insertSubtask,
       match,
       canEdit,
-      changeMainWarning
+      changeMainWarning,
     } = this.props
     switch (e.key) {
       case 'Tab':
@@ -227,17 +235,27 @@ TaskItem.propTypes = {
   task: PropTypes.object.isRequired,
   focusUp: PropTypes.func.isRequired,
   focusDown: PropTypes.func.isRequired,
-  canEdit: PropTypes.bool.isRequired
+  canEdit: PropTypes.bool.isRequired,
 }
 
-const mapStateToProps = (state, { task }) => {
-  const { completed, search, currentSubtask } = state
+const mapStateToProps = (state, { task, match }) => {
+  const { me, completed, search, currentSubtask } = state
   const user = getUserById(state, task.assignee)
+  ////////////////权限
+  const canIEdit = task && (task.createdBy === me.id || task.assignee === me.id)
+  const canEdit =
+    task &&
+    task.completed === 'active' &&
+    match.params.id !== 'search' &&
+    canIEdit
+  ///////////////
   return {
     completed,
     search,
     currentTask: currentSubtask,
-    assigneeName: user ? user.name : ''
+    assigneeName: user ? user.name : '',
+    canEdit,
+    canIEdit,
   }
 }
 

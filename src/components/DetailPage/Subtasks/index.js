@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
@@ -29,7 +30,7 @@ class Subtasks extends React.Component {
   }
 
   rowRenderer = props => {
-    const { tasks, canEdit } = this.props
+    const { tasks } = this.props
     const { index } = props
     return (
       <SortableItem
@@ -37,7 +38,6 @@ class Subtasks extends React.Component {
         focusUp={this.focusUp}
         focusDown={this.focusDown}
         taskIndex={index}
-        canEdit={canEdit}
         {...props}
       />
     )
@@ -79,10 +79,17 @@ class Subtasks extends React.Component {
   }
 }
 
+Subtasks.propTypes = {
+  tasks: PropTypes.array,
+  allIds: PropTypes.array,
+}
+
 const mapStateToProps = ({ tasks }) => ({
-  allIds: tasks.allIds
+  allIds: tasks.allIds,
 })
 
-Subtasks = withRouter(connect(mapStateToProps, actions)(Subtasks))
+const ConnectedSubtasks = withRouter(
+  connect(mapStateToProps, actions)(Subtasks)
+)
 
-export default Subtasks
+export default ConnectedSubtasks

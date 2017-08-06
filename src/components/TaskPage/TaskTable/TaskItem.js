@@ -24,6 +24,7 @@ const DragHandle = SortableHandle(
 class TaskItem extends React.Component {
   state = { mouseOn: false, mounseOnDrag: false }
 
+  //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
   componentDidUpdate(prevProps, prevState) {
     const { currentTask, task } = this.props
     const prevTask = prevProps.currentTask
@@ -31,7 +32,6 @@ class TaskItem extends React.Component {
       this.input.focus()
     }
   }
-  //注意一定要在didUpdate里focus(),因为在render()结束后，ui才存在，focus()才有意义
   render() {
     const {
       project,
@@ -40,7 +40,7 @@ class TaskItem extends React.Component {
       currentTask,
       me,
       match,
-      assigneeName
+      assigneeName,
     } = this.props
     const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
@@ -79,7 +79,10 @@ class TaskItem extends React.Component {
           />
           {task.upTaskId &&
             <span data-component="uptask" className="ph2 black-50">
-              {`< `}<span className="f6">{task.upTaskTitle}</span>
+              {`< `}
+              <span className="f6">
+                {task.upTaskTitle}
+              </span>
             </span>}
           {!isTitle &&
             currentProject === me.id &&
@@ -92,7 +95,7 @@ class TaskItem extends React.Component {
             <span
               className={classnames('ph2 f6', {
                 orange: closeToDue,
-                'dark-red': isDue
+                'dark-red': isDue,
               })}
             >
               {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
@@ -108,15 +111,21 @@ class TaskItem extends React.Component {
     )
   }
 
-  //权限
+  ////////////////权限
   canEdit = () => {
     const { match, me, task } = this.props
     return (
       task.completed === 'active' &&
       match.params.id !== 'search' &&
-      (task.createdBy === me.id || task.assignee === me.id)
+      this.canIEdit()
     )
   }
+
+  canIEdit = () => {
+    const { me, task } = this.props
+    return task.createdBy === me.id || task.assignee === me.id
+  }
+  ///////////////
 
   calcClassName = () => {
     const { currentTask, task } = this.props
@@ -124,7 +133,7 @@ class TaskItem extends React.Component {
       'bt bb b--cyan': currentTask === task.id, //selected
       b: this.isTitle(task),
       'shadow-1': this.state.mouseOnDrag,
-      'black-50': task.completed === 'completed'
+      'black-50': task.completed === 'completed',
     })
   }
 
@@ -145,7 +154,7 @@ class TaskItem extends React.Component {
     const {
       task: { progress, hasSubtask },
       toggleTask,
-      changeMainWarning
+      changeMainWarning,
     } = this.props
     if (!hasSubtask || (hasSubtask && progress === 100)) {
       toggleTask(id)
@@ -172,8 +181,10 @@ class TaskItem extends React.Component {
       const title = e.target.value
       const { task: { id }, editTaskTitle } = this.props
       editTaskTitle(title, id)
-    } else {
+    } else if (this.canIEdit()) {
       this.props.changeMainWarning('此状态下任务不能编辑')
+    } else {
+      this.props.changeMainWarning('不能修改别人的任务')
     }
   }
 
@@ -207,7 +218,7 @@ class TaskItem extends React.Component {
       history,
       match,
       isOnly,
-      changeMainWarning
+      changeMainWarning,
     } = this.props
     switch (e.key) {
       case 'Tab':
@@ -255,7 +266,7 @@ class TaskItem extends React.Component {
 TaskItem.propTypes = {
   task: PropTypes.object.isRequired,
   focusUp: PropTypes.func.isRequired,
-  focusDown: PropTypes.func.isRequired
+  focusDown: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state, { match, task }) => {
@@ -267,7 +278,7 @@ const mapStateToProps = (state, { match, task }) => {
     search,
     me,
     currentTask,
-    assigneeName: user ? user.name : ''
+    assigneeName: user ? user.name : '',
   }
 }
 
