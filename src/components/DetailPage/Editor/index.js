@@ -10,17 +10,15 @@ import 'draft-js/dist/Draft.css'
 import { Editor, EditorState, ContentState } from 'draft-js'
 
 const Plain = {
-  deserialize: text =>
-    EditorState.createWithContent(ContentState.createFromText(text)),
-
-  serialize: state => state.getCurrentContent().getPlainText()
+  deserialize: text => EditorState.createWithContent(ContentState.createFromText(text)),
+  serialize: state => state.getCurrentContent().getPlainText(),
 }
 ////////////////////////////////////////
 
 class ContentEditor extends React.Component {
   state = {
     titleState: Plain.deserialize(''),
-    detailState: Plain.deserialize('')
+    detailState: Plain.deserialize(''),
   } //for slate to work
 
   componentDidMount() {
@@ -28,7 +26,7 @@ class ContentEditor extends React.Component {
     if (task.id) {
       this.setState({
         titleState: Plain.deserialize(task.title || ''),
-        detailState: Plain.deserialize(task.detail || '')
+        detailState: Plain.deserialize(task.detail || ''),
       })
     }
   }
@@ -36,21 +34,17 @@ class ContentEditor extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { task } = this.props
     const { task: nextTask } = nextProps
-    if (
-      nextTask.id &&
-      nextTask.title !== task.title &&
-      document.activeElement.type === 'text'
-    ) {
+    if (nextTask.id && nextTask.title !== task.title && document.activeElement.type === 'text') {
       //当taskTable里修改title时，要同步
       this.setState({
-        titleState: Plain.deserialize(nextTask.title || '')
+        titleState: Plain.deserialize(nextTask.title || ''),
       })
     }
     if (nextTask.id && nextTask.id !== task.id) {
       //只有当换task的时候才同步
       this.setState({
         titleState: Plain.deserialize(nextTask.title || ''),
-        detailState: Plain.deserialize(nextTask.detail || '')
+        detailState: Plain.deserialize(nextTask.detail || ''),
       })
     }
   }
@@ -59,16 +53,10 @@ class ContentEditor extends React.Component {
     const { canEdit, task } = this.props
     return (
       <div
-        className={`ph3 pv2 ${task.completed === 'completed'
-          ? 'black-50'
-          : ''}`}
+        className={`ph3 pv2 ${task.completed === 'completed' ? 'black-50' : ''}`}
         data-component="Editor"
       >
-        <div
-          className={`f3 w-90 pa2 ba b--white lh-title mb3 ${canEdit
-            ? 'hover-b'
-            : ''}`}
-        >
+        <div className={`f3 w-90 pa2 ba b--white lh-title mb3 ${canEdit ? 'hover-b' : ''}`}>
           <Editor
             placeholder="标题"
             editorState={this.state.titleState}
@@ -77,11 +65,7 @@ class ContentEditor extends React.Component {
             onBlur={this.handleTitleBlur}
           />
         </div>
-        <div
-          className={`w-90 pa2 ba b--white min-h-text ${canEdit
-            ? 'hover-b'
-            : ''}`}
-        >
+        <div className={`w-90 pa2 ba b--white min-h-text ${canEdit ? 'hover-b' : ''}`}>
           <Editor
             placeholder="内容"
             editorState={this.state.detailState}
@@ -97,12 +81,7 @@ class ContentEditor extends React.Component {
   onTitleChange = state => {
     //this is for slate.js to work
     const title = Plain.serialize(state)
-    const {
-      editTaskTitle,
-      currentTask,
-      canEdit,
-      changeMainWarning
-    } = this.props
+    const { editTaskTitle, currentTask, canEdit, changeMainWarning } = this.props
     if (canEdit) {
       this.setState({ titleState: state })
       editTaskTitle(title, currentTask)
@@ -122,12 +101,7 @@ class ContentEditor extends React.Component {
   onDetailChange = state => {
     //this is for slate.js to work
     const detail = Plain.serialize(state)
-    const {
-      editTaskDetail,
-      currentTask,
-      canEdit,
-      changeMainWarning
-    } = this.props
+    const { editTaskDetail, currentTask, canEdit, changeMainWarning } = this.props
     if (canEdit) {
       this.setState({ detailState: state })
       editTaskDetail(detail, currentTask)
@@ -156,24 +130,22 @@ ContentEditor.propTypes = {
   saveTaskTitle: PropTypes.func.isRequired,
   editTaskDetail: PropTypes.func.isRequired,
   saveTaskDetail: PropTypes.func.isRequired,
-  changeMainWarning: PropTypes.func.isRequired
+  changeMainWarning: PropTypes.func.isRequired,
 }
 
 ContentEditor.defaultProps = {
   task: {},
-  canEdit: false
+  canEdit: false,
 }
 
 const mapStateToProps = ({ completed, search }, { match }) => {
   return {
     currentTask: match.params.taskId,
     completed,
-    search
+    search,
   }
 }
 
-const ConnectedContentEditor = withRouter(
-  connect(mapStateToProps, actions)(ContentEditor)
-)
+const ConnectedContentEditor = withRouter(connect(mapStateToProps, actions)(ContentEditor))
 
 export default ConnectedContentEditor
