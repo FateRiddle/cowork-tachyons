@@ -37,14 +37,7 @@ const changeUpProgress = id => `
 `
 
 router.get('/', (req, res, next) => {
-  const {
-    userId = '',
-    projectId = '',
-    upTaskId = '',
-    taskId,
-    rootOf,
-    projectIdAll
-  } = req.query
+  const { userId = '', projectId = '', upTaskId = '', taskId, rootOf, projectIdAll } = req.query
   console.log(req.query)
 
   const add_hasSubtask = `
@@ -115,7 +108,7 @@ router.post('/', (req, res, next) => {
     upTaskId,
     rootTaskId = '',
     upTaskTitle = '',
-    insertAt
+    insertAt,
   } = req.body
   const now = moment().format()
 
@@ -198,23 +191,14 @@ router.post('/', (req, res, next) => {
 //editTitle,editDetail,editProject,editAssignee,editDue,editProgress,editAmount,toggle
 router.put('/:id', (req, res, next) => {
   const { id } = req.params
-  const {
-    title,
-    detail,
-    projectId,
-    assignee,
-    dueAt,
-    beginAt,
-    toggle,
-    amount,
-    progress
-  } = req.body
+  const { title, detail, projectId, assignee, dueAt, beginAt, toggle, amount, progress } = req.body
   console.log(req.body)
   const now = moment().format()
 
-  const change_assignee_order = assignee === '0'
-    ? `delete from tb_cowork_task_myOrder where taskId='${id}'`
-    : `if exists(select 1 from tb_cowork_task_myOrder where taskId='${id}' and userId='${assignee}')
+  const change_assignee_order =
+    assignee === '0'
+      ? `delete from tb_cowork_task_myOrder where taskId='${id}'`
+      : `if exists(select 1 from tb_cowork_task_myOrder where taskId='${id}' and userId='${assignee}')
       update tb_cowork_task_myOrder set myOrder=@order where taskId='${id}' and userId='${assignee}'
       else
       insert into tb_cowork_task_myOrder (taskId,myOrder,userId) values ('${id}',@order,'${assignee}')
@@ -224,9 +208,10 @@ router.put('/:id', (req, res, next) => {
       ${change_assignee_order}
     `
     : ''
-  const change_project_order = projectId === '0'
-    ? `delete from tb_cowork_task_order where taskId='${id}'`
-    : `if not exists(select 1 from tb_cowork_task_order where taskId='${id}')
+  const change_project_order =
+    projectId === '0'
+      ? `delete from tb_cowork_task_order where taskId='${id}'`
+      : `if not exists(select 1 from tb_cowork_task_order where taskId='${id}')
       insert into tb_cowork_task_order (taskId,taskOrder) values ('${id}',@order)
     `
   const editProject = projectId
@@ -245,16 +230,18 @@ router.put('/:id', (req, res, next) => {
   end
   `
     : ''
-  const changeAmount = amount !== undefined && progress !== null
-    ? `update tb_cowork_task set amount = ${amount} where id='${id}'
+  const changeAmount =
+    amount !== undefined && progress !== null
+      ? `update tb_cowork_task set amount = ${amount} where id='${id}'
       ${changeUpProgress(id)}
     `
-    : ''
-  const changeProgress = progress !== undefined && progress !== null
-    ? `update tb_cowork_task set progress = ${progress} where id='${id}'
+      : ''
+  const changeProgress =
+    progress !== undefined && progress !== null
+      ? `update tb_cowork_task set progress = ${progress} where id='${id}'
       ${changeUpProgress(id)}
     `
-    : ''
+      : ''
 
   db
     .then(pool =>
@@ -268,16 +255,10 @@ router.put('/:id', (req, res, next) => {
             ? `select @order=min(myOrder)-1 from tb_cowork_task_myOrder where userId='${assignee}'`
             : ''}
           ${assignTask}
-          ${projectId
-            ? `select @order=max(taskOrder)+1 from tb_cowork_task_order`
-            : ''}
+          ${projectId ? `select @order=max(taskOrder)+1 from tb_cowork_task_order` : ''}
           ${editProject}
-          ${title !== undefined
-            ? `update tb_cowork_task set title=@title where id='${id}'`
-            : ''}
-          ${detail !== undefined
-            ? `update tb_cowork_task set detail=@detail where id='${id}'`
-            : ''}
+          ${title !== undefined ? `update tb_cowork_task set title=@title where id='${id}'` : ''}
+          ${detail !== undefined ? `update tb_cowork_task set detail=@detail where id='${id}'` : ''}
           ${dueAt === undefined
             ? ''
             : dueAt === null
@@ -417,9 +398,7 @@ router.post('/search', (req, res, next) => {
   // const now = moment().format()
 
   const date_in_range = () => {
-    const from = beginAt
-      ? `a.beginAt >= '${beginAt}' or a.completedAt >= '${beginAt}'`
-      : '1=1'
+    const from = beginAt ? `a.beginAt >= '${beginAt}' or a.completedAt >= '${beginAt}'` : '1=1'
     const to = completedAt
       ? `a.beginAt <= '${completedAt}' or a.completedAt <= '${completedAt}'`
       : '1=1'
@@ -436,13 +415,9 @@ router.post('/search', (req, res, next) => {
       inner join tb_cowork_task_order b on a.id = b.taskId
       left join tb_cowork_task c on a.rootTaskId = c.id
       left join tb_cowork_task d on a.id = d.upTaskId
-      where ${stringify(assignee)
-        ? `a.assignee in (${stringify(assignee)})`
-        : '1=1'}
+      where ${stringify(assignee) ? `a.assignee in (${stringify(assignee)})` : '1=1'}
       and ${stringify(projectId)
-        ? `(a.projectId in (${stringify(
-            projectId
-          )}) or c.projectId in (${stringify(projectId)}))`
+        ? `(a.projectId in (${stringify(projectId)}) or c.projectId in (${stringify(projectId)}))`
         : `((a.projectId <> '' and a.projectId is not null) or
             (c.projectId <> '' and c.projectId is not null))`}
       and ${date_in_range()}

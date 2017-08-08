@@ -4,13 +4,13 @@ import project from './project'
 const byId = (state = {}, action) => {
   const { payload } = action
   switch (action.type) {
-    case 'ADD_PROJECT_LOADING':
-    case 'EDIT_PROJECT_LOADING':
+    case 'ADD_PROJECT_SUCCESS':
+    case 'EDIT_PROJECT_SUCCESS':
     case 'ADD_USER_TO_PROJECT':
     case 'REMOVE_USER_FROM_PROJECT':
       return {
         ...state,
-        [payload.id]: project(state[payload.id], action)
+        [payload.id]: project(state[payload.id], action),
       }
     case 'UPDATE_ALL_SUCCESS':
       const nextState = {}
@@ -28,8 +28,11 @@ const byId = (state = {}, action) => {
 const allIds = (state = [], action) => {
   const { payload } = action
   switch (action.type) {
-    case 'ADD_PROJECT_LOADING':
-      return [...state, payload.id]
+    case 'ADD_PROJECT_SUCCESS':
+      if (payload.output.message === '') {
+        return [...state, payload.id]
+      }
+      return state
     case 'DELETE_PROJECT_LOADING':
       return state.filter(id => id !== payload.id)
     case 'UPDATE_ALL_SUCCESS':
@@ -55,7 +58,7 @@ const fetched = (state = false, action) => {
 const projects = combineReducers({
   byId,
   allIds,
-  fetched
+  fetched,
 })
 
 export default projects

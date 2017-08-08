@@ -17,13 +17,13 @@ class ProjectEditor extends React.Component {
 
   addUser = id => {
     this.setState({
-      group: [...this.state.group, id]
+      group: [...this.state.group, id],
     })
   }
 
   removeUser = id => {
     this.setState({
-      group: this.state.group.filter(userId => userId !== id)
+      group: this.state.group.filter(userId => userId !== id),
     })
   }
 
@@ -42,14 +42,23 @@ class ProjectEditor extends React.Component {
 
     if (isEmpty(project)) {
       //说明是添加的新项目
-      addProject(title, this.state.group)
-      closeWindow()
+      addProject(title, this.state.group).then(res => {
+        if (res.value.output.message === '此项目名已存在。') {
+          this.setState({ alertText: '此项目名已存在。' })
+        } else {
+          closeWindow()
+        }
+      })
       return
     }
 
-    editProject(this.titleDOM.value, this.state.group, project.id)
-    closeWindow()
-    return
+    editProject(this.titleDOM.value, this.state.group, project.id).then(res => {
+      if (res.value.output.message === '此项目名已存在。') {
+        this.setState({ alertText: '此项目名已存在。' })
+      } else {
+        closeWindow()
+      }
+    })
   }
 
   handleCancelClick = () => {
@@ -75,7 +84,9 @@ class ProjectEditor extends React.Component {
           defaultValue={project.title}
           ref={node => (this.titleDOM = node)}
         />
-        <div className="h2 red" data-component="warning">{alertText}</div>
+        <div className="h2 red" data-component="warning">
+          {alertText}
+        </div>
         <div className="flex flex-wrap mb2" data-component="users">
           <span className="ph3 pv2 black-50 border-box">用户列表</span>
           <span
@@ -86,17 +97,13 @@ class ProjectEditor extends React.Component {
           </span>
         </div>
         {!userListHidden &&
-          <ul
-            className="w-100 ph3 pv2 flex flex-wrap"
-            data-component="userList"
-          >
+          <ul className="w-100 ph3 pv2 flex flex-wrap" data-component="userList">
             {!userListHidden &&
               restOfUsers.map(user =>
-                <li
-                  key={user.id}
-                  className="pv1 ph2 ma1 ba br2 b--black-30 pointer"
-                >
-                  <span onClick={() => this.addUser(user.id)}>{user.name}</span>
+                <li key={user.id} className="pv1 ph2 ma1 ba br2 b--black-30 pointer">
+                  <span onClick={() => this.addUser(user.id)}>
+                    {user.name}
+                  </span>
                 </li>
               )}
           </ul>}
@@ -107,11 +114,10 @@ class ProjectEditor extends React.Component {
           data-component="userList"
         >
           {groupUsers.map(user =>
-            <li
-              key={user.id}
-              className="pv1 ph2 ma1 ba br2 b--cyan cyan bg-washed-cyan pointer"
-            >
-              <span onClick={() => this.removeUser(user.id)}>{user.name}</span>
+            <li key={user.id} className="pv1 ph2 ma1 ba br2 b--cyan cyan bg-washed-cyan pointer">
+              <span onClick={() => this.removeUser(user.id)}>
+                {user.name}
+              </span>
             </li>
           )}
         </ul>
@@ -135,7 +141,7 @@ class ProjectEditor extends React.Component {
 ProjectEditor.PropTypes = {
   project: PropTypes.object.isRequired,
   hidden: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => {
@@ -143,7 +149,7 @@ const mapStateToProps = state => {
   const allUsers = getAllUsers(state)
   // const restOfUsers = allUsers.filter(user => group.indexOf(user.id) === -1)
   return {
-    allUsers
+    allUsers,
   }
 }
 

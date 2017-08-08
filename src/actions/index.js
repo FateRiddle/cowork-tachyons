@@ -413,10 +413,7 @@ export const updateState = () => ({
   // update projects and users
   type: 'UPDATE_ALL',
   payload: {
-    promise: Promise.all([
-      api.Projects.all(),
-      api.Users.all(),
-    ]).then(([projects, users]) => {
+    promise: Promise.all([api.Projects.all(), api.Users.all()]).then(([projects, users]) => {
       //把所有null值变成''
       const newProjects = projects.map(project => nullToEmptyString(project))
       const newUsers = users.map(user => nullToEmptyString(user))
@@ -482,9 +479,7 @@ export const searchTasks = (search = {}) => dispatch => {
   dispatch({
     type: 'SEARCH_TASKS',
     payload: {
-      promise: api.Tasks
-        .bySearch(search)
-        .then(res => formatDate(res.recordset)),
+      promise: api.Tasks.bySearch(search).then(res => formatDate(res.recordset)),
     },
   })
   //how do I dispatch searchTasks after api call? use .then()
