@@ -10,15 +10,14 @@ import classnames from 'classnames'
 import { getUserById, getProjectByTask } from 'reducers'
 import moment from 'moment'
 
-const DragHandle = SortableHandle(
-  ({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
-    <span
-      className="f4 w15 tc pointer b black-60 hover-thin-blue"
-      onMouseEnter={onMouseEnterDrag}
-      onMouseLeave={onMouseLeaveDrag}
-    >
-      {show ? '::' : ''}
-    </span>
+const DragHandle = SortableHandle(({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
+  <span
+    className="f4 w15 tc grab b black-60 hover-thin-blue"
+    onMouseEnter={onMouseEnterDrag}
+    onMouseLeave={onMouseLeaveDrag}
+  >
+    {show ? '::' : ''}
+  </span>
 )
 
 class TaskItem extends React.Component {
@@ -33,15 +32,7 @@ class TaskItem extends React.Component {
     }
   }
   render() {
-    const {
-      project,
-      task,
-      style,
-      currentTask,
-      me,
-      match,
-      assigneeName,
-    } = this.props
+    const { project, task, style, currentTask, me, match, assigneeName } = this.props
     const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
     //due warnings
@@ -114,11 +105,7 @@ class TaskItem extends React.Component {
   ////////////////权限
   canEdit = () => {
     const { match, me, task } = this.props
-    return (
-      task.completed === 'active' &&
-      match.params.id !== 'search' &&
-      this.canIEdit()
-    )
+    return task.completed === 'active' && match.params.id !== 'search' && this.canIEdit()
   }
 
   canIEdit = () => {
@@ -151,11 +138,7 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
-    const {
-      task: { progress, hasSubtask },
-      toggleTask,
-      changeMainWarning,
-    } = this.props
+    const { task: { progress, hasSubtask }, toggleTask, changeMainWarning } = this.props
     if (!hasSubtask || (hasSubtask && progress === 100)) {
       toggleTask(id)
     } else {
@@ -282,9 +265,7 @@ const mapStateToProps = (state, { match, task }) => {
   }
 }
 
-const ConnectedTaskItem = withRouter(
-  connect(mapStateToProps, actions)(TaskItem)
-)
+const ConnectedTaskItem = withRouter(connect(mapStateToProps, actions)(TaskItem))
 
 export default ConnectedTaskItem
 

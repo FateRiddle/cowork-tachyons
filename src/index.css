@@ -112,7 +112,8 @@ ul {
   box-shadow: 0 0 4px 2px rgba(0, 0, 0, .2);
 }*/
 
-.hover-b:focus, .hover-b:hover {
+.hover-b:focus,
+.hover-b:hover {
   border: 1px solid rgba(0, 0, 0, .3);
 }
 
@@ -132,6 +133,11 @@ ul {
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.grab {
+  cursor: grab;
+  cursor: -webkit-grab;
 }
 
 /*.deepen {
