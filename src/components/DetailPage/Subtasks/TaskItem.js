@@ -125,11 +125,15 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
-    const { task: { progress, hasSubtask }, toggleTask, changeMainWarning } = this.props
-    if (!hasSubtask || (hasSubtask && progress === 100)) {
-      toggleTask(id)
+    const { task: { progress, hasSubtask }, toggleTask, changeMainWarning, canIEdit } = this.props
+    if (canIEdit) {
+      if (!hasSubtask || (hasSubtask && progress === 100)) {
+        toggleTask(id)
+      } else {
+        changeMainWarning('还有子任务未完成')
+      }
     } else {
-      changeMainWarning('还有子任务未完成。')
+      changeMainWarning('不能修改别人的任务')
     }
   }
 
