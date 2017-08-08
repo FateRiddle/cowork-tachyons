@@ -12,10 +12,12 @@ class Stats extends React.Component {
         {creator &&
           task.beginAt &&
           <div>
-            {creator.name}创建。开始于{task.beginAt.format().substring(0, 10)}。
+            {creator.name}创建。开始于{task.beginAt.locale('zh-cn').fromNow()}。
           </div>}
         {task.completedAt &&
-          <div>完成于{task.completedAt.format().substring(0, 10)}。</div>}
+          <div>
+            完成于{task.completedAt.locale('zh-cn').fromNow()}。
+          </div>}
       </div>
     )
   }
@@ -27,7 +29,7 @@ const mapStateToProps = (state, { match }) => {
   const creator = getUserById(state, task.createdBy) || {}
   return {
     task,
-    creator
+    creator,
   }
 }
 

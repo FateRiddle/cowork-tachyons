@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import moment from 'moment'
+import 'moment/locale/zh-cn'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { editTaskDue } from 'actions'
@@ -39,7 +40,7 @@ class DueDateTab extends Component {
 const mapStateToProps = (state, { match }) => {
   const currentTask = match.params.taskId
   return {
-    task: getTaskById(state, currentTask)
+    task: getTaskById(state, currentTask),
   }
 }
 

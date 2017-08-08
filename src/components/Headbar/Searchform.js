@@ -19,7 +19,7 @@ class Searchform extends React.Component {
     completed: 'active',
     beginAt: null,
     completedAt: null,
-    isDateOpen: false //DatePicker 的日历没有被看做popup的一部分，点击日期会trigger onClickOutside,所以加了这个state来修正
+    isDateOpen: false, //DatePicker 的日历没有被看做popup的一部分，点击日期会trigger onClickOutside,所以加了这个state来修正
   }
 
   onClickOutside = () => {
@@ -38,7 +38,7 @@ class Searchform extends React.Component {
       projectList: [],
       completed: 'active',
       beginAt: null,
-      completedAt: null
+      completedAt: null,
     })
   }
 
@@ -87,20 +87,14 @@ class Searchform extends React.Component {
 
   onSubmit = () => {
     this.toggleList()
-    const {
-      assigneeList,
-      projectList,
-      completed,
-      beginAt,
-      completedAt
-    } = this.state
+    const { assigneeList, projectList, completed, beginAt, completedAt } = this.state
     const { changeSearch, changeCompleted, searchTasks, history } = this.props
     const newSearch = {
       assignee: assigneeList,
       projectId: projectList,
       completed,
       beginAt: beginAt ? beginAt.format() : null,
-      completedAt: completedAt ? completedAt.format() : null
+      completedAt: completedAt ? completedAt.format() : null,
     }
     changeSearch(newSearch) //this is for persist state to localStorage so refresh browser will load the same query
     changeCompleted(completed)
@@ -117,7 +111,7 @@ class Searchform extends React.Component {
       assigneeList,
       projectList,
       beginAt,
-      completedAt
+      completedAt,
     } = this.state
     const { users, projects } = this.props
     return (
@@ -136,30 +130,21 @@ class Searchform extends React.Component {
               >
                 <section data-component="selection">
                   <div className="flex flex-wrap" data-component="assignee">
-                    <span className="pv2 w3 tr black-50 border-box pr3">
-                      分配给
-                    </span>
+                    <span className="pv2 w3 tr black-50 border-box pr3">分配给</span>
                     <span
                       className="ph3 ba pv2 br2 b--black-30 pointer black-50 dim"
                       onClick={this.showAssigneeList}
                     >
                       +
                     </span>
-                    <ul
-                      className="w-100 ph3 pv2 flex flex-wrap"
-                      data-component="userList"
-                    >
+                    <ul className="w-100 ph3 pv2 flex flex-wrap" data-component="userList">
                       {!assigneeHidden &&
                         users.map(user =>
                           <li
                             key={user.id}
-                            className={classnames(
-                              'pv1 ph2 ma1 ba br2 b--black-30 pointer',
-                              {
-                                'cyan b--cyan bg-washed-cyan':
-                                  assigneeList.indexOf(user.id) > -1
-                              }
-                            )}
+                            className={classnames('pv1 ph2 ma1 ba br2 b--black-30 pointer', {
+                              'cyan b--cyan bg-washed-cyan': assigneeList.indexOf(user.id) > -1,
+                            })}
                             onClick={() => this.toggleAssignee(user.id)}
                           >
                             {user.name}
@@ -168,30 +153,21 @@ class Searchform extends React.Component {
                     </ul>
                   </div>
                   <div className="flex flex-wrap" data-component="project">
-                    <span className="pv2 w3 tr black-50 border-box pr3">
-                      项目
-                    </span>
+                    <span className="pv2 w3 tr black-50 border-box pr3">项目</span>
                     <span
                       className="ph3 ba pv2 br2 b--black-30 pointer black-50 dim"
                       onClick={this.showProjectList}
                     >
                       +
                     </span>
-                    <ul
-                      className="w-100 ph3 pv2 flex flex-wrap"
-                      data-component="projectList"
-                    >
+                    <ul className="w-100 ph3 pv2 flex flex-wrap" data-component="projectList">
                       {!projectHidden &&
                         projects.map(project =>
                           <li
                             key={project.id}
-                            className={classnames(
-                              'pv1 ph2 ma1 ba br2 b--black-30 pointer',
-                              {
-                                'cyan b--cyan bg-washed-cyan':
-                                  projectList.indexOf(project.id) > -1
-                              }
-                            )}
+                            className={classnames('pv1 ph2 ma1 ba br2 b--black-30 pointer', {
+                              'cyan b--cyan bg-washed-cyan': projectList.indexOf(project.id) > -1,
+                            })}
                             onClick={() => this.toggleProject(project.id)}
                           >
                             {project.title}
@@ -200,23 +176,17 @@ class Searchform extends React.Component {
                     </ul>
                   </div>
                   <div className="flex mb3" data-component="completed">
-                    <span className="pv2 w3 tr black-50 border-box pr3">
-                      完成
-                    </span>
+                    <span className="pv2 w3 tr black-50 border-box pr3">完成</span>
                     {[
                       { name: '未完成', value: 'active' },
                       { name: '完成', value: 'completed' },
-                      { name: '全部', value: 'all' }
+                      { name: '全部', value: 'all' },
                     ].map((item, index) =>
                       <div
                         key={index}
-                        className={classnames(
-                          'ba b--black-30 black-80 w-25 pv1 tc pointer',
-                          {
-                            'b--cyan bg-washed-cyan cyan':
-                              completed === item.value
-                          }
-                        )}
+                        className={classnames('ba b--black-30 black-80 w-25 pv1 tc pointer', {
+                          'b--cyan bg-washed-cyan cyan': completed === item.value,
+                        })}
                         onClick={() => this.setState({ completed: item.value })}
                       >
                         {item.name}
@@ -224,9 +194,7 @@ class Searchform extends React.Component {
                     )}
                   </div>
                   <div className="flex mb3" data-component="date:from-to">
-                    <span className="pv2 w3 flex-none tr black-50 border-box pr3">
-                      从
-                    </span>
+                    <span className="pv2 w3 flex-none tr black-50 border-box pr3">从</span>
                     <DatePicker
                       className="pa2 ba br2 w45 b--black-30 pointer outline-0 black-50 hover-thin-blue"
                       selected={beginAt}
@@ -238,9 +206,7 @@ class Searchform extends React.Component {
                       onFocus={this.onDateOpen}
                       onBlur={this.onDateClose}
                     />
-                    <span className="pv2 tr black-50 border-box ph3">
-                      到
-                    </span>
+                    <span className="pv2 tr black-50 border-box ph3">到</span>
                     <DatePicker
                       className="pa2 ba br2 w45 b--black-30 pointer outline-0 black-50 hover-thin-blue"
                       selected={completedAt}
@@ -300,24 +266,21 @@ class Searchform extends React.Component {
               </ul>
             </div> */}
                 </section>
-                <section
-                  className="flex justify-end mr3 mt4"
-                  data-component="buttons"
-                >
+                <section className="flex justify-end mr3 mt4" data-component="buttons">
                   <div
-                    className="ph3 pv2 dim tracked f5 br2 ba b--cyan cyan mr3"
+                    className="ph3 pv2 dim tracked f5 br2 ba b--cyan cyan pointer mr3"
                     onClick={this.toggleList}
                   >
                     取消
                   </div>
                   <div
-                    className="ph3 pv2 dim tracked f5 br2 ba b--cyan cyan mr3"
+                    className="ph3 pv2 dim tracked f5 br2 ba b--cyan cyan pointer mr3"
                     onClick={this.clear}
                   >
                     清除
                   </div>
                   <div
-                    className="ph3 pv2 dim tracked f5 br2 b--cyan bg-cyan white"
+                    className="ph3 pv2 dim tracked f5 br2 b--cyan bg-cyan white pointer"
                     onClick={this.onSubmit}
                   >
                     搜索
@@ -333,14 +296,14 @@ class Searchform extends React.Component {
 
 const mapStateToProps = state => ({
   users: getAllUsers(state),
-  projects: getAllProjects(state)
+  projects: getAllProjects(state),
 })
 
 Searchform = withRouter(
   connect(mapStateToProps, {
     searchTasks,
     changeCompleted,
-    changeSearch
+    changeSearch,
   })(Searchform)
 )
 

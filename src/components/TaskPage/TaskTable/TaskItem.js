@@ -104,7 +104,7 @@ class TaskItem extends React.Component {
 
   ////////////////权限
   canEdit = () => {
-    const { match, me, task } = this.props
+    const { match, task } = this.props
     return task.completed === 'active' && match.params.id !== 'search' && this.canIEdit()
   }
 

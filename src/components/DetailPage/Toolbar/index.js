@@ -15,10 +15,7 @@ class Toolbar extends React.Component {
     const { addSubtask, havingSubtask, match, canEdit } = this.props
     const taskId = match.params.taskId || ''
     return (
-      <div
-        className="relative w-100 flex items-center h3 bb b--black-30"
-        data-component="Toolbar"
-      >
+      <div className="relative w-100 flex items-center h3 bb b--black-30" data-component="Toolbar">
         <AssigneeTab disabled={!canEdit} />
         <DueDateTab disabled={!canEdit} />
         {/* <Icon
@@ -27,9 +24,7 @@ class Toolbar extends React.Component {
           size="large"
         /> */}
         <div
-          className={`ml2 ph2 ${canEdit
-            ? 'pointer hover-thin-blue'
-            : ''} black-50`}
+          className={`ml2 ph2 ${canEdit ? 'pointer hover-thin-blue' : ''} black-50`}
           onClick={_ => {
             if (canEdit) {
               addSubtask(taskId)
