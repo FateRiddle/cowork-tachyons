@@ -7,6 +7,7 @@ const project = (state, action) => {
           id: payload.id,
           title: payload.title,
           group: payload.group,
+          creator: payload.creator,
         }
       }
       return state

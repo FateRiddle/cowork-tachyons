@@ -33,19 +33,20 @@ const formatDate = tasks => {
 }
 
 ////////////////project action:
-export const addProject = (title = '', group = []) => {
+export const addProject = (title = '', group = []) => (dispatch, getState) => {
   const data = {
     id: v4(),
     title,
     group,
+    creator: getState().me.id,
   }
-  return {
+  return dispatch({
     type: 'ADD_PROJECT',
     payload: {
       promise: api.Projects.add(data),
       data,
     },
-  }
+  })
 }
 
 export const deleteProject = id => ({
@@ -475,16 +476,12 @@ export const updateRootTask = id => ({
   },
 })
 
-export const searchTasks = (search = {}) => dispatch => {
-  dispatch({
-    type: 'SEARCH_TASKS',
-    payload: {
-      promise: api.Tasks.bySearch(search).then(res => formatDate(res.recordset)),
-    },
-  })
-  //how do I dispatch searchTasks after api call? use .then()
-  // dispatch(searchTasks(search))
-}
+export const searchTasks = (search = {}) => ({
+  type: 'SEARCH_TASKS',
+  payload: {
+    promise: api.Tasks.bySearch(search).then(res => formatDate(res.recordset)),
+  },
+})
 
 /////////////////// user & error handle
 

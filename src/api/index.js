@@ -14,7 +14,7 @@ const setToken = _token => {
 
 //setting up request
 const request = axios.create({
-  baseURL: API_ROOT
+  baseURL: API_ROOT,
 })
 
 //methods
@@ -26,21 +26,20 @@ const ax = {
   del: url => request.delete(url).then(responseOutput),
   get: url => request.get(url).then(responseBody),
   put: (url, body) => request.put(url, body).then(responseOutput), //put is for update
-  post: (url, body) => request.post(url, body).then(responseOutput) //post is for create
+  post: (url, body) => request.post(url, body).then(responseOutput), //post is for create
 }
 
 const Auth = {
-  login: (name, password) =>
-    ax.post('/auth/login', { user: { name, password } }),
+  login: (name, password) => ax.post('/auth/login', { user: { name, password } }),
   signup: (name, password, password2, slogan) =>
-    ax.post('/auth', { user: { name, password, password2 }, slogan })
+    ax.post('/auth', { user: { name, password, password2 }, slogan }),
 }
 
 const Projects = {
   all: () => ax.get('/projects'),
-  add: ({ id, title, group }) => ax.post('/projects', { id, title, group }),
+  add: ({ id, title, group, creator }) => ax.post('/projects', { id, title, group, creator }),
   update: ({ id, title, group }) => ax.put('/projects', { id, title, group }),
-  del: id => ax.put(`/projects/${id}`, { toDelete: true })
+  del: id => ax.put(`/projects/${id}`, { toDelete: true }),
 }
 
 const Tasks = {
@@ -60,21 +59,14 @@ const Tasks = {
     ax.post('/tasks', { id, createdBy, projectId, assignee, insertAt }),
   addSubtask: ({ id, createdBy, upTaskId, rootTaskId, upTaskTitle }) =>
     ax.post(`/tasks`, { id, createdBy, upTaskId, rootTaskId, upTaskTitle }),
-  insertSubtask: ({
-    id,
-    createdBy,
-    upTaskId,
-    insertAt,
-    rootTaskId,
-    upTaskTitle
-  }) =>
+  insertSubtask: ({ id, createdBy, upTaskId, insertAt, rootTaskId, upTaskTitle }) =>
     ax.post(`/tasks`, {
       id,
       createdBy,
       upTaskId,
       insertAt,
       rootTaskId,
-      upTaskTitle
+      upTaskTitle,
     }),
   //delete
   del: ({ id }) => ax.del(`/tasks/${id}`),
@@ -84,8 +76,7 @@ const Tasks = {
   editDetail: ({ id, detail }) => ax.put(`/tasks/${id}`, { detail }),
   editProject: ({ id, projectId }) => ax.put(`/tasks/${id}`, { projectId }),
   editAssignee: ({ id, assignee }) => ax.put(`/tasks/${id}`, { assignee }),
-  editDue: ({ id, dueAt }) =>
-    ax.put(`/tasks/${id}`, { dueAt: dueAt ? dueAt.format() : null }),
+  editDue: ({ id, dueAt }) => ax.put(`/tasks/${id}`, { dueAt: dueAt ? dueAt.format() : null }),
   editBeginAt: ({ id, beginAt }) =>
     ax.put(`/tasks/${id}`, { beginAt: beginAt ? beginAt.format() : null }),
   editProgress: ({ id, progress }) => ax.put(`/tasks/${id}`, { progress }),
@@ -94,14 +85,13 @@ const Tasks = {
   taskOrder: ({ id, before, targetId }) =>
     ax.put(`/tasks/order/${id}`, { before, type: 'task', targetId }),
   myOrder: ({ id, before, targetId }) =>
-    ax.put(`/tasks/order/${id}`, { before, type: 'my', targetId })
+    ax.put(`/tasks/order/${id}`, { before, type: 'my', targetId }),
 }
 
 const Users = {
   all: () => ax.get('/users'),
   editName: ({ name, id }) => ax.put(`/users/${id}`, { name }),
-  editPassword: ({ oldPass, newPass, id }) =>
-    ax.put(`/users/${id}`, { oldPass, newPass })
+  editPassword: ({ oldPass, newPass, id }) => ax.put(`/users/${id}`, { oldPass, newPass }),
   // current: () => ax.get('/user'),
   // save: (id,name) => ax.put('/user', { user: { id,name } }),
 }
@@ -112,7 +102,7 @@ export default {
   Projects,
   Tasks,
   Users,
-  setToken
+  setToken,
 }
 
 //

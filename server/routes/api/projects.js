@@ -45,7 +45,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  const { id, title, group } = req.body
+  const { id, title, group, creator } = req.body
   let groupValue = group
     .map(item => {
       return `('${id}','${item}')`
@@ -64,8 +64,8 @@ router.post('/', (req, res, next) => {
         end
         else
         begin
-          insert into tb_cowork_project (id,title,deleted)
-          values('${id}',@title,0)
+          insert into tb_cowork_project (id,title,creator,deleted)
+          values('${id}',@title,'${creator}',0)
           insert into tb_cowork_project_group (projectId,userId)
           values ${groupValue}
         end
@@ -79,6 +79,7 @@ router.post('/', (req, res, next) => {
         id,
         title,
         group,
+        creator,
       })
       res.send(result)
     })

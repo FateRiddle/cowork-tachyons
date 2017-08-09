@@ -13,7 +13,7 @@ class Sidebar extends React.Component {
   state = {
     popHidden: true,
     editorHidden: true,
-    projectId: '' //which project to pass into ProjectEditor/DeletePop
+    projectId: '', //which project to pass into ProjectEditor/DeletePop
   }
 
   handleAddProjectClick = () => {
@@ -46,23 +46,14 @@ class Sidebar extends React.Component {
 
   render() {
     const { editorHidden, popHidden, projectId } = this.state
-    const {
-      projects,
-      toggleSidebar,
-      sidebarHidden,
-      fetched,
-      match
-    } = this.props
+    const { projects, toggleSidebar, sidebarHidden, fetched, match } = this.props
     const project = projects.find(project => project.id === projectId) || {}
     return (
       <div
         data-component="Sidebar"
-        className={classnames(
-          'bg-deep-blue vh-100 w5 absolute relative-ns z-1 pt3',
-          {
-            dn: sidebarHidden
-          }
-        )}
+        className={classnames('bg-deep-blue vh-100 w5 absolute relative-ns z-1 pt3', {
+          dn: sidebarHidden,
+        })}
       >
         <div
           className="absolute right-0 top-0 pt2 pr3 f4 white-60 pointer dim"
@@ -82,10 +73,7 @@ class Sidebar extends React.Component {
           hidden={popHidden}
           toggle={this.toggleDeletePop}
         />
-        <div
-          className="pl3 f3 tracked-mega h2 mr2 white-60"
-          data-component="+Project"
-        >
+        <div className="pl3 f3 tracked-mega h2 mr2 white-60" data-component="+Project">
           项目
           <Icon
             className="ph2 light-blue dim pointer"
@@ -99,7 +87,7 @@ class Sidebar extends React.Component {
               <li
                 key={p.id}
                 className={`pl3 flex hover-bg-thin-blue deep-blue hover-light-gray ${p.id ===
-                  match.params.id
+                match.params.id
                   ? 'bg-deepest-blue'
                   : ''}`}
               >
@@ -118,14 +106,8 @@ class Sidebar extends React.Component {
                   // pointing="left"
                 >
                   <Dropdown.Menu>
-                    <Dropdown.Item
-                      text="修改"
-                      onClick={() => this.modifyProject(p.id)}
-                    />
-                    <Dropdown.Item
-                      text="删除"
-                      onClick={() => this.onDeleteClick(p.id)}
-                    />
+                    <Dropdown.Item text="修改" onClick={() => this.modifyProject(p.id)} />
+                    <Dropdown.Item text="删除" onClick={() => this.onDeleteClick(p.id)} />
                   </Dropdown.Menu>
                 </Dropdown>
               </li>
@@ -137,15 +119,15 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-  projects: PropTypes.array.isRequired
+  projects: PropTypes.array.isRequired,
 }
 
 const mapStateToProps = state => ({
   projects: getAllProjects(state).filter(
-    p => p.group.indexOf(state.me.id) > -1
+    p => p.group.indexOf(state.me.id) > -1 || p.creator === state.me.id
   ),
   fetched: state.projects.fetched,
-  sidebarHidden: state.visual.sidebarHidden
+  sidebarHidden: state.visual.sidebarHidden,
 })
 
 Sidebar = connect(mapStateToProps, actions)(Sidebar)
