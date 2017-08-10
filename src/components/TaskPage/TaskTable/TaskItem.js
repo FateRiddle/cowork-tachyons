@@ -72,7 +72,7 @@ class TaskItem extends React.Component {
             task.upTaskTitle &&
             <span data-component="uptask" className="pl0 pl2-ns black-50">
               {`< `}
-              <span className="f6 dn flex-ns">
+              <span className="f6 dn inline-flex-ns">
                 {task.upTaskTitle.length > 15
                   ? `${task.upTaskTitle.substring(0, 15)}...`
                   : task.upTaskTitle}
