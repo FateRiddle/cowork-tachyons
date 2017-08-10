@@ -222,8 +222,10 @@ class TaskItem extends React.Component {
               history.push(`/${match.params.id}`)
             }
             this.changeFocus(taskIndex, 'up')
-          } else {
+          } else if (this.canIEdit()) {
             changeMainWarning('此状态下任务不能编辑')
+          } else {
+            changeMainWarning('不能修改别人的任务')
           }
         }
         break
@@ -233,8 +235,10 @@ class TaskItem extends React.Component {
           const currentProject = match.params.id
           insertTask(currentProject, id)
           setTimeout(() => this.changeFocus(taskIndex, 'down'), 0)
+        } else if (this.canIEdit()) {
+          changeMainWarning('此状态下任务不能编辑')
         } else {
-          changeMainWarning('此状态下不能插入任务')
+          changeMainWarning('不能修改别人的任务')
         }
         break
       case 'ArrowUp':

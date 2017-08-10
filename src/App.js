@@ -29,7 +29,7 @@ let Project = ({ match, allProjectIds, me }) => {
 
 Project = connect(({ projects, me }) => ({
   allProjectIds: projects.allIds,
-  me
+  me,
 }))(Project)
 
 class App extends React.Component {
@@ -46,22 +46,16 @@ class App extends React.Component {
     const { me, fetched, warning } = this.props
     return (
       <div className="flex">
-        <Route
-          path="/:id?/:taskId?"
-          children={props => <Sidebar {...props} />}
-        />
+        <Route path="/:id?/:taskId?" children={props => <Sidebar {...props} />} />
         <div className="flex flex-column w-100 vh-100">
-          <Route
-            path="/:id?/:taskId?"
-            children={props => <Headbar {...props} />}
-          />
+          <Route path="/:id?/:taskId?" children={props => <Headbar {...props} />} />
           {fetched &&
             <Switch>
               <Route path="/:id" component={Project} />
               <Redirect to={`/${me.id}`} />
             </Switch>}
           {warning &&
-            <Warning className="absolute bottom-0 left-0 ma3 pa3 white b bg-light-red w5 h3 flex-center z-2" />}
+            <Warning className="absolute bottom-0 left-0 ma3 pa3 white b bg-light-red w5 h3 flex-center z-5" />}
         </div>
       </div>
     )
@@ -71,7 +65,7 @@ class App extends React.Component {
 const mapStateToProps = ({ me, projects, warning }) => ({
   fetched: projects.fetched,
   me,
-  warning: warning.main
+  warning: warning.main,
 })
 
 App = withRouter(connect(mapStateToProps, { updateState })(App))
