@@ -22,7 +22,7 @@ class UserSettings extends React.Component {
       <div data-component="User-wrapper" className="w5 flex justify-end pr3 black-60">
         <Dropdown
           data-component="User"
-          className="tracked pv3 pl5 pr3"
+          className="tracked pv3 pl4 pl5-ns pr3"
           text={me.name}
           inline
           icon={null}

@@ -9,13 +9,13 @@ class ProjectReport extends React.Component {
     // console.log(project, tasks, progress, amount, match.params)
     return (
       <div
-        className="ml0 ml3-ns h-25 h-50-ns w-100 w-30-ns pa3 bg-white shadow-1"
+        className="ml0 ml3-ns h-25 h-50-ns w-100 w-30-ns pa2 pa3-ns bg-white shadow-1"
         data-component="project-report"
       >
-        <h2 className="black-50">
+        <h3 className="pa0 pa3-ns black-50">
           {project.title}
-        </h2>
-        <div className="w-100 flex pa3">
+        </h3>
+        <div className="w-100 flex pa1 pa3-ns">
           <span className="w3 h2">进度：</span>
           <div className="relative h2 w-100 bg-light-gray">
             <div
@@ -27,7 +27,7 @@ class ProjectReport extends React.Component {
           </div>
         </div>
 
-        <div className="w-100 pa3">
+        <div className="w-100 pa1 pa3-ns">
           <span className="w3 h2">工作量：</span>
           {amount} 人天
         </div>

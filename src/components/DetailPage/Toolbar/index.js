@@ -25,7 +25,7 @@ class Toolbar extends React.Component {
           size="large"
         /> */}
         <div
-          className={`ml2 ph2 ${canEdit ? 'pointer hover-thin-blue' : ''} black-50`}
+          className={`ml2-ns ph2 ${canEdit ? 'pointer hover-thin-blue' : ''} black-50`}
           onClick={_ => {
             if (canEdit) {
               addSubtask(taskId)

@@ -25,7 +25,7 @@ class AssigneeTab extends React.Component {
     return userArray.map(user => ({
       key: user.id,
       value: user.id,
-      text: user.name
+      text: user.name,
     }))
   }
 
@@ -38,7 +38,7 @@ class AssigneeTab extends React.Component {
     const { assignee, disabled } = this.props
     return (
       <Dropdown
-        className="pl3 pv2 w4 black-50 hover-thin-blue"
+        className="pl1 pl3-ns pv2 w3 w4-ns black-50 hover-thin-blue"
         value={assignee}
         options={this.getUserOptions()}
         onChange={this.onChange}
@@ -63,12 +63,10 @@ const mapStateToProps = (state, { match }) => {
     currentAssigned: getUserById(state, _assignee),
     me: state.me,
     currentTask,
-    assignee: _assignee
+    assignee: _assignee,
   }
 }
 
-const ConnectedAssigneeTab = withRouter(
-  connect(mapStateToProps, { editTaskAssignee })(AssigneeTab)
-)
+const ConnectedAssigneeTab = withRouter(connect(mapStateToProps, { editTaskAssignee })(AssigneeTab))
 
 export default ConnectedAssigneeTab

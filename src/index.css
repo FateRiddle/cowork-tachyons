@@ -64,11 +64,11 @@ ul {
   width: 1.5rem;
 }
 
-.w35 {
-  width: 6rem;
+.w3rem {
+  width: 3rem;
 }
 
-.w45 {
+.w10rem {
   width: 10rem;
 }
 
@@ -118,6 +118,10 @@ ul {
   }
   .min-w6-ns {
     min-width: 32rem;
+  }
+
+  .w10rem-ns {
+    width: 10rem;
   }
 }
 

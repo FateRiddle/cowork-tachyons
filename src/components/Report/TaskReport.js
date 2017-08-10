@@ -10,12 +10,10 @@ class TaskReport extends React.Component {
     const { allIds } = this.props
     return allIds.length > 0
       ? <ul
-          className="h-100 pt3 ph3 bg-white shadow-1 overflow-y-auto"
+          className="h-100 pt2 pt3-ns ph2 ph3-ns bg-white shadow-1 overflow-y-auto"
           data-component="TaskReport"
         >
-          {allIds.map((id, index) =>
-            <Task key={index} taskId={id} gray={false} />
-          )}
+          {allIds.map((id, index) => <Task key={index} taskId={id} gray={false} />)}
         </ul>
       : <div
           className="h-100 pt3 ph3 bg-white shadow-1 overflow-y-auto"
@@ -29,12 +27,10 @@ class TaskReport extends React.Component {
 const mapStateToProps = state => {
   const tasks = getAlltasks(state).filter(t => !t.upTaskId && t.projectId)
   return {
-    allIds: tasks.map(t => t.id)
+    allIds: tasks.map(t => t.id),
   }
 }
 
-const ConnectedTaskReport = withRouter(
-  connect(mapStateToProps, actions)(TaskReport)
-)
+const ConnectedTaskReport = withRouter(connect(mapStateToProps, actions)(TaskReport))
 
 export default ConnectedTaskReport

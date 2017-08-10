@@ -70,11 +70,11 @@ class TaskItem extends React.Component {
           />
           {task.upTaskId &&
             task.upTaskTitle &&
-            <span data-component="uptask" className="pl2 black-50">
+            <span data-component="uptask" className="pl0 pl2-ns black-50">
               {`< `}
-              <span className="f6">
-                {task.upTaskTitle.length > 12
-                  ? `${task.upTaskTitle.substring(0, 12)}...`
+              <span className="f6 dn flex-ns">
+                {task.upTaskTitle.length > 15
+                  ? `${task.upTaskTitle.substring(0, 15)}...`
                   : task.upTaskTitle}
               </span>
             </span>}
@@ -82,11 +82,11 @@ class TaskItem extends React.Component {
             currentProject === me.id &&
             project &&
             project.title &&
-            <span className="ph2 bg-black-10 br-pill f6 black-50">
-              {project.title}
+            <span className="ph1 ph2-ns bg-black-10 br-pill f6 black-50">
+              {project.title.length > 6 ? `${project.title.substring(0, 5)}...` : project.title}
             </span>}
           <span
-            className={classnames('ph2 f6', {
+            className={classnames('ph1 ph2-ns f6', {
               orange: closeToDue,
               'dark-red': isDue,
             })}
@@ -96,8 +96,8 @@ class TaskItem extends React.Component {
           {!isTitle &&
             currentProject !== me.id &&
             assigneeName &&
-            <div className="ph2 mr2 bg-black-10 br-pill f6 black-50">
-              {assigneeName}
+            <div className="ph1 ph2-ns mr1 mr2-ns bg-black-10 br-pill f6 black-50">
+              {assigneeName.length > 8 ? `${assigneeName.substring(0, 7)}...` : assigneeName}
             </div>}
         </span>
       </li>

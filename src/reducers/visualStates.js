@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-const sidebarHidden = (state = true, action) => {
+const sidebarHidden = (state = false, action) => {
   switch (action.type) {
     case 'TOGGLE_SIDEBAR':
       return !state

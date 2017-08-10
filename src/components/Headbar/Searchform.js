@@ -118,7 +118,7 @@ class Searchform extends React.Component {
       <main className="static relative-ns" data-component="Searchbar">
         <ClickOutside onClickOutside={this.onClickOutside}>
           <input
-            className="ba b--black-30 mh4 mh6-ns w4 w5-ns pa2 br-pill pointer outline-0 indent"
+            className="ba b--black-30 mh0 mh6-ns w4 w5-ns pa2 br-pill pointer outline-0 indent"
             placeholder="搜索"
             onClick={this.toggleList}
           />
@@ -129,7 +129,7 @@ class Searchform extends React.Component {
             >
               <section data-component="selection">
                 <div className="flex flex-wrap" data-component="assignee">
-                  <span className="pv2 w3 tr black-50 border-box pr3">分配给</span>
+                  <span className="pv2 w3-ns tr black-50 border-box tc pr3">分配给</span>
                   <span
                     className="ph3 ba pv2 br2 b--black-30 pointer black-50 dim"
                     onClick={this.showAssigneeList}
@@ -193,9 +193,9 @@ class Searchform extends React.Component {
                   )}
                 </div>
                 <div className="flex mb3" data-component="date:from-to">
-                  <span className="pv2 w3 flex-none tr black-50 border-box pr3">从</span>
+                  <span className="pv2 w3-ns flex-none tr black-50 border-box pr3">从</span>
                   <DatePicker
-                    className="pa2 ba br2 w45 b--black-30 pointer outline-0 black-50 hover-thin-blue"
+                    className="pa2 ba br2 w4 w10rem-ns b--black-30 pointer outline-0 black-50 hover-thin-blue"
                     selected={beginAt}
                     onChange={this.onBeginAtChange}
                     isClearable={true}
@@ -205,9 +205,9 @@ class Searchform extends React.Component {
                     onFocus={this.onDateOpen}
                     onBlur={this.onDateClose}
                   />
-                  <span className="pv2 tr black-50 border-box ph3">到</span>
+                  <span className="pv2 tr black-50 border-box ph2 ph3-ns">到</span>
                   <DatePicker
-                    className="pa2 ba br2 w45 b--black-30 pointer outline-0 black-50 hover-thin-blue"
+                    className="pa2 ba br2 w4 w10rem-ns b--black-30 pointer outline-0 black-50 hover-thin-blue"
                     selected={completedAt}
                     onChange={this.onCompletedAtChange}
                     isClearable={true}

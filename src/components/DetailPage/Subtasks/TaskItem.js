@@ -80,7 +80,7 @@ class TaskItem extends React.Component {
           </span>
           {assigneeName &&
             <div className="ph2 bg-black-10 br-pill f6 black-50">
-              {assigneeName}
+              {assigneeName.length > 8 ? `${assigneeName.substring(0, 7)}...` : assigneeName}
             </div>}
           <Link
             className={`pl2 hover-thin-blue f3 flex-center ${task.hasSubtask
