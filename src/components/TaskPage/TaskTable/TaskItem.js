@@ -152,7 +152,6 @@ class TaskItem extends React.Component {
 
   handleLineClick = () => {
     const { history, match, changeCurrentTask, task } = this.props
-    console.log(task)
     const { id: projectId } = match.params
     const taskId = task.id
     changeCurrentTask(taskId)

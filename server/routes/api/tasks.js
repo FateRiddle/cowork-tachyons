@@ -38,7 +38,7 @@ const changeUpProgress = id => `
 
 router.get('/', (req, res, next) => {
   const { userId = '', projectId = '', upTaskId = '', taskId, rootOf, projectIdAll } = req.query
-  console.log(req.query)
+  // console.log(req.query)
 
   const add_hasSubtask = `
     with tasktable as
@@ -89,7 +89,7 @@ router.get('/', (req, res, next) => {
     }
     return GET_other
   }
-  console.log(searchQuery())
+  // console.log(searchQuery())
   query(searchQuery(), res)
 })
 
@@ -192,7 +192,7 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   const { id } = req.params
   const { title, detail, projectId, assignee, dueAt, beginAt, toggle, amount, progress } = req.body
-  console.log(req.body)
+  // console.log(req.body)
   const now = moment().format()
 
   const change_assignee_order =
@@ -288,7 +288,7 @@ router.put('/:id', (req, res, next) => {
 router.put('/order/:id', (req, res, next) => {
   const { id } = req.params
   const { before, type, targetId } = req.body
-  console.log({ before, type, targetId })
+  // console.log({ before, type, targetId })
 
   let calc_order = ''
   let update_order = ''
@@ -364,7 +364,7 @@ router.put('/order/:id', (req, res, next) => {
 router.delete('/:id', (req, res) => {
   const { id } = req.params
   const { upId } = req.query
-  console.log('upid', req.query)
+  // console.log('upid', req.query)
   query(
     `
       begin tran
@@ -387,7 +387,7 @@ router.delete('/:id', (req, res) => {
 router.post('/search', (req, res, next) => {
   //it is actually a get request
   const { assignee, projectId, beginAt, completedAt } = req.body
-  console.log(req.body)
+  // console.log(req.body)
 
   const stringify = array => {
     if (!array || array.length === 0) {

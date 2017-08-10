@@ -91,7 +91,7 @@ router.post('/', (req, res, next) => {
 //edit project
 router.put('/', (req, res, next) => {
   const { id, title, group } = req.body
-  console.log({ id, title, group })
+  // console.log({ id, title, group })
   let groupValue = group
     .map(item => {
       return `('${id}','${item}')`
@@ -132,7 +132,6 @@ router.put('/', (req, res, next) => {
       res.send(result)
     })
     .catch(err => {
-      console.log(err)
       res.status(500).json({ errors: err.toString() })
     })
 })
@@ -141,7 +140,7 @@ router.put('/', (req, res, next) => {
 router.put('/:id', (req, res) => {
   const { id } = req.params
   const { toDelete } = req.body
-  console.log(id, toDelete)
+  // console.log(id, toDelete)
   const deleteProject = toDelete
     ? `update tb_cowork_project set deleted = 1 where id = '${id}'`
     : ''

@@ -38,9 +38,9 @@ router.post('/auth/login', (req, res) => {
           data: {
             name,
             password,
-            id
+            id,
           },
-          exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60 //10小时expiration
+          exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60, //10小时expiration
         }
         const token = jwt.sign(profile, secret)
         res.json({ token, id, name })
@@ -86,7 +86,7 @@ router.post('/auth', (req, res, next) => {
     )
     .then(data => {
       const { flag, message } = data.output
-      console.log(flag, message)
+      // console.log(flag, message)
       if (flag === '1') {
         res.status(422).json({ errors: message })
       } else {
