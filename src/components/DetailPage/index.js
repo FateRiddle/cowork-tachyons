@@ -23,14 +23,7 @@ class DetailPage extends React.Component {
   }
 
   update = () => {
-    const {
-      updateSubtasks,
-      updateRootTask,
-      updateTaskById,
-      currentTask,
-      task,
-      match,
-    } = this.props
+    const { updateSubtasks, updateRootTask, updateTaskById, currentTask, task, match } = this.props
     if (currentTask && match.params.id !== 'search') {
       updateTaskById(currentTask).then(_ => {
         if (task) {
@@ -54,7 +47,7 @@ class DetailPage extends React.Component {
       canEdit,
     } = this.props
     return (
-      <div className="w-40 border-box mb2 mt3 mr2 shadow-1 bg-white">
+      <div className="absolute static-ns w-100 w-40-ns h-100 h-auto-ns border-box mb2 mt1 mt3-ns mr2 shadow-1 bg-white">
         {taskFetched &&
           detailFetched &&
           <div className="h-100 flex flex-column">

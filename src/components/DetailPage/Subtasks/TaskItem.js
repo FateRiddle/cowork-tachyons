@@ -70,15 +70,14 @@ class TaskItem extends React.Component {
             onKeyDown={this.handleKeyDown}
             onBlur={this.handleBlur}
           />
-          {!isTitle &&
-            <span
-              className={classnames('ph2 f6', {
-                orange: closeToDue,
-                'dark-red': isDue,
-              })}
-            >
-              {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
-            </span>}
+          <span
+            className={classnames('ph2 f6', {
+              orange: closeToDue,
+              'dark-red': isDue,
+            })}
+          >
+            {!isTitle && task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
+          </span>
           {assigneeName &&
             <div className="ph2 bg-black-10 br-pill f6 black-50">
               {assigneeName}

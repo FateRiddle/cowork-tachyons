@@ -12,7 +12,7 @@ class Pop extends React.Component {
         data-component="mask"
       >
         <ClickOutside
-          className="relative w-30 pv4 min-w6 shadow-1 bg-white z-4"
+          className="relative pv4 w-90 w-30-ns min-w6-ns shadow-1 bg-white z-4"
           data-component="Pop"
           onClickOutside={close}
         >
@@ -26,7 +26,7 @@ class Pop extends React.Component {
 Pop.propTypes = {
   hidden: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  children: PropTypes.element
+  children: PropTypes.element,
 }
 
 export default Pop

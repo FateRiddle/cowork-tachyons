@@ -56,6 +56,10 @@ ul {
   padding-bottom: .6rem;
 }
 
+.pl3rem {
+  padding-left: 3rem;
+}
+
 .w15 {
   width: 1.5rem;
 }
@@ -105,6 +109,16 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (min-width: 30em) {
+  .flex-nowrap-ns {
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+  }
+  .min-w6-ns {
+    min-width: 32rem;
+  }
 }
 
 /*effect*/

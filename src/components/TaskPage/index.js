@@ -76,7 +76,11 @@ class TaskPage extends React.Component {
   render() {
     const { fetched, match } = this.props
     return (
-      <div className={`h-100 pt3 ph3 ${match.params.taskId ? 'w-60' : 'w-80'}`}>
+      <div
+        className={`h-100 pt2 pt3-ns ph1 ph3-ns ${match.params.taskId
+          ? 'w-100 w-60-ns'
+          : 'w-100 w-80-ns'}`}
+      >
         <TableFilter />
         {fetched ? <TaskTable /> : <div className="w-100 h-taskTable bg-white shadow-1" />}
       </div>

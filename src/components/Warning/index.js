@@ -4,6 +4,13 @@ import { connect } from 'react-redux'
 import { resetErrorMessage } from 'actions'
 
 class Warning extends React.Component {
+  componentDidMount() {
+    const { warning, resetErrorMessage } = this.props
+    if (warning) {
+      setTimeout(resetErrorMessage, 4000)
+    }
+  }
+
   render() {
     const { warning, className, resetErrorMessage } = this.props
     return warning
@@ -21,13 +28,13 @@ class Warning extends React.Component {
 }
 
 Warning.propTypes = {
-  className: PropTypes.string.isRequired
+  className: PropTypes.string.isRequired,
 }
 
 const mapStateToProps = ({ warning }) => ({ warning: warning.main })
 
 Warning = connect(mapStateToProps, {
-  resetErrorMessage
+  resetErrorMessage,
 })(Warning)
 
 export default Warning

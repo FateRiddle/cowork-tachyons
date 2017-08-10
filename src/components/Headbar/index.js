@@ -38,19 +38,17 @@ class Headbar extends React.Component {
       <div className="relative shadow-1" data-component="headbar">
         <div
           className={classnames('absolute pa2 left-0 black-60 pointer dim', {
-            dn: !sidebarHidden
+            dn: !sidebarHidden,
           })}
           onClick={toggleSidebar}
         >
-          <Icon name="content" />
+          <Icon name="content" size="big" />
         </div>
         <div className="h3rem flex w-100 justify-between border-box items-center bb b--black-20">
           <NavLink
             to={`/${me.id}`}
             onClick={() => this.onMyTaskClick(me.id)}
-            className={`${isMe
-              ? 'black-60'
-              : 'black-30'} w5 tracked pl4 hover-thin-blue`}
+            className={`${isMe ? 'black-60' : 'black-30'} w5 tracked pl3rem hover-thin-blue`}
           >
             我的任务
           </NavLink>
@@ -91,7 +89,7 @@ const mapStateToProps = (state, { match }) => {
     me: state.me,
     isMe: state.me.id === match.params.id,
     getSubs: id => getAllSubtasks(state, id),
-    stack: id => getTaskStack(state, id)
+    stack: id => getTaskStack(state, id),
   }
 }
 

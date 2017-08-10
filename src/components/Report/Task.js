@@ -21,14 +21,9 @@ class Task extends React.Component {
     const isDue = diff < 0
     const closeToDue = diff < 1.5 && diff >= 0
     //calculate progress
-    const getProgress = task =>
-      task.completed === 'completed' ? 100 : task.progress || 0
+    const getProgress = task => (task.completed === 'completed' ? 100 : task.progress || 0)
     return (
-      <li
-        className={`relative ba b--black-10 mb2 ph3 pv2 ${gray
-          ? 'bg-light-gray'
-          : 'bg-white'}`}
-      >
+      <li className={`relative ba b--black-10 mb2 ph3 pv2 ${gray ? 'bg-light-gray' : 'bg-white'}`}>
         <div
           className="absolute h-100 top-0 left-0 bg-cyan o-20"
           style={{ width: `${getProgress(task)}%` }}
@@ -47,21 +42,22 @@ class Task extends React.Component {
             <div className="pl2 flex-grow">
               {task.title}
             </div>
-            <div
-              data-component="dueAt"
-              className={`pl2 ${closeToDue ? 'orange' : ''} ${isDue
-                ? 'red'
-                : ''}`}
-            >
-              {task.dueAt && task.dueAt.format().substring(5, 10)}
-            </div>
-            <div className="pl2">
-              {userName}
-            </div>
+            {task.dueAt &&
+              <div
+                data-component="dueAt"
+                className={`pl2 pl0 flex-none ${closeToDue ? 'orange' : ''} ${isDue ? 'red' : ''}`}
+              >
+                {task.dueAt.format().substring(5, 10)}
+              </div>}
+            {userName &&
+              <div className="pl2 pl0 flex-none">
+                {userName}
+              </div>}
           </section>
           <section className="w-100 flex mb1" data-component="2nd-line">
             <div className="">
-              <span className="black-60">工作量：</span>{task.amount || 1}天
+              <span className="black-60">工作量：</span>
+              {task.amount || 1}天
             </div>
             <div className="pl2">
               <span className="black-60">进度：</span>
@@ -74,9 +70,7 @@ class Task extends React.Component {
         </main>
         {!fold &&
           <ul>
-            {subIds.map((id, index) =>
-              <ConnectedTask key={index} taskId={id} gray={!gray} />
-            )}
+            {subIds.map((id, index) => <ConnectedTask key={index} taskId={id} gray={!gray} />)}
           </ul>}
       </li>
     )
@@ -84,14 +78,12 @@ class Task extends React.Component {
 }
 
 Task.propTypes = {
-  taskId: PropTypes.string
+  taskId: PropTypes.string,
 }
 
 const mapStateToProps = (state, { taskId }) => {
   const task = getTaskById(state, taskId)
-  const subIds = getAlltasks(state)
-    .filter(t => t.upTaskId && t.upTaskId === taskId)
-    .map(t => t.id)
+  const subIds = getAlltasks(state).filter(t => t.upTaskId && t.upTaskId === taskId).map(t => t.id)
   const rootId = task.upTaskId ? task.rootTaskId : taskId
   const projectId = getTaskById(state, rootId).projectId
   const projectName = projectId ? getProjectById(state, projectId).title : ''
@@ -99,7 +91,7 @@ const mapStateToProps = (state, { taskId }) => {
     projectName,
     subIds,
     task,
-    user: getUserById(state, task.assignee)
+    user: getUserById(state, task.assignee),
   }
 }
 

@@ -69,10 +69,13 @@ class TaskItem extends React.Component {
             onBlur={this.handleBlur}
           />
           {task.upTaskId &&
-            <span data-component="uptask" className="ph2 black-50">
+            task.upTaskTitle &&
+            <span data-component="uptask" className="pl2 black-50">
               {`< `}
               <span className="f6">
-                {task.upTaskTitle}
+                {task.upTaskTitle.length > 12
+                  ? `${task.upTaskTitle.substring(0, 12)}...`
+                  : task.upTaskTitle}
               </span>
             </span>}
           {!isTitle &&
@@ -82,15 +85,14 @@ class TaskItem extends React.Component {
             <span className="ph2 bg-black-10 br-pill f6 black-50">
               {project.title}
             </span>}
-          {!isTitle &&
-            <span
-              className={classnames('ph2 f6', {
-                orange: closeToDue,
-                'dark-red': isDue,
-              })}
-            >
-              {task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
-            </span>}
+          <span
+            className={classnames('ph2 f6', {
+              orange: closeToDue,
+              'dark-red': isDue,
+            })}
+          >
+            {!isTitle && task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
+          </span>
           {!isTitle &&
             currentProject !== me.id &&
             assigneeName &&

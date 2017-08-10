@@ -7,14 +7,14 @@ class Password extends React.Component {
   state = {
     oldPass: '',
     newPass: '',
-    passAgain: ''
+    passAgain: '',
   }
 
   componentWillUnmount() {
     this.setState({
       oldPass: '',
       newPass: '',
-      passAgain: ''
+      passAgain: '',
     })
     this.props.changeUserWarning('')
   }
@@ -76,30 +76,26 @@ class Password extends React.Component {
     return (
       <div className="w-100 ph4 flex flex-wrap justify-end">
         <main className="pt4 ph4 w-100 flex flex-wrap">
-          <section className="w-100 pa2">
-            <label className="dib w-25">原密码：</label>
+          <section className="w-100 flex items-center pa2">
+            <label className="w-50 w-25-ns">原密码：</label>
             <input
-              className={`w5 ba pa2 outline-0 ${warning === '请填写原密码。'
-                ? 'b--red'
-                : 'b--black-30'}`}
+              className={`w5 ba pa2 outline-0 ${warning === '请填写原密码。' ? 'b--red' : 'b--black-30'}`}
               value={oldPass}
               onChange={this.onChangeOldPass}
               type="password"
             />
           </section>
-          <section className="w-100 pa2">
-            <label className="dib w-25">新密码：</label>
+          <section className="w-100 flex items-center pa2">
+            <label className="w-50 w-25-ns">新密码：</label>
             <input
-              className={`w5 ba pa2 outline-0 ${warning === '新密码不能为空。'
-                ? 'b--red'
-                : 'b--black-30'}`}
+              className={`w5 ba pa2 outline-0 ${warning === '新密码不能为空。' ? 'b--red' : 'b--black-30'}`}
               value={newPass}
               onChange={this.onChangeNewPass}
               type="password"
             />
           </section>
-          <section className="w-100 pa2">
-            <label className="dib w-25">再次输入：</label>
+          <section className="w-100 flex items-center pa2">
+            <label className="w-50 w-25-ns">再次输入：</label>
             <input
               className={`w5 ba pa2 outline-0 ${warning === '两次密码填写不一致。'
                 ? 'b--red'
@@ -132,12 +128,12 @@ class Password extends React.Component {
 
 const mapStateToProps = ({ me, warning }) => ({
   me,
-  warning: warning.userSettings
+  warning: warning.userSettings,
 })
 
 const ConnectedPassword = connect(mapStateToProps, {
   changeUserWarning,
-  editMyPassword
+  editMyPassword,
 })(Password)
 
 export default ConnectedPassword

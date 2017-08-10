@@ -8,7 +8,8 @@ import { addSubtask, havingSubtask } from 'actions'
 
 class Toolbar extends React.Component {
   close = () => {
-    this.props.history.push('')
+    const { history, match } = this.props
+    history.push(`/${match.params.id}`)
   }
 
   render() {

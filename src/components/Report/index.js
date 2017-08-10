@@ -7,12 +7,11 @@ import PersonReport from './PersonReport'
 import ProjectReport from './ProjectReport'
 
 const Tabs = ({ tabs, tab, toggleTab }) =>
-  <ul className="flex-none self-start h2 mb1 shadow-1 flex">
+  <ul className="flex-none w-100 w-auto-ns self-start h2 mb1 shadow-1 flex">
     {tabs.map(t =>
       <li
         key={t.value}
-        className={`w5 h-100 flex-center black-50 hover-bg-light-gray pointer ${tab ===
-          t.value
+        className={`w5 h-100 flex-center black-50 hover-bg-light-gray pointer ${tab === t.value
           ? 'bg-light-gray'
           : 'bg-white'}`}
         onClick={() => toggleTab(t.value)}
@@ -57,24 +56,18 @@ class Report extends React.Component {
     const { fetched, isSearch } = this.props
     return (
       <div
-        className="flex w-100 vh-fit pt3 ph3 pb1 bg-pale-grey"
+        className="flex flex-column flex-row-ns w-100 vh-fit pt2 pt3-ns ph1 ph3-ns pb1 bg-pale-grey"
         data-component="Report"
       >
-        <section className="flex flex-column w-70 h-100">
-          {isSearch &&
-            <Tabs tabs={this.tabs} tab={tab} toggleTab={this.toggleTab} />}
+        <section className="order-1 order-0-ns flex flex-column w-100 w-70-ns mt2 mt0-ns h-100">
+          {isSearch && <Tabs tabs={this.tabs} tab={tab} toggleTab={this.toggleTab} />}
           {!fetched
-            ? <div className="h-100 f4 pt3 ph3 bg-white shadow-1">
-                没有任务
-              </div>
+            ? <div className="h-100 f4 pt3 ph3 bg-white shadow-1">没有任务</div>
             : tab === 'task' ? <TaskReport /> : <PersonReport />}
         </section>
         {isSearch
           ? null
-          : fetched
-            ? <ProjectReport />
-            : <div className="ml3 h-50 w-30 pa3 bg-white shadow-1" />}
-
+          : fetched ? <ProjectReport /> : <div className="ml3 h-50 w-30 pa3 bg-white shadow-1" />}
       </div>
     )
   }
@@ -83,7 +76,7 @@ class Report extends React.Component {
 const mapStateToProps = ({ search, tasks }, { match }) => ({
   search,
   isSearch: match.params.id === 'search',
-  fetched: tasks.taskFetched
+  fetched: tasks.taskFetched,
 })
 
 Report = withRouter(connect(mapStateToProps, actions)(Report))

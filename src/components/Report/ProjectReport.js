@@ -9,10 +9,12 @@ class ProjectReport extends React.Component {
     // console.log(project, tasks, progress, amount, match.params)
     return (
       <div
-        className="ml3 h-50 w-30 pa3 bg-white shadow-1"
+        className="ml0 ml3-ns h-25 h-50-ns w-100 w-30-ns pa3 bg-white shadow-1"
         data-component="project-report"
       >
-        <h2 className="black-50">{project.title}</h2>
+        <h2 className="black-50">
+          {project.title}
+        </h2>
         <div className="w-100 flex pa3">
           <span className="w3 h2">进度：</span>
           <div className="relative h2 w-100 bg-light-gray">
@@ -23,11 +25,11 @@ class ProjectReport extends React.Component {
               {Math.floor(progress)} %
             </div>
           </div>
-
         </div>
 
         <div className="w-100 pa3">
-          <span className="w3 h2">工作量：</span>{amount} 人天
+          <span className="w3 h2">工作量：</span>
+          {amount} 人天
         </div>
       </div>
     )
@@ -39,8 +41,7 @@ const mapStateToProps = (state, { match }) => {
   const project = getProjectById(state, currentProject)
   const tasks = getAlltasks(state).filter(t => !t.upTaskId && t.projectId)
   const amount = tasks.map(t => t.amount || 1).reduce((t1, t2) => t1 + t2, 0)
-  const getProgress = task =>
-    task.completed === 'completed' ? 100 : task.progress || 0
+  const getProgress = task => (task.completed === 'completed' ? 100 : task.progress || 0)
   const weightedAmount = tasks
     .map(t => getProgress(t) * t.amount || 0)
     .reduce((t1, t2) => t1 + t2, 0)
@@ -48,12 +49,10 @@ const mapStateToProps = (state, { match }) => {
   return {
     project,
     amount,
-    progress
+    progress,
   }
 }
 
-const ConnectedProjectReport = withRouter(
-  connect(mapStateToProps)(ProjectReport)
-)
+const ConnectedProjectReport = withRouter(connect(mapStateToProps)(ProjectReport))
 
 export default ConnectedProjectReport

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-const sidebarHidden = (state = false, action) => {
+const sidebarHidden = (state = true, action) => {
   switch (action.type) {
     case 'TOGGLE_SIDEBAR':
       return !state
@@ -30,5 +30,5 @@ const userSettingsTab = (state = 'info', action) => {
 export const visual = combineReducers({
   sidebarHidden,
   userSettingsHidden,
-  userSettingsTab
+  userSettingsTab,
 })
