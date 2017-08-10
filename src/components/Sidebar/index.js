@@ -51,7 +51,7 @@ class Sidebar extends React.Component {
     return (
       <div
         data-component="Sidebar"
-        className={classnames('bg-deep-blue vh-100 w5 absolute relative-ns z-1 pt3', {
+        className={classnames('bg-deep-blue vh-100 w5 absolute relative-ns z-5 pt3', {
           dn: sidebarHidden,
         })}
       >

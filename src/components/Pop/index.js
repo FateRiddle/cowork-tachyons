@@ -12,7 +12,7 @@ class Pop extends React.Component {
         data-component="mask"
       >
         <ClickOutside
-          className="w-30 min-w6 pa4 shadow-1 bg-white z-4 flex flex-wrap justify-end"
+          className="w-90 w-30-ns min-w6-ns pa3 pa4-ns shadow-1 bg-white z-4 flex flex-wrap justify-end"
           data-component="Pop"
           onClickOutside={onCancelClick}
         >
@@ -41,7 +41,7 @@ Pop.propTypes = {
   hidden: PropTypes.bool.isRequired,
   onOKClick: PropTypes.func.isRequired,
   onCancelClick: PropTypes.func.isRequired,
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 export default Pop

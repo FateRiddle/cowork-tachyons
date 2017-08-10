@@ -79,7 +79,7 @@ class ProjectEditor extends React.Component {
       <div data-component="editor-content">
         <h2 className="a">项目</h2>
         <input
-          className="ph3 ba pv2 br2 w-90 b--black-30 outline-0 black-80 mb3"
+          className="ph3 ba pv2 br2 w-90 b--black-30 outline-0 black-80 mb2 mb3-ns"
           placeholder="项目名称"
           defaultValue={project.title}
           ref={node => (this.titleDOM = node)}
