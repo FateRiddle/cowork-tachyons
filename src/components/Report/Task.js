@@ -86,7 +86,7 @@ const mapStateToProps = (state, { taskId }) => {
   const subIds = getAlltasks(state).filter(t => t.upTaskId && t.upTaskId === taskId).map(t => t.id)
   const rootId = task.upTaskId ? task.rootTaskId : taskId
   const projectId = getTaskById(state, rootId).projectId
-  const projectName = projectId ? getProjectById(state, projectId).title : ''
+  const projectName = projectId ? (getProjectById(state, projectId) || {}).title : ''
   return {
     projectName,
     subIds,
