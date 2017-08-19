@@ -33,13 +33,13 @@ class Task extends React.Component {
           <section className="w-100 flex mb3" data-component="1st-line">
             {subIds.length > 0 &&
               <div
-                className="f3 dim pointer w2 tracked z-1"
+                className="f3 dim pointer w2 mr2 tracked z-1"
                 data-component="toggle"
                 onClick={this.toggle}
               >
                 [{fold ? '+' : '-'}]
               </div>}
-            <div className="pl2 flex-grow">
+            <div className="b tracked flex-grow">
               {task.title}
             </div>
             {task.dueAt &&
@@ -54,8 +54,8 @@ class Task extends React.Component {
                 {userName}
               </div>}
           </section>
-          <section className="w-100 flex mb1" data-component="2nd-line">
-            <div className="">
+          <section className="w-100 flex" data-component="2nd-line">
+            <div className="f6">
               <span className="black-60">工作量：</span>
               {task.amount || 1}天
             </div>
