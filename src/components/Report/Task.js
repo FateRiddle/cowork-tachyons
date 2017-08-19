@@ -55,12 +55,12 @@ class Task extends React.Component {
               </div>}
           </section>
           <section className="w-100 flex" data-component="2nd-line">
-            <div className="f6">
-              <span className="black-60">工作量：</span>
+            <div className="f6 black-60">
+              <span>工作量：</span>
               {task.amount || 1}天
             </div>
-            <div className="pl2">
-              <span className="black-60">进度：</span>
+            <div className="pl2 f6 black-60">
+              <span>进度：</span>
               {Math.floor(getProgress(task))}%
             </div>
             <div className="flex-auto tr">
