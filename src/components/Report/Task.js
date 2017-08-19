@@ -45,21 +45,23 @@ class Task extends React.Component {
             {task.dueAt &&
               <div
                 data-component="dueAt"
-                className={`pl2 pl0 flex-none ${closeToDue ? 'orange' : ''} ${isDue ? 'red' : ''}`}
+                className={`f6 pl2 pl0 flex-none ${closeToDue ? 'orange' : ''} ${isDue
+                  ? 'red'
+                  : ''}`}
               >
                 {task.dueAt.format().substring(5, 10)}
               </div>}
             {userName &&
-              <div className="pl2 pl0 flex-none">
+              <div className="f6 pl2 pl0 flex-none">
                 {userName}
               </div>}
           </section>
-          <section className="w-100 flex" data-component="2nd-line">
-            <div className="f6 black-60">
+          <section className="w-100 flex f6" data-component="2nd-line">
+            <div className="black-60">
               <span>工作量：</span>
               {task.amount || 1}天
             </div>
-            <div className="pl2 f6 black-60">
+            <div className="pl2 black-60">
               <span>进度：</span>
               {Math.floor(getProgress(task))}%
             </div>
