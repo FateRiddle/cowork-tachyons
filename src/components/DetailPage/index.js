@@ -45,11 +45,16 @@ class DetailPage extends React.Component {
       task,
       subtasks,
       canEdit,
+      hidden,
     } = this.props
     return (
-      <div className="absolute static-ns w-100 w-40-ns h-100 h-auto-ns border-box mb2 mt1 mt3-ns mr2 shadow-1 bg-white">
+      <div
+        className={`absolute static-ns w-100 h-100 h-auto-ns border-box mb2 mt1 mt3-ns mr2 shadow-1 bg-white ${hidden
+          ? 'w-70-ns'
+          : 'w-40-ns'}`}
+      >
         {taskFetched &&
-          detailFetched &&
+        detailFetched && (
           <div className="h-100 flex flex-column">
             <Toolbar canEdit={canEdit} />
             <main className="h-100 overflow-y-auto">
@@ -60,7 +65,8 @@ class DetailPage extends React.Component {
               {subtaskFetched && <Subtasks tasks={subtasks} />}
               <Stats />
             </main>
-          </div>}
+          </div>
+        )}
       </div>
     )
   }
@@ -85,6 +91,7 @@ const mapStateToProps = (state, { match }) => {
     canEdit,
     subtasks,
     hasSubtask: subtasks.length > 0,
+    hidden: state.visual.taskPageHidden,
   }
 }
 

@@ -553,3 +553,7 @@ export const changeUserSettingsTab = tab => ({
   type: 'CHANGE_USERSETTINGS_TAB',
   tab,
 })
+
+export const toggleTaskpage = () => ({
+  type: 'TOGGLE_TASKPAGE',
+})

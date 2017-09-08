@@ -58,21 +58,19 @@ class Headbar extends React.Component {
         </div>
         <ul className="flex justify-center h2" data-component="tabs 任务/报表">
           <li
-            className={`pa1 mh4 b bb bw1 ${match.params.taskId !== 'report'
+            className={`pa1 mh4 b bb bw1 hover-black-60 hover-b--red pointer ${match.params
+              .taskId !== 'report'
               ? 'black-60 b--red'
-              : 'black-40 b--white'} ${me.id === match.params.id
-              ? ''
-              : 'hover-black-60 hover-b--red pointer'}`}
+              : 'black-40 b--white'} ${me.id === match.params.id ? 'dn' : ''}`}
             onClick={this.onTaskTabClick}
           >
             任务
           </li>
           <li
-            className={`pa1 mh4 b bb bw1 ${match.params.taskId === 'report'
+            className={`pa1 mh4 b bb bw1 hover-black-60 hover-b--red pointer ${match.params
+              .taskId === 'report'
               ? 'black-60 b--red'
-              : 'black-40 b--white'} ${me.id === match.params.id
-              ? ''
-              : 'hover-black-60 hover-b--red pointer'}`}
+              : 'black-40 b--white'} ${me.id === match.params.id ? 'dn' : ''}`}
             onClick={this.onReportTabClick}
           >
             报表

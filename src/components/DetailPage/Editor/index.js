@@ -56,7 +56,7 @@ class ContentEditor extends React.Component {
         className={`ph3 pv2 ${task.completed === 'completed' ? 'black-50' : ''}`}
         data-component="Editor"
       >
-        <div className={`f3 w-90 pa2 ba b--white lh-title mb3 ${canEdit ? 'hover-b' : ''}`}>
+        <div className={`f3 w-100 pa2 ba b--white lh-title mb3 ${canEdit ? 'hover-b' : ''}`}>
           <Editor
             placeholder="标题"
             editorState={this.state.titleState}
@@ -65,7 +65,7 @@ class ContentEditor extends React.Component {
             onBlur={this.handleTitleBlur}
           />
         </div>
-        <div className={`w-90 pa2 ba b--white min-h-text ${canEdit ? 'hover-b' : ''}`}>
+        <div className={`w-100 pv3 ph2 ba b--white min-h-text ${canEdit ? 'hover-b' : ''}`}>
           <Editor
             placeholder="内容"
             editorState={this.state.detailState}

@@ -74,7 +74,21 @@ class TaskPage extends React.Component {
   }
 
   render() {
-    const { fetched, match } = this.props
+    const { fetched, hidden, match } = this.props
+    if (hidden) {
+      return (
+        <div className={`h-100 pt2 pt3-ns ph1 ph3-ns`}>
+          <div className="bg-white shadow-1 pv2 ph3">
+            <div
+              className="black-40 hover-thin-blue b f2 pointer"
+              onClick={this.props.toggleTaskpage}
+            >
+              {'>'}
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div
         className={`h-100 pt2 pt3-ns ph1 ph3-ns ${match.params.taskId
@@ -94,6 +108,7 @@ const mapStateToProps = (state, { match }) => {
     task: getTaskById(state, match.params.taskId),
     me: state.me,
     fetched: state.tasks.taskFetched,
+    hidden: state.visual.taskPageHidden,
   }
 }
 

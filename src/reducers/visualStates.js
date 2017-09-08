@@ -27,8 +27,16 @@ const userSettingsTab = (state = 'info', action) => {
   }
 }
 
+const taskPageHidden = (state = false, action) => {
+  if (action.type === 'TOGGLE_TASKPAGE') {
+    return !state
+  }
+  return state
+}
+
 export const visual = combineReducers({
   sidebarHidden,
   userSettingsHidden,
   userSettingsTab,
+  taskPageHidden,
 })

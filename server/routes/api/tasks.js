@@ -248,7 +248,7 @@ router.put('/:id', (req, res, next) => {
       pool
         .request() //user params to prevent sql injection
         .input('title', sql.NVarChar(500), title)
-        .input('detail', sql.NVarChar(500), detail).query(`
+        .input('detail', sql.NVarChar(5000), detail).query(`
         begin tran
           declare @order numeric(12,6)
           ${assignee
