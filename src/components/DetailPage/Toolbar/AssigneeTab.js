@@ -42,7 +42,7 @@ class AssigneeTab extends React.Component {
         value={assignee}
         options={this.getUserOptions()}
         onChange={this.onChange}
-        // disabled={disabled}
+        disabled={disabled} //使用了不同的canEdit判断，所有组员都可以修改 2017/9/20 毛豆组要求
       />
     )
   }
@@ -50,7 +50,8 @@ class AssigneeTab extends React.Component {
 
 const mapStateToProps = (state, { match }) => {
   const currentTask = match.params.taskId
-  const { assignee, rootTaskId } = getTaskById(state, currentTask) || {} //in case it is undefined
+  const task = getTaskById(state, currentTask) || {} //in case it is undefined
+  const { assignee, rootTaskId } = task
   let users = []
   if (rootTaskId) {
     users = getUserByTask(state, rootTaskId)
@@ -58,12 +59,15 @@ const mapStateToProps = (state, { match }) => {
     users = getUserByTask(state, currentTask)
   }
   const _assignee = assignee ? assignee : '0' //Dropdown插件的value不接受''，所以必须赋值'0'
+  const canEdit =
+    task && task.completed === 'active' && match.params.id !== 'search'
   return {
     users,
     currentAssigned: getUserById(state, _assignee),
     me: state.me,
     currentTask,
-    assignee: _assignee
+    assignee: _assignee,
+    disabled: !canEdit
   }
 }
 
