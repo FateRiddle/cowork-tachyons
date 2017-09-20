@@ -10,14 +10,15 @@ import classnames from 'classnames'
 import { getUserById, getProjectByTask } from 'reducers'
 import moment from 'moment'
 
-const DragHandle = SortableHandle(({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
-  <span
-    className="f4 w15 tc grab b black-60 hover-thin-blue"
-    onMouseEnter={onMouseEnterDrag}
-    onMouseLeave={onMouseLeaveDrag}
-  >
-    {show ? '::' : ''}
-  </span>
+const DragHandle = SortableHandle(
+  ({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
+    <span
+      className="f4 w15 tc grab b black-60 hover-thin-blue"
+      onMouseEnter={onMouseEnterDrag}
+      onMouseLeave={onMouseLeaveDrag}
+    >
+      {show ? '::' : ''}
+    </span>
 )
 
 class TaskItem extends React.Component {
@@ -32,7 +33,15 @@ class TaskItem extends React.Component {
     }
   }
   render() {
-    const { project, task, style, currentTask, me, match, assigneeName } = this.props
+    const {
+      project,
+      task,
+      style,
+      currentTask,
+      me,
+      match,
+      assigneeName
+    } = this.props
     const { id: currentProject } = match.params
     const isTitle = this.isTitle(task)
     //due warnings
@@ -56,7 +65,7 @@ class TaskItem extends React.Component {
             completed={task.completed === 'completed'}
             onClick={() => this.handleCheckIconClick(task.id)}
           />}
-        <span className="flex-auto flex">
+        <span className="ml2 flex-auto flex">
           <input
             className="bn outline-0 flex-auto"
             value={task.title || ''}
@@ -83,12 +92,14 @@ class TaskItem extends React.Component {
             project &&
             project.title &&
             <span className="ph1 ph2-ns bg-black-10 br-pill f6 black-50">
-              {project.title.length > 6 ? `${project.title.substring(0, 5)}...` : project.title}
+              {project.title.length > 6
+                ? `${project.title.substring(0, 5)}...`
+                : project.title}
             </span>}
           <span
             className={classnames('ph1 ph2-ns f6', {
               orange: closeToDue,
-              'dark-red': isDue,
+              'dark-red': isDue
             })}
           >
             {!isTitle && task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
@@ -97,7 +108,9 @@ class TaskItem extends React.Component {
             currentProject !== me.id &&
             assigneeName &&
             <div className="ph1 ph2-ns mr1 mr2-ns bg-black-10 br-pill f6 black-50">
-              {assigneeName.length > 8 ? `${assigneeName.substring(0, 7)}...` : assigneeName}
+              {assigneeName.length > 8
+                ? `${assigneeName.substring(0, 7)}...`
+                : assigneeName}
             </div>}
         </span>
       </li>
@@ -107,7 +120,11 @@ class TaskItem extends React.Component {
   ////////////////权限
   canEdit = () => {
     const { match, task } = this.props
-    return task.completed === 'active' && match.params.id !== 'search' && this.canIEdit()
+    return (
+      task.completed === 'active' &&
+      match.params.id !== 'search' &&
+      this.canIEdit()
+    )
   }
 
   canIEdit = () => {
@@ -122,7 +139,7 @@ class TaskItem extends React.Component {
       'bt bb b--cyan': currentTask === task.id, //selected
       b: this.isTitle(task),
       'shadow-1': this.state.mouseOnDrag,
-      'black-50': task.completed === 'completed',
+      'black-50': task.completed === 'completed'
     })
   }
 
@@ -140,7 +157,11 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
-    const { task: { progress, hasSubtask }, toggleTask, changeMainWarning } = this.props
+    const {
+      task: { progress, hasSubtask },
+      toggleTask,
+      changeMainWarning
+    } = this.props
     if (this.canIEdit()) {
       if (!hasSubtask || (hasSubtask && progress === 100)) {
         toggleTask(id)
@@ -206,7 +227,7 @@ class TaskItem extends React.Component {
       history,
       match,
       isOnly,
-      changeMainWarning,
+      changeMainWarning
     } = this.props
     switch (e.key) {
       case 'Tab':
@@ -258,7 +279,7 @@ class TaskItem extends React.Component {
 TaskItem.propTypes = {
   task: PropTypes.object.isRequired,
   focusUp: PropTypes.func.isRequired,
-  focusDown: PropTypes.func.isRequired,
+  focusDown: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, { match, task }) => {
@@ -270,11 +291,13 @@ const mapStateToProps = (state, { match, task }) => {
     search,
     me,
     currentTask,
-    assigneeName: user ? user.name : '',
+    assigneeName: user ? user.name : ''
   }
 }
 
-const ConnectedTaskItem = withRouter(connect(mapStateToProps, actions)(TaskItem))
+const ConnectedTaskItem = withRouter(
+  connect(mapStateToProps, actions)(TaskItem)
+)
 
 export default ConnectedTaskItem
 

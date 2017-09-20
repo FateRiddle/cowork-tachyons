@@ -11,14 +11,15 @@ import { Icon } from 'semantic-ui-react'
 import { getUserById } from 'reducers'
 import moment from 'moment'
 
-const DragHandle = SortableHandle(({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
-  <span
-    className="f4 w15 tc grab b black-60 hover-thin-blue"
-    onMouseEnter={onMouseEnterDrag}
-    onMouseLeave={onMouseLeaveDrag}
-  >
-    {show ? '::' : ''}
-  </span>
+const DragHandle = SortableHandle(
+  ({ show, onMouseEnterDrag, onMouseLeaveDrag }) =>
+    <span
+      className="f4 w15 tc grab b black-60 hover-thin-blue"
+      onMouseEnter={onMouseEnterDrag}
+      onMouseLeave={onMouseLeaveDrag}
+    >
+      {show ? '::' : ''}
+    </span>
 )
 //为了简洁，注意所有的currentTask指的是currentSubtask
 class TaskItem extends React.Component {
@@ -58,7 +59,7 @@ class TaskItem extends React.Component {
             completed={task.completed === 'completed'}
             onClick={() => this.handleCheckIconClick(id)}
           />}
-        <span className="flex-auto flex">
+        <span className="ml2 flex-auto flex">
           <input
             className="bn outline-0 flex-auto"
             value={task.title || ''}
@@ -73,14 +74,16 @@ class TaskItem extends React.Component {
           <span
             className={classnames('ph2 f6', {
               orange: closeToDue,
-              'dark-red': isDue,
+              'dark-red': isDue
             })}
           >
             {!isTitle && task.dueAt ? task.dueAt.format().substring(5, 10) : ''}
           </span>
           {assigneeName &&
             <div className="ph2 bg-black-10 br-pill f6 black-50">
-              {assigneeName.length > 8 ? `${assigneeName.substring(0, 7)}...` : assigneeName}
+              {assigneeName.length > 8
+                ? `${assigneeName.substring(0, 7)}...`
+                : assigneeName}
             </div>}
           <Link
             className={`pl2 hover-thin-blue f3 flex-center ${task.hasSubtask
@@ -106,7 +109,7 @@ class TaskItem extends React.Component {
       'bt bb b--cyan': currentTask === task.id, //selected
       b: this.isTitle(task),
       'shadow-1': this.state.mouseOnDrag,
-      'black-50': task.completed === 'completed',
+      'black-50': task.completed === 'completed'
     })
   }
 
@@ -124,7 +127,12 @@ class TaskItem extends React.Component {
   }
 
   handleCheckIconClick = id => {
-    const { task: { progress, hasSubtask }, toggleTask, changeMainWarning, canIEdit } = this.props
+    const {
+      task: { progress, hasSubtask },
+      toggleTask,
+      changeMainWarning,
+      canIEdit
+    } = this.props
     if (canIEdit) {
       if (!hasSubtask || (hasSubtask && progress === 100)) {
         toggleTask(id)
@@ -143,7 +151,13 @@ class TaskItem extends React.Component {
   }
 
   handleTitleChange = e => {
-    const { task: { id }, editTaskTitle, canEdit, canIEdit, changeMainWarning } = this.props
+    const {
+      task: { id },
+      editTaskTitle,
+      canEdit,
+      canIEdit,
+      changeMainWarning
+    } = this.props
     if (canEdit) {
       const title = e.target.value
       editTaskTitle(title, id)
@@ -184,7 +198,7 @@ class TaskItem extends React.Component {
       match,
       canEdit,
       canIEdit,
-      changeMainWarning,
+      changeMainWarning
     } = this.props
     switch (e.key) {
       case 'Tab':
@@ -232,7 +246,7 @@ TaskItem.propTypes = {
   task: PropTypes.object.isRequired,
   focusUp: PropTypes.func.isRequired,
   focusDown: PropTypes.func.isRequired,
-  canEdit: PropTypes.bool.isRequired,
+  canEdit: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = (state, { task, match }) => {
@@ -240,7 +254,11 @@ const mapStateToProps = (state, { task, match }) => {
   const user = getUserById(state, task.assignee)
   ////////////////权限
   const canIEdit = task && (task.createdBy === me.id || task.assignee === me.id)
-  const canEdit = task && task.completed === 'active' && match.params.id !== 'search' && canIEdit
+  const canEdit =
+    task &&
+    task.completed === 'active' &&
+    match.params.id !== 'search' &&
+    canIEdit
   ///////////////
   return {
     completed,
@@ -248,10 +266,12 @@ const mapStateToProps = (state, { task, match }) => {
     currentTask: currentSubtask,
     assigneeName: user ? user.name : '',
     canEdit,
-    canIEdit,
+    canIEdit
   }
 }
 
-const ConnectedTaskItem = withRouter(connect(mapStateToProps, actions)(TaskItem))
+const ConnectedTaskItem = withRouter(
+  connect(mapStateToProps, actions)(TaskItem)
+)
 
 export default ConnectedTaskItem
