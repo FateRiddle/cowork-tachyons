@@ -1,14 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom'
+import createBrowserHistory from 'history/createBrowserHistory'
+import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import App from './App'
 import Home from './components/Homepage'
+
+export const history = createBrowserHistory() //export to share with configureStore
 
 const loggedIn = () => {
   if (window.localStorage.getItem('token')) {
@@ -26,7 +24,7 @@ const PrivateRoute = ({ component, ...rest }) => {
 }
 
 const Root = ({ store }) =>
-  <Router>
+  <Router history={history}>
     <Provider store={store}>
       <Switch>
         <Route path="/home" component={Home} />

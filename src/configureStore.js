@@ -7,6 +7,13 @@ import app from './reducers'
 import { loadUser, saveUser, loadSearch, saveSearch } from './localStorage'
 import throttle from 'lodash/throttle'
 import api from './api'
+import { history } from './Root'
+
+const clearLocalStorage = () => {
+  window.localStorage.setItem('token', '')
+  api.setToken(null)
+  //because subscription, 'me' will sync with state, so also be cleared... really?No, the otherway around
+}
 
 const localStorageMiddleware = store => next => action => {
   if (action.type === 'LOGIN_SUCCESS') {
@@ -19,13 +26,15 @@ const localStorageMiddleware = store => next => action => {
     action.type.endsWith('_ERROR') &&
     action.payload.response.status === 401
   ) {
-    window.localStorage.setItem('token', '')
+    setTimeout(_ => {
+      history.push('/home/login')
+      clearLocalStorage()
+      store.dispatch({ type: 'LOGOUT' })
+    }, 2000)
+    //Here I want to manually route to /home
+    // setTimeout(_ => history.push('/home/login'), 1500)
   } else if (action.type === 'LOGOUT') {
-    window.localStorage.setItem('token', '')
-    window.localStorage.setItem('me', '')
-    window.localStorage.setItem('search', '')
-    api.setToken(null)
-    //because subscription, 'me' will sync with state, so also be cleared... really?
+    clearLocalStorage()
   }
   next(action)
 }
